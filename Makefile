@@ -1,4 +1,6 @@
+CC = clang++
+
 all : blockcillin
 
 blockcillin : blockcillin.cpp
-	 clang++ blockcillin.cpp -o blockcillin
+	${CC} blockcillin.cpp -o blockcillin
