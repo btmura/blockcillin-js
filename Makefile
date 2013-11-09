@@ -4,8 +4,8 @@ EXE = blockcillin
 
 all : ${EXE}
 
-${EXE} : blockcillin.cpp
-	${CXX} ${CXXFLAGS} blockcillin.cpp -lSDL2 -o blockcillin
+${EXE} : main.cpp
+	${CXX} ${CXXFLAGS} main.cpp -lSDL2 -o ${EXE}
 
 clean:
 	rm *.o && rm ${EXE}
