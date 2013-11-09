@@ -1,11 +1,18 @@
 CXX = clang++
-CXXFLAGS = -std=c++11
+CXXFLAGS = -std=c++11 -Wall -c
+LDFLAGS = -lSDL2
 EXE = blockcillin
 
 all : ${EXE}
 
-${EXE} : main.cpp
-	${CXX} ${CXXFLAGS} main.cpp -lSDL2 -o ${EXE}
+${EXE} : main.o
+	${CXX} ${LDFLAGS} $< -o $@
+
+main.o : main.cpp
+	${CXX} ${CXXFLAGS} $<
+
+run:
+	./${EXE}
 
 clean:
-	rm *.o && rm ${EXE}
+	rm -f *.o ${EXE}
