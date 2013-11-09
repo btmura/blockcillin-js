@@ -1,6 +1,11 @@
-CC = clang++
+CXX = clang++
+CXXFLAGS = -std=c++11
+EXE = blockcillin
 
-all : blockcillin
+all : ${EXE}
 
-blockcillin : blockcillin.cpp
-	${CC} blockcillin.cpp -lSDL -o blockcillin
+${EXE} : blockcillin.cpp
+	${CXX} ${CXXFLAGS} blockcillin.cpp -lSDL2 -o blockcillin
+
+clean:
+	rm *.o && rm ${EXE}
