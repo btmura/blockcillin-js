@@ -8,9 +8,13 @@ const int kWindowWidth = 640;
 const int kWindowHeight = 480;
 const int kWindowFlags = SDL_WINDOW_OPENGL;
 
+void logSDLError(const std::string &message) {
+	std::cerr << message << " error: " << SDL_GetError() << std::endl;
+}
+
 int main(int argc, char *argv[]) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
+		logSDLError("SDL_Init");
 		return 1;
 	}
 
@@ -22,7 +26,7 @@ int main(int argc, char *argv[]) {
 		kWindowHeight,
 		kWindowFlags);
 	if (window == NULL) {
-		std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << std::endl;
+		logSDLError("SDL_CreateWindow");
 		return 1;
 	}
 
