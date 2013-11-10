@@ -18,6 +18,21 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
+	if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3) != 0) {
+		logSDLError("SDL_GL_SetAttribute");
+		return 1;
+	}
+
+	if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1) != 0) {
+		logSDLError("SDL_GL_SetAttribute");
+		return 1;
+	}
+
+	if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE) != 0) {
+		logSDLError("SDL_GL_SetAttribute");
+		return 1;
+	}
+
 	SDL_Window *window = SDL_CreateWindow(
 		kWindowTitle.c_str(),
 		kWindowX,
@@ -30,7 +45,12 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	SDL_Surface *surface = SDL_GetWindowSurface(window);
+	SDL_GLContext context = SDL_GL_CreateContext(window);
+	if (context == NULL) {
+		logSDLError("SDL_GL_CreateContext");
+		return 1;
+	}
+
 	SDL_Event event;
 	bool quit = false;
 
@@ -42,8 +62,8 @@ int main(int argc, char *argv[]) {
 					break;
 			}
 		}
-		SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0xFF, 0, 0));
-		SDL_UpdateWindowSurface(window);
+
+		SDL_GL_SwapWindow(window);
 	}
 
 	SDL_DestroyWindow(window);
