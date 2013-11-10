@@ -1,12 +1,12 @@
 #include <iostream>
 #include "SDL2/SDL.h"
 
-const std::string WindowTitle = "blockcillin";
-const int WindowX = SDL_WINDOWPOS_UNDEFINED;
-const int WindowY = SDL_WINDOWPOS_UNDEFINED;
-const int WindowWidth = 640;
-const int WindowHeight = 480;
-const int WindowFlags = SDL_WINDOW_OPENGL;
+const std::string kWindowTitle = "blockcillin";
+const int kWindowX = SDL_WINDOWPOS_UNDEFINED;
+const int kWindowY = SDL_WINDOWPOS_UNDEFINED;
+const int kWindowWidth = 640;
+const int kWindowHeight = 480;
+const int kWindowFlags = SDL_WINDOW_OPENGL;
 
 int main(int argc, char *argv[]) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -15,12 +15,12 @@ int main(int argc, char *argv[]) {
 	}
 
 	SDL_Window *window = SDL_CreateWindow(
-		WindowTitle.c_str(),
-		WindowX,
-		WindowY,
-		WindowWidth,
-		WindowHeight,
-		WindowFlags);
+		kWindowTitle.c_str(),
+		kWindowX,
+		kWindowY,
+		kWindowWidth,
+		kWindowHeight,
+		kWindowFlags);
 	if (window == NULL) {
 		std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << std::endl;
 		return 1;
