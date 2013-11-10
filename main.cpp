@@ -26,6 +26,10 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
+	SDL_Surface *surface = SDL_GetWindowSurface(window);
+	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0xFF, 0, 0));
+	SDL_UpdateWindowSurface(window);
+
 	SDL_Delay(5000);
 
 	SDL_DestroyWindow(window);
