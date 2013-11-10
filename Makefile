@@ -1,6 +1,6 @@
 CXX = clang++
 CXXFLAGS = -std=c++11 -Wall -c
-LDFLAGS = -lSDL2
+LDFLAGS = -lSDL2 -lGLEW -lGLU -lGL
 EXE = blockcillin
 
 all : ${EXE}

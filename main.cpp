@@ -1,5 +1,6 @@
 #include <iostream>
 #include "SDL2/SDL.h"
+#include "GL/glew.h"
 
 const std::string kWindowTitle = "blockcillin";
 const int kWindowX = SDL_WINDOWPOS_UNDEFINED;
@@ -63,6 +64,8 @@ int main(int argc, char *argv[]) {
 			}
 		}
 
+		glClearColor(1, 0, 0, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
 		SDL_GL_SwapWindow(window);
 	}
 
