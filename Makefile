@@ -4,20 +4,20 @@ LDFLAGS = -lSDL2 -lGLEW -lGLU -lGL
 EXE = blockcillin
 TESTS = make -f gtest.mk
 
-all : ${EXE}
+all : $(EXE)
 
-${EXE} : main.o game.o
-	${CXX} ${LDFLAGS} $^ -o $@
+$(EXE) : main.o game.o
+	$(CXX) $(LDFLAGS) $^ -o $@
 
 %.o : %.cc %.h
-	${CXX} ${CXXFLAGS} $< -o $@
+	$(CXX) $(CXXFLAGS) $< -o $@
 
 run:
-	./${EXE}
+	./$(EXE)
 
 test:
-	${TESTS} test
+	$(TESTS) test
 
 clean:
-	rm -f *.o ${EXE}
-	${TESTS} clean
+	rm -f *.o $(EXE)
+	$(TESTS) clean
