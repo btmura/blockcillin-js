@@ -8,7 +8,7 @@ all : ${EXE}
 ${EXE} : main.o game.o
 	${CXX} ${LDFLAGS} $^ -o $@
 
-%.o : %.cpp
+%.o : %.cc
 	${CXX} ${CXXFLAGS} $< -o $@
 
 run:
