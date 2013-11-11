@@ -2,16 +2,17 @@
 #define BLOCKCILLIN_GAME_H_
 
 #include <iostream>
-#include "SDL2/SDL.h"
+
 #include "GL/glew.h"
+#include "SDL2/SDL.h"
 
 class Game {
  public:
   int Run();
 
  private:
-  int InitWindow();
-  int InitGL();
+  bool InitWindow();
+  bool InitGL();
   void Loop();
   void Render();
   void Quit();
