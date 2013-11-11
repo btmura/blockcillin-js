@@ -47,14 +47,14 @@ int Game::InitWindow() {
     return 1;
   }
 
-  window = SDL_CreateWindow(
+  window_ = SDL_CreateWindow(
     kWindowTitle.c_str(),
     kWindowX,
     kWindowY,
     kWindowWidth,
     kWindowHeight,
     kWindowFlags);
-  if (window == NULL) {
+  if (window_ == NULL) {
     LogSDLError("SDL_CreateWindow");
     return 1;
   }
@@ -63,7 +63,7 @@ int Game::InitWindow() {
 }
 
 int Game::InitGL() {
-  SDL_GLContext context = SDL_GL_CreateContext(window);
+  SDL_GLContext context = SDL_GL_CreateContext(window_);
   if (context == NULL) {
     LogSDLError("SDL_GL_CreateContext");
     return 1;
@@ -74,7 +74,7 @@ int Game::InitGL() {
     LogGLEWError("glewInit", error);
   }
 
-  program = glCreateProgram();
+  program_ = glCreateProgram();
 
   return 0;
 }
@@ -93,7 +93,7 @@ void Game::Loop() {
     }
 
     Render();
-    SDL_GL_SwapWindow(window);
+    SDL_GL_SwapWindow(window_);
   }
 }
 
@@ -102,8 +102,8 @@ void Game::Render() {
 }
 
 void Game::Quit() {
-  glDeleteProgram(program);
-  SDL_DestroyWindow(window);
+  glDeleteProgram(program_);
+  SDL_DestroyWindow(window_);
   SDL_Quit();
 }
 
