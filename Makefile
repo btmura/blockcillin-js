@@ -1,25 +1,29 @@
 EXE = blockcillin
-OUT_DIR = out
 SRC_DIR = src
+OBJ_DIR = out
 
 CXX = clang++
 CXXFLAGS = -std=c++11 -Wall -c
 LDFLAGS = -lSDL2 -lGLEW -lGLU -lGL
 
+OBJS = $(addprefix $(OBJ_DIR)/,main.o game.o)
 TESTS = make -f gtest.mk
 
-all : $(EXE)
+all: $(EXE)
 
-$(EXE) : $(OUT_DIR)/main.o $(OUT_DIR)/game.o
+$(EXE): $(OBJS)
 	$(CXX) $(LDFLAGS) $^ -o $@
 
-$(OUT_DIR)/%.o : $(SRC_DIR)/%.cc $(SRC_DIR)/%.h
-	@mkdir -p $(OUT_DIR)
+$(OBJS): | $(OBJ_DIR)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc $(SRC_DIR)/%.h
 	$(CXX) $(CXXFLAGS) $< -o $@
 
-$(OUT_DIR)/%.o : $(SRC_DIR)/%.cc
-	@mkdir -p $(OUT_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cc
 	$(CXX) $(CXXFLAGS) $< -o $@
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 run:
 	./$(EXE)
@@ -28,5 +32,5 @@ test:
 	$(TESTS) test
 
 clean:
-	rm -rf $(OUT_DIR) $(EXE)
+	rm -rf $(OBJ_DIR) $(EXE)
 	$(TESTS) clean
