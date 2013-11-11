@@ -2,6 +2,9 @@
 
 int main(int argc, char *argv[]) {
   Game game;
-  game.Run();
+  int result = game.Run();
+  if (result != 0) {
+    return result;
+  }
   return 0;
 }

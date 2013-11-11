@@ -10,11 +10,15 @@ const int kWindowWidth = 640;
 const int kWindowHeight = 480;
 const int kWindowFlags = SDL_WINDOW_OPENGL;
 
-void Game::Run() {
-  if (Init() == 0) {
-    Loop();
-    Quit();
+int Game::Run() {
+  int result = Init();
+  if (result != 0) {
+    return result;
   }
+
+  Loop();
+  Quit();
+  return 0;
 }
 
 int Game::Init() {
