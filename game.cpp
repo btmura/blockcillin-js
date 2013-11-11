@@ -72,9 +72,20 @@ bool Game::InitGL() {
   GLenum error = glewInit();
   if (error != GLEW_OK) {
     LogGLEWError("glewInit", error);
+    return false;
   }
 
   program_ = glCreateProgram();
+  if (program_ == 0) {
+    LogGLError("glCreateProgram", program_);
+    return false;
+  }
+
+  GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+  if (vertex_shader == 0) {
+    LogGLError("glCreateShader", vertex_shader);
+    return false;
+  }
 
   return true;
 }
@@ -113,4 +124,8 @@ void Game::LogSDLError(const std::string &tag) {
 
 void Game::LogGLEWError(const std::string &tag, GLenum error) {
   std::cerr << tag << " error: " << glewGetErrorString(error) << std::endl;
+}
+
+void Game::LogGLError(const std::string &tag, GLuint error) {
+  std::cerr << tag << " error: " << error << std::endl;
 }
