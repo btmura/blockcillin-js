@@ -8,11 +8,8 @@ all : ${EXE}
 ${EXE} : main.o game.o
 	${CXX} ${LDFLAGS} $^ -o $@
 
-main.o : main.cpp
-	${CXX} ${CXXFLAGS} $<
-
-game.o : game.cpp
-	${CXX} ${CXXFLAGS} $<
+%.o : %.cpp
+	${CXX} ${CXXFLAGS} $< -o $@
 
 run:
 	./${EXE}
