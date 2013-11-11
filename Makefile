@@ -1,5 +1,5 @@
 EXE = blockcillin
-OBJ_DIR = obj
+OUT_DIR = out
 SRC_DIR = src
 
 CXX = clang++
@@ -10,15 +10,15 @@ TESTS = make -f gtest.mk
 
 all : $(EXE)
 
-$(EXE) : $(OBJ_DIR)/main.o $(OBJ_DIR)/game.o
+$(EXE) : $(OUT_DIR)/main.o $(OUT_DIR)/game.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cc $(SRC_DIR)/%.h
-	@mkdir -p $(OBJ_DIR)
+$(OUT_DIR)/%.o : $(SRC_DIR)/%.cc $(SRC_DIR)/%.h
+	@mkdir -p $(OUT_DIR)
 	$(CXX) $(CXXFLAGS) $< -o $@
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cc
-	@mkdir -p $(OBJ_DIR)
+$(OUT_DIR)/%.o : $(SRC_DIR)/%.cc
+	@mkdir -p $(OUT_DIR)
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 run:
@@ -28,5 +28,5 @@ test:
 	$(TESTS) test
 
 clean:
-	rm -rf $(OBJ_DIR) $(EXE)
+	rm -rf $(OUT_DIR) $(EXE)
 	$(TESTS) clean
