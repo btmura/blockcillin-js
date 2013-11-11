@@ -5,10 +5,13 @@ EXE = blockcillin
 
 all : ${EXE}
 
-${EXE} : main.o
-	${CXX} ${LDFLAGS} $< -o $@
+${EXE} : main.o game.o
+	${CXX} ${LDFLAGS} $^ -o $@
 
 main.o : main.cpp
+	${CXX} ${CXXFLAGS} $<
+
+game.o : game.cpp
 	${CXX} ${CXXFLAGS} $<
 
 run:
