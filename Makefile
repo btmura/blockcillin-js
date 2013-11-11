@@ -16,7 +16,7 @@ run:
 	./${EXE}
 
 test:
-	${TESTS}
+	${TESTS} test
 
 clean:
 	rm -f *.o ${EXE}
