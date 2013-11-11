@@ -3,19 +3,24 @@
 
 #include <iostream>
 #include "SDL2/SDL.h"
+#include "GL/glew.h"
 
 class Game {
  public:
   int Run();
 
  private:
-  int Init();
+  int InitWindow();
+  int InitGL();
   void Loop();
+  void Render();
   void Quit();
 
   static void LogSDLError(const std::string &tag);
+  static void LogGLEWError(const std::string &tag, const GLenum error);
 
-  SDL_Window *window;
+  SDL_Window *window = NULL;
+  GLuint program = 0;
 };
 
 #endif // BLOCKCILLIN_GAME_H_

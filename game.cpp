@@ -11,7 +11,12 @@ const int kWindowHeight = 480;
 const int kWindowFlags = SDL_WINDOW_OPENGL;
 
 int Game::Run() {
-  int result = Init();
+  int result = InitWindow();
+  if (result != 0) {
+    return result;
+  }
+
+  result = InitGL();
   if (result != 0) {
     return result;
   }
@@ -21,7 +26,7 @@ int Game::Run() {
   return 0;
 }
 
-int Game::Init() {
+int Game::InitWindow() {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     LogSDLError("SDL_Init");
     return 1;
@@ -54,11 +59,22 @@ int Game::Init() {
     return 1;
   }
 
+  return 0;
+}
+
+int Game::InitGL() {
   SDL_GLContext context = SDL_GL_CreateContext(window);
   if (context == NULL) {
     LogSDLError("SDL_GL_CreateContext");
     return 1;
   }
+
+  GLenum error = glewInit();
+  if (error != GLEW_OK) {
+    LogGLEWError("glewInit", error);
+  }
+
+  program = glCreateProgram();
 
   return 0;
 }
@@ -76,17 +92,25 @@ void Game::Loop() {
       }
     }
 
-    glClearColor(1, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    Render();
     SDL_GL_SwapWindow(window);
   }
 }
 
+void Game::Render() {
+  glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void Game::Quit() {
+  glDeleteProgram(program);
   SDL_DestroyWindow(window);
   SDL_Quit();
 }
 
-void Game::LogSDLError(const std::string &message) {
-  std::cerr << message << " error: " << SDL_GetError() << std::endl;
+void Game::LogSDLError(const std::string &tag) {
+  std::cerr << tag << " error: " << SDL_GetError() << std::endl;
+}
+
+void Game::LogGLEWError(const std::string &tag, GLenum error) {
+  std::cerr << tag << " error: " << glewGetErrorString(error) << std::endl;
 }
