@@ -1,5 +1,19 @@
-SRC_DIR = src
+EXE = blockcillin
+TEST_EXE = blockcillin_tests
 OUT_DIR = out
+
+all: $(EXE)
+
+run: $(EXE)
+	./$(EXE)
+
+test: $(TEST_EXE)
+	./$(TEST_EXE)
+
+clean:
+	rm -rf $(EXE) $(TEST_EXE) $(OUT_DIR)
+
+SRC_DIR = src
 GTEST_DIR = gtest-1.7.0
 
 CXX = clang++
@@ -16,11 +30,6 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
                 $(GTEST_DIR)/include/gtest/internal/*.h
 GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 GTEST_OBJS = $(addprefix $(OUT_DIR)/,gtest-all.o gtest_main.o gtest_main.a)
-
-EXE = blockcillin
-TEST_EXE = blockcillin_tests
-
-all: $(EXE)
 
 $(EXE): $(OBJS)
 	$(CXX) $(LDFLAGS) $^ -o $@
@@ -49,12 +58,3 @@ $(OUT_DIR)/gtest%.o: $(GTEST_SRCS_)
 
 $(OUT_DIR)/gtest_main.a: $(OUT_DIR)/gtest-all.o $(OUT_DIR)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
-
-run: $(EXE)
-	./$(EXE)
-
-test: $(TEST_EXE)
-	./$(TEST_EXE)
-
-clean:
-	rm -rf $(OUT_DIR) $(EXE) $(TEST_EXE)
