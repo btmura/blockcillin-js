@@ -6,7 +6,7 @@ CXX = clang++
 CXXFLAGS = -std=c++11 -Wall -c
 LDFLAGS = -lSDL2 -lGLEW -lGLU -lGL
 
-OBJS = $(addprefix $(OUT_DIR)/,main.o game.o)
+OBJS = $(addprefix $(OUT_DIR)/,main.o game.o shader.o)
 TESTS = shader_unittest
 
 all: $(EXE)
@@ -60,12 +60,9 @@ $(OUT_DIR)/gtest.a: $(OUT_DIR)/gtest-all.o
 $(OUT_DIR)/gtest_main.a: $(OUT_DIR)/gtest-all.o $(OUT_DIR)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-shader.o: $(SRC_DIR)/shader.cc $(SRC_DIR)/shader.h $(GTEST_HEADERS)
-	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -c $(SRC_DIR)/shader.cc
-
 shader_unittest.o: $(SRC_DIR)/shader_unittest.cc \
                      $(SRC_DIR)/shader.h $(GTEST_HEADERS)
 	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -c $(SRC_DIR)/shader_unittest.cc
 
-shader_unittest: shader.o shader_unittest.o $(OUT_DIR)/gtest_main.a
+shader_unittest: $(OUT_DIR)/shader.o shader_unittest.o $(OUT_DIR)/gtest_main.a
 	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -lpthread $^ -o $@
