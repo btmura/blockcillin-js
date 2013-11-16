@@ -25,10 +25,6 @@ GTEST_CXXFLAGS += -g -Wall -pthread
 
 OBJS = $(addprefix $(OUT_DIR)/,main.o game.o shader.o)
 TEST_OBJS = $(addprefix $(OUT_DIR)/,shader_unittest.o)
-
-GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
-                $(GTEST_DIR)/include/gtest/internal/*.h
-GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 GTEST_OBJS = $(addprefix $(OUT_DIR)/,gtest-all.o gtest_main.o gtest_main.a)
 
 $(EXE): $(OBJS)
@@ -49,6 +45,9 @@ $(OUT_DIR)/%.o: $(SRC_DIR)/%.cc $(SRC_DIR)/%.h
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.cc
 	$(CXX) $(CXXFLAGS) $< -o $@
+
+GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h $(GTEST_DIR)/include/gtest/internal/*.h
+GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 
 $(OUT_DIR)/%_unittest.o: $(SRC_DIR)/%_unittest.cc $(GTEST_HEADERS)
 	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -c $< -o $@
