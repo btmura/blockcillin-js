@@ -1,4 +1,6 @@
 EXE = blockcillin
+TEST_EXE = blockcillin_tests
+
 SRC_DIR = src
 OUT_DIR = out
 
@@ -7,7 +9,7 @@ CXXFLAGS = -std=c++11 -Wall -c
 LDFLAGS = -lSDL2 -lGLEW -lGLU -lGL
 
 OBJS = $(addprefix $(OUT_DIR)/,main.o game.o shader.o)
-TESTS = shader_unittest
+TEST_OBJS = $(addprefix $(OUT_DIR)/,shader_unittest.o)
 
 all: $(EXE)
 
@@ -15,6 +17,7 @@ $(EXE): $(OBJS)
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 $(OBJS): | $(OUT_DIR)
+$(TEST_OBJS): | $(OUT_DIR)
 
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.cc $(SRC_DIR)/%.h
 	$(CXX) $(CXXFLAGS) $< -o $@
@@ -25,15 +28,14 @@ $(OUT_DIR)/%.o: $(SRC_DIR)/%.cc
 $(OUT_DIR):
 	mkdir -p $(OUT_DIR)
 
-run:
+run: $(EXE)
 	./$(EXE)
 
-test: $(TESTS)
-	$(foreach test,$(TESTS),./$(test);)
+test: $(TEST_EXE)
+	./$(TEST_EXE)
 
 clean:
-	rm -rf $(OUT_DIR) $(EXE)
-	rm -rf $(TESTS) gtest.a gtest_main.a *.o
+	rm -rf $(OUT_DIR) $(EXE) $(TEST_EXE)
 
 GTEST_DIR = gtest-1.7.0
 GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
@@ -60,9 +62,8 @@ $(OUT_DIR)/gtest.a: $(OUT_DIR)/gtest-all.o
 $(OUT_DIR)/gtest_main.a: $(OUT_DIR)/gtest-all.o $(OUT_DIR)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-shader_unittest.o: $(SRC_DIR)/shader_unittest.cc \
-                     $(SRC_DIR)/shader.h $(GTEST_HEADERS)
-	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -c $(SRC_DIR)/shader_unittest.cc
+$(OUT_DIR)/%_unittest.o: $(SRC_DIR)/%_unittest.cc $(GTEST_HEADERS)
+	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -c $< -o $@
 
-shader_unittest: $(OUT_DIR)/shader.o shader_unittest.o $(OUT_DIR)/gtest_main.a
+$(TEST_EXE): $(TEST_OBJS) $(OUT_DIR)/gtest_main.a
 	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -lpthread $^ -o $@
