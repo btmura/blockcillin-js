@@ -55,7 +55,7 @@ bool Game::InitWindow() {
     kWindowWidth,
     kWindowHeight,
     kWindowFlags);
-  if (window_ == NULL) {
+  if (window_ == nullptr) {
     Log::ErrorSDL("SDL_CreateWindow");
     return false;
   }
@@ -65,7 +65,7 @@ bool Game::InitWindow() {
 
 bool Game::InitGL() {
   SDL_GLContext context = SDL_GL_CreateContext(window_);
-  if (context == NULL) {
+  if (context == nullptr) {
     Log::ErrorSDL("SDL_GL_CreateContext");
     return false;
   }

@@ -16,7 +16,7 @@ class Game {
   void Render();
   void Quit();
 
-  SDL_Window *window_ = NULL;
+  SDL_Window *window_ = nullptr;
   GLuint program_ = 0;
 };
 
