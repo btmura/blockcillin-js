@@ -1,8 +1,7 @@
 #ifndef BLOCKCILLIN_GAME_H_
 #define BLOCKCILLIN_GAME_H_
 
-#include <iostream>
-
+#include <string>
 #include "GL/glew.h"
 #include "SDL2/SDL.h"
 
