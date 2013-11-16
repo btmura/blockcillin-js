@@ -9,7 +9,7 @@ LDFLAGS = -lSDL2 -lGLEW -lGLU -lGL
 GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
                 $(GTEST_DIR)/include/gtest/internal/*.h
 GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
-GTEST_OUTS = $(addprefix $(OUT_DIR)/,gtest-all.o gtest_main.o gtest.a gtest_main.a)
+GTEST_OUTS = $(addprefix $(OUT_DIR)/,gtest-all.o gtest_main.o gtest_main.a)
 
 GTEST_CPPFLAGS += -isystem $(GTEST_DIR)/include
 GTEST_CXXFLAGS += -g -Wall -Wextra -pthread
@@ -60,9 +60,6 @@ $(OUT_DIR)/gtest-all.o: $(GTEST_SRCS_)
 $(OUT_DIR)/gtest_main.o: $(GTEST_SRCS_)
 	$(CXX) $(GTEST_CPPFLAGS) -I$(GTEST_DIR) $(GTEST_CXXFLAGS) -c \
             $(GTEST_DIR)/src/gtest_main.cc -o $@
-
-$(OUT_DIR)/gtest.a: $(OUT_DIR)/gtest-all.o
-	$(AR) $(ARFLAGS) $@ $^
 
 $(OUT_DIR)/gtest_main.a: $(OUT_DIR)/gtest-all.o $(OUT_DIR)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
