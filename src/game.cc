@@ -3,6 +3,7 @@
 #include "GL/glew.h"
 #include "SDL2/SDL.h"
 
+#include "log.h"
 #include "game.h"
 
 const std::string kWindowTitle = "blockcillin";
@@ -28,22 +29,22 @@ int Game::Run() {
 
 bool Game::InitWindow() {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-    LogSDLError("SDL_Init");
+    Log::ErrorSDL("SDL_Init");
     return false;
   }
 
   if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3) != 0) {
-    LogSDLError("SDL_GL_SetAttribute");
+    Log::ErrorSDL("SDL_GL_SetAttribute");
     return false;
   }
 
   if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1) != 0) {
-    LogSDLError("SDL_GL_SetAttribute");
+    Log::ErrorSDL("SDL_GL_SetAttribute");
     return false;
   }
 
   if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE) != 0) {
-    LogSDLError("SDL_GL_SetAttribute");
+    Log::ErrorSDL("SDL_GL_SetAttribute");
     return false;
   }
 
@@ -55,7 +56,7 @@ bool Game::InitWindow() {
     kWindowHeight,
     kWindowFlags);
   if (window_ == NULL) {
-    LogSDLError("SDL_CreateWindow");
+    Log::ErrorSDL("SDL_CreateWindow");
     return false;
   }
 
@@ -65,25 +66,25 @@ bool Game::InitWindow() {
 bool Game::InitGL() {
   SDL_GLContext context = SDL_GL_CreateContext(window_);
   if (context == NULL) {
-    LogSDLError("SDL_GL_CreateContext");
+    Log::ErrorSDL("SDL_GL_CreateContext");
     return false;
   }
 
   GLenum error = glewInit();
   if (error != GLEW_OK) {
-    LogGLEWError("glewInit", error);
+    Log::ErrorGLEW("glewInit", error);
     return false;
   }
 
   program_ = glCreateProgram();
   if (program_ == 0) {
-    LogGLError("glCreateProgram", program_);
+    Log::ErrorGL("glCreateProgram", program_);
     return false;
   }
 
   GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
   if (vertex_shader == 0) {
-    LogGLError("glCreateShader", vertex_shader);
+    Log::ErrorGL("glCreateShader", vertex_shader);
     return false;
   }
 
@@ -116,16 +117,4 @@ void Game::Quit() {
   glDeleteProgram(program_);
   SDL_DestroyWindow(window_);
   SDL_Quit();
-}
-
-void Game::LogSDLError(const std::string &tag) {
-  std::cerr << tag << " error: " << SDL_GetError() << std::endl;
-}
-
-void Game::LogGLEWError(const std::string &tag, GLenum error) {
-  std::cerr << tag << " error: " << glewGetErrorString(error) << std::endl;
-}
-
-void Game::LogGLError(const std::string &tag, GLuint error) {
-  std::cerr << tag << " error: " << error << std::endl;
 }

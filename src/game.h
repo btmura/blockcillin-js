@@ -16,10 +16,6 @@ class Game {
   void Render();
   void Quit();
 
-  static void LogSDLError(const std::string &tag);
-  static void LogGLEWError(const std::string &tag, const GLenum error);
-  static void LogGLError(const std::string &tag, const GLuint error);
-
   SDL_Window *window_ = NULL;
   GLuint program_ = 0;
 };

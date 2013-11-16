@@ -1,0 +1,14 @@
+#ifndef BLOCKCILLIN_LOG_H_
+#define BLOCKCILLIN_LOG_H_
+
+#include <string>
+#include "GL/glew.h"
+
+class Log {
+ public:
+  static void ErrorSDL(const std::string &tag);
+  static void ErrorGLEW(const std::string &tag, const GLenum error);
+  static void ErrorGL(const std::string &tag, const GLuint error);
+};
+
+#endif // BLOCKCILLIN_LOG_H_

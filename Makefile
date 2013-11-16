@@ -23,7 +23,7 @@ LDFLAGS = -lSDL2 -lGLEW -lGLU -lGL
 GTEST_CPPFLAGS += -isystem $(GTEST_DIR)/include
 GTEST_CXXFLAGS += -g -Wall -pthread
 
-OBJS = $(addprefix $(OUT_DIR)/,main.o game.o shader.o)
+OBJS = $(addprefix $(OUT_DIR)/,game.o log.o main.o shader.o)
 TEST_OBJS = $(addprefix $(OUT_DIR)/,shader_unittest.o)
 GTEST_OBJS = $(addprefix $(OUT_DIR)/,gtest-all.o gtest_main.o gtest_main.a)
 
