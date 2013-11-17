@@ -5,6 +5,10 @@
 
 #include "log.h"
 
+void Log::Error(const std::string &message) {
+  std::cerr << message << std::endl;
+}
+
 void Log::ErrorSDL(const std::string &tag) {
   std::cerr << tag << " error: " << SDL_GetError() << std::endl;
 }

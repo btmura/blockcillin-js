@@ -1,4 +1,7 @@
+#include <fstream>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 #include "GL/glew.h"
 #include "SDL2/SDL.h"
@@ -63,6 +66,45 @@ bool Game::InitWindow() {
   return true;
 }
 
+bool GetFileContents(const std::string &path, std::string *contents) {
+  std::ifstream in(path, std::ifstream::in);
+  if (in.is_open()) {
+    std::stringstream buffer;
+    buffer << in.rdbuf();
+    *contents = buffer.str();
+    in.close();
+    return true;
+  }
+  return false;
+}
+
+GLuint CreateShader(const GLenum type, const std::string &path) {
+  GLuint shader = glCreateShader(type);
+  if (shader == 0) {
+    Log::ErrorGL("glCreateShader", shader);
+    return 0;
+  }
+
+  std::string source;
+  if (!GetFileContents(path, &source)) {
+    Log::Error("GetFileContents");
+    return 0;
+  }
+
+  const GLchar* sources[] = {source.c_str()};
+  glShaderSource(shader, 1, sources, nullptr);
+  glCompileShader(shader);
+
+  GLint success = GL_TRUE;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+  if (success != GL_TRUE) {
+    Log::Error("compiling shader failed");
+    return 0;
+  }
+
+  return shader;
+}
+
 bool Game::InitGL() {
   SDL_GLContext context = SDL_GL_CreateContext(window_);
   if (context == nullptr) {
@@ -82,9 +124,26 @@ bool Game::InitGL() {
     return false;
   }
 
-  GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+  GLuint vertex_shader = CreateShader(GL_VERTEX_SHADER, "data/vertex-shader.txt");
   if (vertex_shader == 0) {
-    Log::ErrorGL("glCreateShader", vertex_shader);
+    Log::Error("error creating vertex shader");
+    return false;
+  }
+
+  GLuint fragment_shader = CreateShader(GL_FRAGMENT_SHADER, "data/fragment-shader.txt");
+  if (fragment_shader == 0) {
+    Log::Error("error creating fragment shader");
+    return false;
+  }
+
+  glAttachShader(program_, vertex_shader);
+  glAttachShader(program_, fragment_shader);
+  glLinkProgram(program_);
+
+  GLint success = GL_TRUE;
+  glGetProgramiv(program_, GL_LINK_STATUS, &success);
+  if (success != GL_TRUE) {
+    Log::Error("error linking program");
     return false;
   }
 

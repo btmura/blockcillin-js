@@ -6,6 +6,7 @@
 
 class Log {
  public:
+  static void Error(const std::string &message);
   static void ErrorSDL(const std::string &tag);
   static void ErrorGLEW(const std::string &tag, const GLenum error);
   static void ErrorGL(const std::string &tag, const GLuint error);
