@@ -1,6 +1,6 @@
-EXE = blockcillin
-TEST_EXE = blockcillin_tests
 OUT_DIR = out
+EXE = $(OUT_DIR)/blockcillin
+TEST_EXE = $(OUT_DIR)/blockcillin-tests
 
 all: $(EXE)
 
@@ -11,7 +11,7 @@ test: $(TEST_EXE)
 	./$(TEST_EXE)
 
 clean:
-	rm -rf $(EXE) $(TEST_EXE) $(OUT_DIR)
+	rm -rf $(OUT_DIR)
 
 SRC_DIR = src
 GTEST_DIR = gtest-1.7.0
