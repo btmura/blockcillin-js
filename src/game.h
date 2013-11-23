@@ -18,6 +18,9 @@ class Game {
 
   SDL_Window *window_ = nullptr;
   GLuint program_ = 0;
+  GLuint vbo_ = 0;
+  GLuint ibo_ = 0;
+  GLint position_ = 0;
 };
 
 #endif // BLOCKCILLIN_GAME_H_

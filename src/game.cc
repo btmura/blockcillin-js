@@ -12,8 +12,8 @@
 const std::string kWindowTitle = "blockcillin";
 const int kWindowX = SDL_WINDOWPOS_UNDEFINED;
 const int kWindowY = SDL_WINDOWPOS_UNDEFINED;
-const int kWindowWidth = 640;
-const int kWindowHeight = 480;
+const int kWindowWidth = 1024;
+const int kWindowHeight = 768;
 const int kWindowFlags = SDL_WINDOW_OPENGL;
 
 int Game::Run() {
@@ -33,21 +33,6 @@ int Game::Run() {
 bool Game::InitWindow() {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     Log::ErrorSDL("SDL_Init");
-    return false;
-  }
-
-  if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3) != 0) {
-    Log::ErrorSDL("SDL_GL_SetAttribute");
-    return false;
-  }
-
-  if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1) != 0) {
-    Log::ErrorSDL("SDL_GL_SetAttribute");
-    return false;
-  }
-
-  if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE) != 0) {
-    Log::ErrorSDL("SDL_GL_SetAttribute");
     return false;
   }
 
@@ -98,7 +83,14 @@ GLuint CreateShader(const GLenum type, const std::string &path) {
   GLint success = GL_TRUE;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
   if (success != GL_TRUE) {
-    Log::Error("compiling shader failed");
+    GLint info_log_length;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
+
+    GLchar *info_log = new GLchar[info_log_length];
+    glGetShaderInfoLog(shader, info_log_length, nullptr, info_log);
+
+    std::cerr << "error: " << type << " -> " << info_log << std::endl;
+    delete[] info_log;
     return 0;
   }
 
@@ -111,6 +103,12 @@ bool Game::InitGL() {
     Log::ErrorSDL("SDL_GL_CreateContext");
     return false;
   }
+
+  const GLubyte* gl_version = glGetString(GL_VERSION);
+  std::cerr << "GL_VERSION: " << gl_version << std::endl;
+
+  const GLubyte* gl_shading_language_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
+  std::cerr << "GL_SHADING_LANGUAGE_VERSION: " << gl_shading_language_version << std::endl;
 
   GLenum error = glewInit();
   if (error != GLEW_OK) {
@@ -147,6 +145,32 @@ bool Game::InitGL() {
     return false;
   }
 
+  glDeleteShader(vertex_shader);
+  glDeleteShader(fragment_shader);
+
+  position_ = glGetAttribLocation(program_, "position");
+  if (position_ == -1) {
+    Log::Error("glGetAttribLocation");
+    return false;
+  }
+
+  const GLfloat vertex_data[] = {
+    -0.5f, -0.5f,
+    0.5f, -0.5f,
+    0.5f,  0.5f,
+    -0.5f,  0.5f
+  };
+
+  const GLuint index_data[] = {0, 1, 2, 3};
+
+  glGenBuffers(1, &vbo_);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
+
+  glGenBuffers(1, &ibo_);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index_data), index_data, GL_STATIC_DRAW);
+
   return true;
 }
 
@@ -169,7 +193,22 @@ void Game::Loop() {
 }
 
 void Game::Render() {
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
+
+  glUseProgram(program_);
+
+  glEnableVertexAttribArray(position_);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+  glVertexAttribPointer(position_, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_);
+  glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, nullptr);
+
+  glDisableVertexAttribArray(position_);
+
+  glUseProgram(0);
 }
 
 void Game::Quit() {
