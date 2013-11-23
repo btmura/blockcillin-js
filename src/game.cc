@@ -6,8 +6,9 @@
 #include "GL/glew.h"
 #include "SDL2/SDL.h"
 
-#include "log.h"
+#include "file.h"
 #include "game.h"
+#include "log.h"
 
 const std::string kWindowTitle = "blockcillin";
 const int kWindowX = SDL_WINDOWPOS_UNDEFINED;
@@ -51,18 +52,6 @@ bool Game::InitWindow() {
   return true;
 }
 
-bool GetFileContents(const std::string &path, std::string *contents) {
-  std::ifstream in(path, std::ifstream::in);
-  if (in.is_open()) {
-    std::stringstream buffer;
-    buffer << in.rdbuf();
-    *contents = buffer.str();
-    in.close();
-    return true;
-  }
-  return false;
-}
-
 GLuint CreateShader(const GLenum type, const std::string &path) {
   GLuint shader = glCreateShader(type);
   if (shader == 0) {
@@ -71,7 +60,7 @@ GLuint CreateShader(const GLenum type, const std::string &path) {
   }
 
   std::string source;
-  if (!GetFileContents(path, &source)) {
+  if (!File::GetFileContents(path, &source)) {
     Log::Error("GetFileContents");
     return 0;
   }
