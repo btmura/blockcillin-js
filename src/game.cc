@@ -10,6 +10,8 @@
 #include "game.h"
 #include "log.h"
 
+const std::string kTag = "game";
+
 const std::string kWindowTitle = "blockcillin";
 const int kWindowX = SDL_WINDOWPOS_UNDEFINED;
 const int kWindowY = SDL_WINDOWPOS_UNDEFINED;
@@ -94,10 +96,10 @@ bool Game::InitGL() {
   }
 
   const GLubyte* gl_version = glGetString(GL_VERSION);
-  std::cerr << "GL_VERSION: " << gl_version << std::endl;
+  Log::Info(kTag, "GL_VERSION: %s", gl_version);
 
-  const GLubyte* gl_shading_language_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
-  std::cerr << "GL_SHADING_LANGUAGE_VERSION: " << gl_shading_language_version << std::endl;
+  const GLubyte* glsl_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
+  Log::Info(kTag, "GL_SHADING_LANGUAGE_VERSION: %s", glsl_version);
 
   GLenum error = glewInit();
   if (error != GLEW_OK) {
