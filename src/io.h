@@ -1,11 +1,11 @@
-#ifndef BLOCKCILLIN_FILE_H_
-#define BLOCKCILLIN_FILE_H_
+#ifndef BLOCKCILLIN_IO_H_
+#define BLOCKCILLIN_IO_H_
 
 #include <string>
 
-class File {
+class IO {
  public:
   static bool ReadFile(const std::string &path, std::string *contents);
 };
 
-#endif // BLOCKCILLIN_FILE_H_
+#endif // BLOCKCILLIN_IO_H_

@@ -6,8 +6,8 @@
 #include "GL/glew.h"
 #include "SDL2/SDL.h"
 
-#include "file.h"
 #include "game.h"
+#include "io.h"
 #include "log.h"
 
 const std::string kWindowTitle = "blockcillin";
@@ -62,8 +62,8 @@ GLuint Game::CreateShader(const GLenum type, const std::string &path) {
   }
 
   std::string source;
-  if (!File::ReadFile(path, &source)) {
-    log.Errorf("ReadFile on %s failed", path);
+  if (!IO::ReadFile(path, &source)) {
+    log.Errorf("ReadFile on %s failed", path.c_str());
     return 0;
   }
 

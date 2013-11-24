@@ -2,9 +2,9 @@
 #include <sstream>
 #include <string>
 
-#include "file.h"
+#include "io.h"
 
-bool File::ReadFile(const std::string &path, std::string *contents) {
+bool IO::ReadFile(const std::string &path, std::string *contents) {
   std::ifstream in(path, std::ifstream::in);
   if (in.is_open()) {
     std::stringstream buffer;
