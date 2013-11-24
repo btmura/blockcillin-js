@@ -10,8 +10,6 @@
 #include "game.h"
 #include "log.h"
 
-const std::string kTag = "game";
-
 const std::string kWindowTitle = "blockcillin";
 const int kWindowX = SDL_WINDOWPOS_UNDEFINED;
 const int kWindowY = SDL_WINDOWPOS_UNDEFINED;
@@ -37,7 +35,7 @@ int Game::Run() {
 
 bool Game::InitWindow() {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-    Log::ErrorSDL("SDL_Init");
+    log.ErrorSDL("SDL_Init");
     return false;
   }
 
@@ -49,7 +47,7 @@ bool Game::InitWindow() {
     kWindowHeight,
     kWindowFlags);
   if (window_ == nullptr) {
-    Log::ErrorSDL("SDL_CreateWindow");
+    log.ErrorSDL("SDL_CreateWindow");
     return false;
   }
 
@@ -59,13 +57,13 @@ bool Game::InitWindow() {
 GLuint Game::CreateShader(const GLenum type, const std::string &path) {
   GLuint shader = glCreateShader(type);
   if (shader == 0) {
-    Log::ErrorGL("glCreateShader", shader);
+    log.Errorf("glCreateShader for type %d failed", type);
     return 0;
   }
 
   std::string source;
   if (!File::GetFileContents(path, &source)) {
-    log.Error("GetFileContents");
+    log.Errorf("GetFileContents");
     return 0;
   }
 
@@ -82,7 +80,7 @@ GLuint Game::CreateShader(const GLenum type, const std::string &path) {
     GLchar *info_log = new GLchar[info_log_length];
     glGetShaderInfoLog(shader, info_log_length, nullptr, info_log);
 
-    std::cerr << "error: " << type << " -> " << info_log << std::endl;
+    std::cerr << "errorf: " << type << " -> " << info_log << std::endl;
     delete[] info_log;
     return 0;
   }
@@ -93,37 +91,37 @@ GLuint Game::CreateShader(const GLenum type, const std::string &path) {
 bool Game::InitGL() {
   SDL_GLContext context = SDL_GL_CreateContext(window_);
   if (context == nullptr) {
-    Log::ErrorSDL("SDL_GL_CreateContext");
+    log.ErrorSDL("SDL_GL_CreateContext");
     return false;
   }
 
   const GLubyte* gl_version = glGetString(GL_VERSION);
-  log.Info("GL_VERSION: %s", gl_version);
+  log.Infof("GL_VERSION: %s", gl_version);
 
   const GLubyte* glsl_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
-  log.Info("GL_SHADING_LANGUAGE_VERSION: %s", glsl_version);
+  log.Infof("GL_SHADING_LANGUAGE_VERSION: %s", glsl_version);
 
   GLenum error = glewInit();
   if (error != GLEW_OK) {
-    Log::ErrorGLEW("glewInit", error);
+    log.ErrorGLEW("glewInit", error);
     return false;
   }
 
   program_ = glCreateProgram();
   if (program_ == 0) {
-    Log::ErrorGL("glCreateProgram", program_);
+    log.Errorf("glCreateProgram failed");
     return false;
   }
 
   GLuint vertex_shader = CreateShader(GL_VERTEX_SHADER, "data/vertex-shader.txt");
   if (vertex_shader == 0) {
-    log.Error("error creating vertex shader");
+    log.Errorf("CreateShader for GL_VERTEX_SHADER failed");
     return false;
   }
 
   GLuint fragment_shader = CreateShader(GL_FRAGMENT_SHADER, "data/fragment-shader.txt");
   if (fragment_shader == 0) {
-    log.Error("error creating fragment shader");
+    log.Errorf("CreateShader for GL_FRAGMENT_SHADER failed");
     return false;
   }
 
@@ -134,7 +132,7 @@ bool Game::InitGL() {
   GLint success = GL_TRUE;
   glGetProgramiv(program_, GL_LINK_STATUS, &success);
   if (success != GL_TRUE) {
-    log.Error("error linking program");
+    log.Errorf("glLinkProgram failed");
     return false;
   }
 
@@ -143,7 +141,7 @@ bool Game::InitGL() {
 
   position_ = glGetAttribLocation(program_, "position");
   if (position_ == -1) {
-    log.Error("glGetAttribLocation");
+    log.Errorf("glGetAttribLocation failed");
     return false;
   }
 
