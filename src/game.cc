@@ -56,7 +56,7 @@ bool Game::InitWindow() {
   return true;
 }
 
-GLuint CreateShader(const GLenum type, const std::string &path) {
+GLuint Game::CreateShader(const GLenum type, const std::string &path) {
   GLuint shader = glCreateShader(type);
   if (shader == 0) {
     Log::ErrorGL("glCreateShader", shader);
@@ -65,7 +65,7 @@ GLuint CreateShader(const GLenum type, const std::string &path) {
 
   std::string source;
   if (!File::GetFileContents(path, &source)) {
-    Log::Error(kTag, "GetFileContents");
+    log.Error("GetFileContents");
     return 0;
   }
 
@@ -117,13 +117,13 @@ bool Game::InitGL() {
 
   GLuint vertex_shader = CreateShader(GL_VERTEX_SHADER, "data/vertex-shader.txt");
   if (vertex_shader == 0) {
-    Log::Error(kTag, "error creating vertex shader");
+    log.Error("error creating vertex shader");
     return false;
   }
 
   GLuint fragment_shader = CreateShader(GL_FRAGMENT_SHADER, "data/fragment-shader.txt");
   if (fragment_shader == 0) {
-    Log::Error(kTag, "error creating fragment shader");
+    log.Error("error creating fragment shader");
     return false;
   }
 
@@ -134,7 +134,7 @@ bool Game::InitGL() {
   GLint success = GL_TRUE;
   glGetProgramiv(program_, GL_LINK_STATUS, &success);
   if (success != GL_TRUE) {
-    Log::Error(kTag, "error linking program");
+    log.Error("error linking program");
     return false;
   }
 
@@ -143,7 +143,7 @@ bool Game::InitGL() {
 
   position_ = glGetAttribLocation(program_, "position");
   if (position_ == -1) {
-    Log::Error(kTag, "glGetAttribLocation");
+    log.Error("glGetAttribLocation");
     return false;
   }
 

@@ -9,7 +9,7 @@ class Log {
   Log(const std::string &tag);
 
   void Info(const char* format, ...) const;
-  static void Error(const std::string &tag, const char* format, ...);
+  void Error(const char* format, ...) const;
 
   static void ErrorSDL(const std::string &tag);
   static void ErrorGLEW(const std::string &tag, const GLenum error);

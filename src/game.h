@@ -19,6 +19,8 @@ class Game {
   void Render();
   void Quit();
 
+  GLuint CreateShader(const GLenum type, const std::string &path);
+
   SDL_Window *window_ = nullptr;
   GLuint program_ = 0;
   GLuint vbo_ = 0;

@@ -23,10 +23,10 @@ void Log::Info(const char* format, ...) const {
   va_end(args);
 }
 
-void Log::Error(const std::string &tag, const char* format, ...) {
+void Log::Error(const char* format, ...) const {
   va_list args;
   va_start(args, format);
-  log(tag, format, args);
+  log(tag_, format, args);
   va_end(args);
 }
 
