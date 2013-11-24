@@ -1,4 +1,2 @@
-*.o
-*unittest
-blockcillin*
 gtest*
+out*
