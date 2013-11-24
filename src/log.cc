@@ -7,19 +7,24 @@
 
 #include "log.h"
 
-void Log::Info(const std::string &tag, const char* format, ...) {
+void log(const std::string &tag, const char* format, va_list args) {
   fprintf(stderr, "%s: ", tag.c_str());
-
-  va_list args;
-  va_start(args, format);
   vfprintf(stderr, format, args);
-  va_end(args);
-
   fprintf(stderr, "\n");
 }
 
-void Log::Error(const std::string &message) {
-  std::cerr << message << std::endl;
+void Log::Info(const std::string &tag, const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  log(tag, format, args);
+  va_end(args);
+}
+
+void Log::Error(const std::string &tag, const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  log(tag, format, args);
+  va_end(args);
 }
 
 void Log::ErrorSDL(const std::string &tag) {
