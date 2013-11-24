@@ -4,7 +4,7 @@
 
 #include "file.h"
 
-bool File::GetFileContents(const std::string &path, std::string *contents) {
+bool File::ReadFile(const std::string &path, std::string *contents) {
   std::ifstream in(path, std::ifstream::in);
   if (in.is_open()) {
     std::stringstream buffer;

@@ -62,8 +62,8 @@ GLuint Game::CreateShader(const GLenum type, const std::string &path) {
   }
 
   std::string source;
-  if (!File::GetFileContents(path, &source)) {
-    log.Errorf("GetFileContents");
+  if (!File::ReadFile(path, &source)) {
+    log.Errorf("ReadFile on %s failed", path);
     return 0;
   }
 
