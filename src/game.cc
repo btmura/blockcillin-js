@@ -79,9 +79,9 @@ GLuint Game::CreateShader(const GLenum type, const std::string &path) {
 
     GLchar *info_log = new GLchar[info_log_length];
     glGetShaderInfoLog(shader, info_log_length, nullptr, info_log);
-
-    std::cerr << "errorf: " << type << " -> " << info_log << std::endl;
+    log.Errorf("glCompileShader for type %d failed: %s", type, info_log);
     delete[] info_log;
+
     return 0;
   }
 
