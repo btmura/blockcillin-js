@@ -7,16 +7,19 @@
 
 #include "log.h"
 
+Log::Log(const std::string &tag) : tag_(tag) {
+}
+
 void log(const std::string &tag, const char* format, va_list args) {
   fprintf(stderr, "%s: ", tag.c_str());
   vfprintf(stderr, format, args);
   fprintf(stderr, "\n");
 }
 
-void Log::Info(const std::string &tag, const char* format, ...) {
+void Log::Info(const char* format, ...) const {
   va_list args;
   va_start(args, format);
-  log(tag, format, args);
+  log(tag_, format, args);
   va_end(args);
 }
 

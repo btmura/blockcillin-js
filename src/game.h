@@ -4,11 +4,15 @@
 #include "GL/glew.h"
 #include "SDL2/SDL.h"
 
+#include "log.h"
+
 class Game {
  public:
   int Run();
 
  private:
+  static const Log log;
+
   bool InitWindow();
   bool InitGL();
   void Loop();

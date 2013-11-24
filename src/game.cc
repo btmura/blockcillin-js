@@ -19,6 +19,8 @@ const int kWindowWidth = 1024;
 const int kWindowHeight = 768;
 const int kWindowFlags = SDL_WINDOW_OPENGL;
 
+const Log Game::log("game");
+
 int Game::Run() {
   if (!InitWindow()) {
     return 1;
@@ -96,10 +98,10 @@ bool Game::InitGL() {
   }
 
   const GLubyte* gl_version = glGetString(GL_VERSION);
-  Log::Info(kTag, "GL_VERSION: %s", gl_version);
+  log.Info("GL_VERSION: %s", gl_version);
 
   const GLubyte* glsl_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
-  Log::Info(kTag, "GL_SHADING_LANGUAGE_VERSION: %s", glsl_version);
+  log.Info("GL_SHADING_LANGUAGE_VERSION: %s", glsl_version);
 
   GLenum error = glewInit();
   if (error != GLEW_OK) {
