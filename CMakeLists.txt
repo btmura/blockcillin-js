@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.6)
-
+cmake_minimum_required(VERSION 2.6.4)
 project(blockcillin)
-
+enable_testing()
 add_subdirectory(src)
+add_subdirectory(gtest-1.7.0)
