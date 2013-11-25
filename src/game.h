@@ -11,15 +11,13 @@ class Game {
   int Run();
 
  private:
-  static const Log log;
-
   bool InitWindow();
   bool InitGL();
   void Loop();
   void Render();
   void Quit();
 
-  GLuint CreateShader(const GLenum type, const std::string &path);
+  static const Log log;
 
   SDL_Window *window_ = nullptr;
   GLuint program_ = 0;

@@ -7,7 +7,7 @@
 #include "SDL2/SDL.h"
 
 #include "game.h"
-#include "io.h"
+#include "glutil.h"
 #include "log.h"
 
 const std::string kWindowTitle = "blockcillin";
@@ -54,40 +54,6 @@ bool Game::InitWindow() {
   return true;
 }
 
-GLuint Game::CreateShader(const GLenum type, const std::string &path) {
-  GLuint shader = glCreateShader(type);
-  if (shader == 0) {
-    log.Errorf("glCreateShader for type %d failed", type);
-    return 0;
-  }
-
-  std::string source;
-  if (!IO::ReadFile(path, &source)) {
-    log.Errorf("ReadFile on %s failed", path.c_str());
-    return 0;
-  }
-
-  const GLchar* sources[] = {source.c_str()};
-  glShaderSource(shader, 1, sources, nullptr);
-  glCompileShader(shader);
-
-  GLint success = GL_TRUE;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-  if (success != GL_TRUE) {
-    GLint info_log_length;
-    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
-
-    GLchar *info_log = new GLchar[info_log_length];
-    glGetShaderInfoLog(shader, info_log_length, nullptr, info_log);
-    log.Errorf("glCompileShader for type %d failed: %s", type, info_log);
-    delete[] info_log;
-
-    return 0;
-  }
-
-  return shader;
-}
-
 bool Game::InitGL() {
   SDL_GLContext context = SDL_GL_CreateContext(window_);
   if (context == nullptr) {
@@ -113,13 +79,13 @@ bool Game::InitGL() {
     return false;
   }
 
-  GLuint vertex_shader = CreateShader(GL_VERTEX_SHADER, "data/vertex-shader.txt");
+  GLuint vertex_shader = GLUtil::CreateShader(GL_VERTEX_SHADER, "data/vertex-shader.txt");
   if (vertex_shader == 0) {
     log.Errorf("CreateShader for GL_VERTEX_SHADER failed");
     return false;
   }
 
-  GLuint fragment_shader = CreateShader(GL_FRAGMENT_SHADER, "data/fragment-shader.txt");
+  GLuint fragment_shader = GLUtil::CreateShader(GL_FRAGMENT_SHADER, "data/fragment-shader.txt");
   if (fragment_shader == 0) {
     log.Errorf("CreateShader for GL_FRAGMENT_SHADER failed");
     return false;
