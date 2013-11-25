@@ -1,5 +1,9 @@
+#include <string>
+
+#include "GL/glew.h"
+
 #include "glutil.h"
-#include "io.h"
+#include "ioutil.h"
 
 const Log GLUtil::log("glutil");
 
@@ -11,7 +15,7 @@ GLuint GLUtil::CreateShader(const GLenum type, const std::string &path) {
   }
 
   std::string source;
-  if (!IO::ReadFile(path, &source)) {
+  if (!IOUtil::ReadFile(path, &source)) {
     log.Errorf("ReadFile on %s failed", path.c_str());
     return 0;
   }
