@@ -40,12 +40,12 @@ bool Game::InitWindow() {
   }
 
   window_ = SDL_CreateWindow(
-    kWindowTitle.c_str(),
-    kWindowX,
-    kWindowY,
-    kWindowWidth,
-    kWindowHeight,
-    kWindowFlags);
+      kWindowTitle.c_str(),
+      kWindowX,
+      kWindowY,
+      kWindowWidth,
+      kWindowHeight,
+      kWindowFlags);
   if (window_ == nullptr) {
     log.ErrorSDL("SDL_CreateWindow");
     return false;
@@ -73,37 +73,11 @@ bool Game::InitGL() {
     return false;
   }
 
-  program_ = glCreateProgram();
+  program_ = GLUtil::CreateProgram("data/vertex-shader.txt", "data/fragment-shader.txt");
   if (program_ == 0) {
-    log.Errorf("glCreateProgram failed");
+    log.Errorf("CreateProgram failed");
     return false;
   }
-
-  GLuint vertex_shader = GLUtil::CreateShader(GL_VERTEX_SHADER, "data/vertex-shader.txt");
-  if (vertex_shader == 0) {
-    log.Errorf("CreateShader for GL_VERTEX_SHADER failed");
-    return false;
-  }
-
-  GLuint fragment_shader = GLUtil::CreateShader(GL_FRAGMENT_SHADER, "data/fragment-shader.txt");
-  if (fragment_shader == 0) {
-    log.Errorf("CreateShader for GL_FRAGMENT_SHADER failed");
-    return false;
-  }
-
-  glAttachShader(program_, vertex_shader);
-  glAttachShader(program_, fragment_shader);
-  glLinkProgram(program_);
-
-  GLint success = GL_TRUE;
-  glGetProgramiv(program_, GL_LINK_STATUS, &success);
-  if (success != GL_TRUE) {
-    log.Errorf("glLinkProgram failed");
-    return false;
-  }
-
-  glDeleteShader(vertex_shader);
-  glDeleteShader(fragment_shader);
 
   position_ = glGetAttribLocation(program_, "position");
   if (position_ == -1) {

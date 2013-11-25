@@ -5,9 +5,13 @@
 
 class GLUtil {
  public:
-  static GLuint CreateShader(const GLenum type, const std::string &path);
+  static GLuint CreateProgram(
+      const std::string &vertex_shader_path,
+      const std::string &fragment_shader_path);
 
  private:
+  static GLuint CreateShader(const GLenum type, const std::string &path);
+
   static const Log log;
 };
 

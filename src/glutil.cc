@@ -7,6 +7,44 @@
 
 const Log GLUtil::log("glutil");
 
+GLuint GLUtil::CreateProgram(
+    const std::string &vertex_shader_path,
+    const std::string &fragment_shader_path) {
+  GLuint program = glCreateProgram();
+  if (program == 0) {
+    log.Errorf("glCreateProgram failed");
+    return 0;
+  }
+
+  GLuint vertex_shader = CreateShader(GL_VERTEX_SHADER, "data/vertex-shader.txt");
+  if (vertex_shader == 0) {
+    log.Errorf("CreateShader for GL_VERTEX_SHADER failed");
+    return 0;
+  }
+
+  GLuint fragment_shader = CreateShader(GL_FRAGMENT_SHADER, "data/fragment-shader.txt");
+  if (fragment_shader == 0) {
+    log.Errorf("CreateShader for GL_FRAGMENT_SHADER failed");
+    return 0;
+  }
+
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+
+  glLinkProgram(program);
+  GLint success = GL_TRUE;
+  glGetProgramiv(program, GL_LINK_STATUS, &success);
+  if (success != GL_TRUE) {
+    log.Errorf("glLinkProgram failed");
+    return 0;
+  }
+
+  glDeleteShader(vertex_shader);
+  glDeleteShader(fragment_shader);
+
+  return program;
+}
+
 GLuint GLUtil::CreateShader(const GLenum type, const std::string &path) {
   GLuint shader = glCreateShader(type);
   if (shader == 0) {
