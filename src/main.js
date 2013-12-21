@@ -76,9 +76,7 @@ var createProgram = function(gl, shaders, opt_attribs, opt_locations) {
 	return program;
 };
 
-window.onload = main;
-
-function main() {
+$(document).ready(function() {
 	var canvas = document.getElementById("canvas");
 	var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 	// TODO(btmura): handle situation where WebGL is not available
@@ -121,4 +119,4 @@ function main() {
 	gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 	gl.uniform3f(colorLocation, 1, 1, 1);
 	gl.drawArrays(gl.TRIANGLES, 0, 6);
-}
+});
