@@ -27,29 +27,6 @@ var loadShader = function(gl, shaderSource, shaderType, opt_errorCallback) {
 	return shader;
 };
 
-var createShaderFromScriptElement = function(gl, scriptId, opt_shaderType, opt_errorCallback) {
-	var shaderSource = "";
-	var shaderType;
-	var shaderScript = document.getElementById(scriptId);
-	if (!shaderScript) {
-		throw("*** Error: unknown script element " + scriptId);
-	}
-	shaderSource = shaderScript.text;
-
-	if (!opt_shaderType) {
-		if (shaderScript.type == "x-shader/x-vertex") {
-			shaderType = gl.VERTEX_SHADER;
-		} else if (shaderScript.type == "x-shader/x-fragment") {
-			shaderType = gl.FRAGMENT_SHADER;
-		} else if (shaderType != gl.VERTEX_SHADER && shaderType != gl.FRAGMENT_SHADER) {
-			throw("*** Error: unknown shader type");
-			return null;
-		}
-	}
-
-	return loadShader(gl, shaderSource, opt_shaderType ? opt_shaderType : shaderType, opt_errorCallback);
-};
-
 var createProgram = function(gl, shaders, opt_attribs, opt_locations) {
 	var program = gl.createProgram();
 	for (var i = 0; i < shaders.length; i++) {
@@ -81,42 +58,54 @@ $(document).ready(function() {
 	var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 	// TODO(btmura): handle situation where WebGL is not available
 
-	var vertexShader = createShaderFromScriptElement(gl, "2d-vertex-shader");
-	var fragmentShader = createShaderFromScriptElement(gl, "2d-fragment-shader");
-	var program = createProgram(gl, [vertexShader, fragmentShader]);
-	gl.useProgram(program);
+	var vertexShader;
+	var fragmentShader;
+	$.when(
+		$.get('/glsl/vertex.glsl', function(shaderSource) {
+			vertexShader = loadShader(gl, shaderSource, gl.VERTEX_SHADER);
+		}),
+		$.get('/glsl/fragment.glsl', function(shaderSource) {
+			fragmentShader = loadShader(gl, shaderSource, gl.FRAGMENT_SHADER);
+		})
+	).then(loadShaderSourceSuccess);
 
-	var positionLocation = gl.getAttribLocation(program, "a_position");
-	var colorLocation = gl.getUniformLocation(program, "u_color");
+	function loadShaderSourceSuccess() {
+		var program = createProgram(gl, [vertexShader, fragmentShader]);
+		gl.useProgram(program);
 
-	var buffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-	gl.bufferData(
+		var positionLocation = gl.getAttribLocation(program, "a_position");
+		var colorLocation = gl.getUniformLocation(program, "u_color");
+
+		var buffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+		gl.bufferData(
+				gl.ARRAY_BUFFER,
+				new Float32Array([
+					-1.0, -1.0,
+					1.0, -1.0,
+					-1.0, 1.0,
+					-1.0, 1.0,
+					1.0, -1.0,
+					1.0, 1.0]),
+				gl.STATIC_DRAW);
+		gl.enableVertexAttribArray(positionLocation);
+		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+		gl.uniform3f(colorLocation, 0, 0, 0);
+		gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+		gl.bufferData(
 			gl.ARRAY_BUFFER,
 			new Float32Array([
-				-1.0, -1.0,
-				1.0, -1.0,
-				-1.0, 1.0,
-				-1.0, 1.0,
-				1.0, -1.0,
-				1.0, 1.0]),
+				-0.5, -0.5,
+				0.5, -0.5,
+				-0.5, 0.5,
+				-0.5, 0.5,
+				0.5, -0.5,
+				0.5, 0.5]),
 			gl.STATIC_DRAW);
-	gl.enableVertexAttribArray(positionLocation);
-	gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-	gl.uniform3f(colorLocation, 0, 0, 0);
-	gl.drawArrays(gl.TRIANGLES, 0, 6);
+		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+		gl.uniform3f(colorLocation, 1, 1, 1);
+		gl.drawArrays(gl.TRIANGLES, 0, 6);
+	}
 
-	gl.bufferData(
-		gl.ARRAY_BUFFER,
-		new Float32Array([
-			-0.5, -0.5,
-			0.5, -0.5,
-			-0.5, 0.5,
-			-0.5, 0.5,
-			0.5, -0.5,
-			0.5, 0.5]),
-		gl.STATIC_DRAW);
-	gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-	gl.uniform3f(colorLocation, 1, 1, 1);
-	gl.drawArrays(gl.TRIANGLES, 0, 6);
 });
