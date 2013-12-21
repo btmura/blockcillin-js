@@ -80,7 +80,8 @@ window.onload = main;
 
 function main() {
 	var canvas = document.getElementById("canvas");
-	var gl = canvas.getContext("experimental-webgl");
+	var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+	// TODO(btmura): handle situation where WebGL is not available
 
 	var vertexShader = createShaderFromScriptElement(gl, "2d-vertex-shader");
 	var fragmentShader = createShaderFromScriptElement(gl, "2d-fragment-shader");
