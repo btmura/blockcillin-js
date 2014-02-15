@@ -1,11 +1,13 @@
 package handlers
 
 import (
-	"html/template"
 	"net/http"
+
+	"blockcillin/template"
 )
 
+var debugTemplate = template.MustParseFiles("templates/debug.html")
+
 func debugHandler(w http.ResponseWriter, r *http.Request) {
-	t := template.Must(template.ParseFiles("templates/debug.html"))
-	t.Execute(w, nil)
+	debugTemplate.Execute(w, nil)
 }
