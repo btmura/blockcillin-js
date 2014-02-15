@@ -75,7 +75,10 @@ $(document).ready(function() {
 
 		var positionLocation = gl.getAttribLocation(program, "a_position");
 		var translationLocation = gl.getUniformLocation(program, "u_translation");
+		var rotationLocation = gl.getUniformLocation(program, "u_rotation");
 		var colorLocation = gl.getUniformLocation(program, "u_color");
+
+		var rotation = [0, 1];
 
 		var buffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -92,8 +95,14 @@ $(document).ready(function() {
 		gl.enableVertexAttribArray(positionLocation);
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 		gl.uniform2f(translationLocation, 0, 0);
+		gl.uniform2fv(rotationLocation, rotation);
 		gl.uniform3f(colorLocation, 0, 0, 0);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+		var degrees = 30;
+		var radians = degrees * Math.PI / 180;
+		rotation[0] = Math.cos(radians);
+		rotation[1] = Math.sin(radians);
 
 		gl.bufferData(
 			gl.ARRAY_BUFFER,
@@ -107,6 +116,7 @@ $(document).ready(function() {
 			gl.STATIC_DRAW);
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 		gl.uniform2f(translationLocation, -0.5, 0);
+		gl.uniform2fv(rotationLocation, rotation);
 		gl.uniform3f(colorLocation, 1, 1, 1);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	}
