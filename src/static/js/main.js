@@ -74,6 +74,7 @@ $(document).ready(function() {
 		gl.useProgram(program);
 
 		var positionLocation = gl.getAttribLocation(program, "a_position");
+		var translationLocation = gl.getUniformLocation(program, "u_translation");
 		var colorLocation = gl.getUniformLocation(program, "u_color");
 
 		var buffer = gl.createBuffer();
@@ -90,6 +91,7 @@ $(document).ready(function() {
 				gl.STATIC_DRAW);
 		gl.enableVertexAttribArray(positionLocation);
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+		gl.uniform2f(translationLocation, 0, 0);
 		gl.uniform3f(colorLocation, 0, 0, 0);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -104,6 +106,7 @@ $(document).ready(function() {
 				0.5, 0.5]),
 			gl.STATIC_DRAW);
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+		gl.uniform2f(translationLocation, -0.5, 0);
 		gl.uniform3f(colorLocation, 1, 1, 1);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	}
