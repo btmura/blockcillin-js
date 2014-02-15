@@ -76,6 +76,7 @@ $(document).ready(function() {
 		var positionLocation = gl.getAttribLocation(program, "a_position");
 		var translationLocation = gl.getUniformLocation(program, "u_translation");
 		var rotationLocation = gl.getUniformLocation(program, "u_rotation");
+		var scaleLocation = gl.getUniformLocation(program, "u_scale");
 		var colorLocation = gl.getUniformLocation(program, "u_color");
 
 		var rotation = [0, 1];
@@ -96,6 +97,7 @@ $(document).ready(function() {
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 		gl.uniform2f(translationLocation, 0, 0);
 		gl.uniform2fv(rotationLocation, rotation);
+		gl.uniform2f(scaleLocation, 1, 1);
 		gl.uniform3f(colorLocation, 0, 0, 0);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 
@@ -117,6 +119,7 @@ $(document).ready(function() {
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 		gl.uniform2f(translationLocation, -0.5, 0);
 		gl.uniform2fv(rotationLocation, rotation);
+		gl.uniform2f(scaleLocation, 0.25, 0.25);
 		gl.uniform3f(colorLocation, 1, 1, 1);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	}
