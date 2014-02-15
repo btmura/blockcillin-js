@@ -6,4 +6,5 @@ import (
 
 func init() {
 	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/debug", debugHandler)
 }
