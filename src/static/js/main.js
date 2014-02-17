@@ -74,12 +74,18 @@ $(document).ready(function() {
 		gl.useProgram(program);
 
 		var positionLocation = gl.getAttribLocation(program, "a_position");
-		var translationLocation = gl.getUniformLocation(program, "u_translation");
-		var rotationLocation = gl.getUniformLocation(program, "u_rotation");
-		var scaleLocation = gl.getUniformLocation(program, "u_scale");
+		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 		var colorLocation = gl.getUniformLocation(program, "u_color");
 
-		var rotation = [0, 1];
+		var degrees = 0;
+		var angleInRadians = degrees * Math.PI / 180;
+
+		var translationMatrix = makeTranslation(0, 0);
+		var rotationMatrix = makeRotation(angleInRadians);
+		var scaleMatrix = makeScale(1, 1);
+
+		var matrix = matrixMultiply(scaleMatrix, rotationMatrix);
+		matrix = matrixMultiply(matrix, translationMatrix);
 
 		var buffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -95,16 +101,19 @@ $(document).ready(function() {
 				gl.STATIC_DRAW);
 		gl.enableVertexAttribArray(positionLocation);
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-		gl.uniform2f(translationLocation, 0, 0);
-		gl.uniform2fv(rotationLocation, rotation);
-		gl.uniform2f(scaleLocation, 1, 1);
+		gl.uniformMatrix3fv(matrixLocation, false, matrix);
 		gl.uniform3f(colorLocation, 0, 0, 0);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-		var degrees = 30;
-		var radians = degrees * Math.PI / 180;
-		rotation[0] = Math.cos(radians);
-		rotation[1] = Math.sin(radians);
+		degrees = 45;
+		angleInRadians = degrees * Math.PI / 180;
+
+		translationMatrix = makeTranslation(-0.5, 0);
+		rotationMatrix = makeRotation(angleInRadians);
+		scaleMatrix = makeScale(0.5, 0.5);
+
+		matrix = matrixMultiply(scaleMatrix, rotationMatrix);
+		matrix = matrixMultiply(matrix, translationMatrix);
 
 		gl.bufferData(
 			gl.ARRAY_BUFFER,
@@ -117,9 +126,7 @@ $(document).ready(function() {
 				0.5, 0.5]),
 			gl.STATIC_DRAW);
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-		gl.uniform2f(translationLocation, -0.5, 0);
-		gl.uniform2fv(rotationLocation, rotation);
-		gl.uniform2f(scaleLocation, 0.25, 0.25);
+		gl.uniformMatrix3fv(matrixLocation, false, matrix);
 		gl.uniform3f(colorLocation, 1, 1, 1);
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	}
