@@ -80,55 +80,29 @@ $(document).ready(function() {
 		var degrees = 0;
 		var angleInRadians = degrees * Math.PI / 180;
 
-		var translationMatrix = makeTranslation(0, 0);
-		var rotationMatrix = makeRotation(angleInRadians);
 		var scaleMatrix = makeScale(1, 1);
+		var rotationMatrix = makeRotation(angleInRadians);
+		var translationMatrix = makeTranslation(0, 0);
+
+		var projectionMatrix = make2DProjection(canvas.width, canvas.height);
 
 		var matrix = matrixMultiply(scaleMatrix, rotationMatrix);
 		matrix = matrixMultiply(matrix, translationMatrix);
+		matrix = matrixMultiply(matrix, projectionMatrix);
 
 		var buffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 		gl.bufferData(
 				gl.ARRAY_BUFFER,
 				new Float32Array([
-					-1.0, -1.0,
-					1.0, -1.0,
-					-1.0, 1.0,
-					-1.0, 1.0,
-					1.0, -1.0,
-					1.0, 1.0]),
+					0, 0,
+					0, -canvas.height,
+					canvas.width, -canvas.height]),
 				gl.STATIC_DRAW);
 		gl.enableVertexAttribArray(positionLocation);
 		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 		gl.uniformMatrix3fv(matrixLocation, false, matrix);
 		gl.uniform3f(colorLocation, 0, 0, 0);
-		gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-		degrees = 45;
-		angleInRadians = degrees * Math.PI / 180;
-
-		translationMatrix = makeTranslation(-0.5, 0);
-		rotationMatrix = makeRotation(angleInRadians);
-		scaleMatrix = makeScale(0.5, 0.5);
-
-		matrix = matrixMultiply(scaleMatrix, rotationMatrix);
-		matrix = matrixMultiply(matrix, translationMatrix);
-
-		gl.bufferData(
-			gl.ARRAY_BUFFER,
-			new Float32Array([
-				-0.5, -0.5,
-				0.5, -0.5,
-				-0.5, 0.5,
-				-0.5, 0.5,
-				0.5, -0.5,
-				0.5, 0.5]),
-			gl.STATIC_DRAW);
-		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-		gl.uniformMatrix3fv(matrixLocation, false, matrix);
-		gl.uniform3f(colorLocation, 1, 1, 1);
-		gl.drawArrays(gl.TRIANGLES, 0, 6);
+		gl.drawArrays(gl.TRIANGLES, 0, 3);
 	}
-
 });

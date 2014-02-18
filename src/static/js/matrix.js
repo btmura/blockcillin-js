@@ -1,3 +1,12 @@
+function make2DProjection(width, height) {
+	// Translate to upper left
+	return [
+		2 / width, 0, 0,
+		0, 2 / height, 0,
+		-1, 1, 1
+	];
+}
+
 function makeTranslation(tx, ty) {
 	return [
 		1, 0, 0,
