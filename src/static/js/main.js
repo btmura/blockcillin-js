@@ -77,32 +77,45 @@ $(document).ready(function() {
 		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 		var colorLocation = gl.getUniformLocation(program, "u_color");
 
-		var degrees = 0;
-		var angleInRadians = degrees * Math.PI / 180;
+		var radians = function(degrees) {
+			return degrees * Math.PI / 180;
+		}
 
-		var scaleMatrix = makeScale(1, 1);
-		var rotationMatrix = makeRotation(angleInRadians);
-		var translationMatrix = makeTranslation(0, 0);
+		var translation = [-50, 0, 0];
+		var rotation = [radians(0), radians(0), radians(0)];
+		var scale = [1, 0.5, 1];
 
-		var projectionMatrix = make2DProjection(canvas.width, canvas.height);
+		var projectionMatrix = makeProjection(canvas.width, canvas.height, canvas.width);
+		var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
+		var rotationXMatrix = makeXRotation(rotation[0]);
+		var rotationYMatrix = makeYRotation(rotation[1]);
+		var rotationZMatrix = makeZRotation(rotation[2]);
+		var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
 
-		var matrix = matrixMultiply(scaleMatrix, rotationMatrix);
+		var matrix = matrixMultiply(scaleMatrix, rotationZMatrix);
+		matrix = matrixMultiply(matrix, rotationYMatrix);
+		matrix = matrixMultiply(matrix, rotationXMatrix);
 		matrix = matrixMultiply(matrix, translationMatrix);
 		matrix = matrixMultiply(matrix, projectionMatrix);
+
+		var w = canvas.width
+		var h = canvas.height
+		var d = canvas.width
 
 		var buffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 		gl.bufferData(
 				gl.ARRAY_BUFFER,
 				new Float32Array([
-					0, 0,
-					0, -canvas.height,
-					canvas.width, -canvas.height]),
+					w / 2, 0, 0,
+					0, -h, 0,
+					w, -h, 0
+					]),
 				gl.STATIC_DRAW);
 		gl.enableVertexAttribArray(positionLocation);
-		gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-		gl.uniformMatrix3fv(matrixLocation, false, matrix);
-		gl.uniform3f(colorLocation, 0, 0, 0);
+		gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+		gl.uniformMatrix4fv(matrixLocation, false, matrix);
+		gl.uniform3f(colorLocation, 1, 0, 0);
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
 	}
 });
