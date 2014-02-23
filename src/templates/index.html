@@ -10,6 +10,11 @@
 		</p>
 		<canvas id="canvas"></canvas>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-		<script src="js/compiled.js"></script>
+		{{if .Compiled}}
+			<script src="js/compiled.js"></script>
+		{{else}}
+			<script src="js/matrix.js"></script>
+			<script src="js/main.js"></script>
+		{{end}}
 	</body>
 </html>
