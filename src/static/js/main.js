@@ -81,11 +81,11 @@ $(document).ready(function() {
 			return degrees * Math.PI / 180;
 		}
 
-		var translation = [-50, 0, 0];
+		var translation = [75, 75, 0];
 		var rotation = [radians(0), radians(0), radians(0)];
-		var scale = [1, 0.5, 1];
+		var scale = [1, 1, 1];
 
-		var projectionMatrix = makeProjection(canvas.width, canvas.height, canvas.width);
+		var projectionMatrix = makeProjection(200, 200, 200);
 		var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
 		var rotationXMatrix = makeXRotation(rotation[0]);
 		var rotationYMatrix = makeYRotation(rotation[1]);
@@ -98,24 +98,25 @@ $(document).ready(function() {
 		matrix = matrixMultiply(matrix, translationMatrix);
 		matrix = matrixMultiply(matrix, projectionMatrix);
 
-		var w = canvas.width
-		var h = canvas.height
-		var d = canvas.width
-
 		var buffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 		gl.bufferData(
 				gl.ARRAY_BUFFER,
 				new Float32Array([
-					w / 2, 0, 0,
-					0, -h, 0,
-					w, -h, 0
+					0, 0, 0,
+					50, 50, 0,
+					0, 50, 0,
+
+					0, 0, 0,
+					50, 0, 0,
+					50, 50, 0
+
 					]),
 				gl.STATIC_DRAW);
 		gl.enableVertexAttribArray(positionLocation);
 		gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 		gl.uniformMatrix4fv(matrixLocation, false, matrix);
 		gl.uniform3f(colorLocation, 1, 0, 0);
-		gl.drawArrays(gl.TRIANGLES, 0, 3);
+		gl.drawArrays(gl.TRIANGLES, 0, 6);
 	}
 });

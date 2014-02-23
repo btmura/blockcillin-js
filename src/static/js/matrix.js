@@ -2,7 +2,7 @@ function makeProjection(width, height, depth) {
 	// Translate to upper left
 	return [
 		2 / width, 0, 0, 0,
-		0, 2 / height, 0, 0,
+		0, -2 / height, 0, 0,
 		0, 0, 2 / depth, 0,
 		-1, 1, 0, 1
 	];
