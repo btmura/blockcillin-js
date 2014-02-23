@@ -50,6 +50,7 @@ function makeZRotation(angleInRadians) {
 	];
 }
 
+
 function makeScale(sx, sy, sz) {
 	return [
 		sx, 0, 0, 0,

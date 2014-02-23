@@ -75,14 +75,14 @@ $(document).ready(function() {
 
 		var positionLocation = gl.getAttribLocation(program, "a_position");
 		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
-		var colorLocation = gl.getUniformLocation(program, "u_color");
+		var colorLocation = gl.getAttribLocation(program, "a_color");
 
 		var radians = function(degrees) {
 			return degrees * Math.PI / 180;
 		}
 
 		var translation = [75, 75, 0];
-		var rotation = [radians(0), radians(0), radians(0)];
+		var rotation = [radians(45), radians(45), radians(0)];
 		var scale = [1, 1, 1];
 
 		var projectionMatrix = makeProjection(200, 200, 200);
@@ -101,22 +101,73 @@ $(document).ready(function() {
 		var buffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 		gl.bufferData(
-				gl.ARRAY_BUFFER,
-				new Float32Array([
-					0, 0, 0,
-					50, 50, 0,
-					0, 50, 0,
+			gl.ARRAY_BUFFER,
+			new Float32Array([
+				// Red
+				0, 0, 0,
+				50, 50, 0,
+				0, 50, 0,
 
-					0, 0, 0,
-					50, 0, 0,
-					50, 50, 0
+				0, 0, 0,
+				50, 0, 0,
+				50, 50, 0,
 
-					]),
-				gl.STATIC_DRAW);
+				// Blue
+				50, 0, 0,
+				50, 50, 50,
+				50, 50, 0,
+
+				50, 0, 0,
+				50, 0, 50,
+				50, 50, 50,
+
+				// Green
+				0, 0, 0,
+				0, 0, 50,
+				50, 0, 0,
+
+				50, 0, 0,
+				0, 0, 50,
+				50, 0, 50
+			]),
+			gl.STATIC_DRAW);
 		gl.enableVertexAttribArray(positionLocation);
 		gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 		gl.uniformMatrix4fv(matrixLocation, false, matrix);
-		gl.uniform3f(colorLocation, 1, 0, 0);
-		gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+		var colorBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+		gl.bufferData(
+			gl.ARRAY_BUFFER,
+			new Uint8Array([
+				255, 0, 0,
+				255, 0, 0,
+				255, 0, 0,
+
+				255, 0, 0,
+				255, 0, 0,
+				255, 0, 0,
+
+				0, 0, 255,
+				0, 0, 255,
+				0, 0, 255,
+
+				0, 0, 255,
+				0, 0, 255,
+				0, 0, 255,
+
+				0, 255, 0,
+				0, 255, 0,
+				0, 255, 0,
+
+				0, 255, 0,
+				0, 255, 0,
+				0, 255, 0
+			]),
+			gl.STATIC_DRAW);
+		gl.enableVertexAttribArray(colorLocation);
+		gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
+
+		gl.drawArrays(gl.TRIANGLES, 0, 18);
 	}
 });
