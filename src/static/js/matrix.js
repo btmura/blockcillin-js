@@ -1,10 +1,11 @@
-function makeProjection(width, height, depth) {
-	// Translate to upper left
+function makePerspective(fieldOfViewInRadians, aspect, near, far) {
+	var f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
+	var rangeInv = 1.0 / (near - far);
 	return [
-		2 / width, 0, 0, 0,
-		0, -2 / height, 0, 0,
-		0, 0, 2 / depth, 0,
-		-1, 1, 0, 1
+		f / aspect, 0, 0, 0,
+		0, f, 0, 0,
+		0, 0, (near + far) * rangeInv, -1,
+		0, 0, near * far * rangeInv *2, 0
 	];
 }
 

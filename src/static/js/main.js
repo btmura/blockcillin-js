@@ -74,23 +74,26 @@ $(document).ready(function() {
 		gl.useProgram(program);
 
 		var positionLocation = gl.getAttribLocation(program, "a_position");
-		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 		var colorLocation = gl.getAttribLocation(program, "a_color");
+		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
 		var radians = function(degrees) {
 			return degrees * Math.PI / 180;
 		}
 
-		var translation = [75, 75, 0];
-		var rotation = [radians(45), radians(45), radians(0)];
+		var translation = [0, 0, -5];
+		var rotation = [radians(45), radians(-45), radians(0)];
 		var scale = [1, 1, 1];
 
-		var projectionMatrix = makeProjection(200, 200, 200);
-		var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
-		var rotationXMatrix = makeXRotation(rotation[0]);
-		var rotationYMatrix = makeYRotation(rotation[1]);
-		var rotationZMatrix = makeZRotation(rotation[2]);
 		var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
+		var rotationZMatrix = makeZRotation(rotation[2]);
+		var rotationYMatrix = makeYRotation(rotation[1]);
+		var rotationXMatrix = makeXRotation(rotation[0]);
+		var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
+
+		var aspect = canvas.width / canvas.height;
+		var fieldOfViewRadians = radians(55);
+		var projectionMatrix = makePerspective(fieldOfViewRadians, aspect, 1, 2000);
 
 		var matrix = matrixMultiply(scaleMatrix, rotationZMatrix);
 		matrix = matrixMultiply(matrix, rotationYMatrix);
@@ -104,31 +107,31 @@ $(document).ready(function() {
 			gl.ARRAY_BUFFER,
 			new Float32Array([
 				// Red
-				0, 0, 0,
-				50, 50, 0,
-				0, 50, 0,
+				-1, 1, 1,
+				1, -1, 1,
+				-1, -1, 1,
 
-				0, 0, 0,
-				50, 0, 0,
-				50, 50, 0,
+				-1, 1, 1,
+				1, 1, 1,
+				1, -1, 1,
 
 				// Blue
-				50, 0, 0,
-				50, 50, 50,
-				50, 50, 0,
+				1, 1, 1,
+				1, -1, -1,
+				1, -1, 1,
 
-				50, 0, 0,
-				50, 0, 50,
-				50, 50, 50,
+				1, 1, 1,
+				1, 1, -1,
+				1, -1, -1,
 
 				// Green
-				0, 0, 0,
-				0, 0, 50,
-				50, 0, 0,
+				-1, 1, 1,
+				-1, 1, -1,
+				1, 1, -1,
 
-				50, 0, 0,
-				0, 0, 50,
-				50, 0, 50
+				-1, 1, 1,
+				1, 1, -1,
+				1, 1, 1
 			]),
 			gl.STATIC_DRAW);
 		gl.enableVertexAttribArray(positionLocation);
