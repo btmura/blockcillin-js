@@ -86,104 +86,114 @@ $(document).ready(function() {
 			return degrees * Math.PI / 180;
 		}
 
-		var translation = [0, 0, 0];
+		var rotationSpeed = 1.2;
 		var rotation = [radians(0), radians(0), radians(0)];
-		var scale = [1, 1, 1];
 
-		var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
-		var rotationZMatrix = makeZRotation(rotation[2]);
-		var rotationYMatrix = makeYRotation(rotation[1]);
-		var rotationXMatrix = makeXRotation(rotation[0]);
-		var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
+		function drawScene() {
+			rotation[1] += rotationSpeed / 60.0;
 
-		var up = [0, 1, 0];
-		var cameraPosition = [3, 3, 3];
-		var targetPosition = [0, 0, 0];
-		var cameraMatrix = makeLookAt(cameraPosition, targetPosition, up);
-		var viewMatrix = makeInverse(cameraMatrix);
+			var translation = [0, 0, 0];
+			var scale = [1, 1, 1];
 
-		var aspect = canvas.width / canvas.height;
-		var fieldOfViewRadians = radians(55);
-		var projectionMatrix = makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+			var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
+			var rotationZMatrix = makeZRotation(rotation[2]);
+			var rotationYMatrix = makeYRotation(rotation[1]);
+			var rotationXMatrix = makeXRotation(rotation[0]);
+			var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
 
-		var matrix = matrixMultiply(scaleMatrix, rotationZMatrix);
-		matrix = matrixMultiply(matrix, rotationYMatrix);
-		matrix = matrixMultiply(matrix, rotationXMatrix);
-		matrix = matrixMultiply(matrix, translationMatrix);
-		matrix = matrixMultiply(matrix, viewMatrix);
-		matrix = matrixMultiply(matrix, projectionMatrix);
+			var up = [0, 1, 0];
+			var cameraPosition = [3, 3, 3];
+			var targetPosition = [0, 0, 0];
+			var cameraMatrix = makeLookAt(cameraPosition, targetPosition, up);
+			var viewMatrix = makeInverse(cameraMatrix);
 
-		var buffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-		gl.bufferData(
-			gl.ARRAY_BUFFER,
-			new Float32Array([
-				// Red
-				-1, 1, 1,
-				-1, -1, 1,
-				1, -1, 1,
+			var aspect = canvas.width / canvas.height;
+			var fieldOfViewRadians = radians(55);
+			var projectionMatrix = makePerspective(fieldOfViewRadians, aspect, 1, 2000);
 
-				-1, 1, 1,
-				1, -1, 1,
-				1, 1, 1,
+			var matrix = matrixMultiply(scaleMatrix, rotationZMatrix);
+			matrix = matrixMultiply(matrix, rotationYMatrix);
+			matrix = matrixMultiply(matrix, rotationXMatrix);
+			matrix = matrixMultiply(matrix, translationMatrix);
+			matrix = matrixMultiply(matrix, viewMatrix);
+			matrix = matrixMultiply(matrix, projectionMatrix);
 
-				// Blue
-				1, 1, 1,
-				1, -1, 1,
-				1, -1, -1,
+			var buffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+			gl.bufferData(
+				gl.ARRAY_BUFFER,
+				new Float32Array([
+					// Red
+					-1, 1, 1,
+					-1, -1, 1,
+					1, -1, 1,
 
-				1, 1, 1,
-				1, -1, -1,
-				1, 1, -1,
+					-1, 1, 1,
+					1, -1, 1,
+					1, 1, 1,
 
-				// Green
-				-1, 1, 1,
-				1, 1, -1,
-				-1, 1, -1,
+					// Blue
+					1, 1, 1,
+					1, -1, 1,
+					1, -1, -1,
 
-				-1, 1, 1,
-				1, 1, 1,
-				1, 1, -1
-			]),
-			gl.STATIC_DRAW);
-		gl.enableVertexAttribArray(positionLocation);
-		gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-		gl.uniformMatrix4fv(matrixLocation, false, matrix);
+					1, 1, 1,
+					1, -1, -1,
+					1, 1, -1,
 
-		var colorBuffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-		gl.bufferData(
-			gl.ARRAY_BUFFER,
-			new Uint8Array([
-				255, 0, 0,
-				255, 0, 0,
-				255, 0, 0,
+					// Green
+					-1, 1, 1,
+					1, 1, -1,
+					-1, 1, -1,
 
-				255, 0, 0,
-				255, 0, 0,
-				255, 0, 0,
+					-1, 1, 1,
+					1, 1, 1,
+					1, 1, -1
+				]),
+				gl.STATIC_DRAW);
+			gl.enableVertexAttribArray(positionLocation);
+			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+			gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
-				0, 0, 255,
-				0, 0, 255,
-				0, 0, 255,
+			var colorBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+			gl.bufferData(
+				gl.ARRAY_BUFFER,
+				new Uint8Array([
+					255, 0, 0,
+					255, 0, 0,
+					255, 0, 0,
 
-				0, 0, 255,
-				0, 0, 255,
-				0, 0, 255,
+					255, 0, 0,
+					255, 0, 0,
+					255, 0, 0,
 
-				0, 255, 0,
-				0, 255, 0,
-				0, 255, 0,
+					0, 0, 255,
+					0, 0, 255,
+					0, 0, 255,
 
-				0, 255, 0,
-				0, 255, 0,
-				0, 255, 0
-			]),
-			gl.STATIC_DRAW);
-		gl.enableVertexAttribArray(colorLocation);
-		gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
+					0, 0, 255,
+					0, 0, 255,
+					0, 0, 255,
 
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-		gl.drawArrays(gl.TRIANGLES, 0, 18);
+					0, 255, 0,
+					0, 255, 0,
+					0, 255, 0,
+
+					0, 255, 0,
+					0, 255, 0,
+					0, 255, 0
+				]),
+				gl.STATIC_DRAW);
+			gl.enableVertexAttribArray(colorLocation);
+			gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
+
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			gl.drawArrays(gl.TRIANGLES, 0, 18);
+
+			requestAnimationFrame(drawScene);
+		}
+
+		drawScene();
 	}
 });
