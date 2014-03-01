@@ -87,6 +87,22 @@ $(document).ready(function() {
 		var rotationSpeed = 1;
 		var rotation = [radians(0), radians(0), radians(0)];
 
+		var scale = [1, 1, 1];
+		var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
+
+		var translation = [0, 0, 0];
+		var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
+
+		var up = [0, 1, 0];
+		var cameraPosition = [3, 3, 3];
+		var targetPosition = [0, 0, 0];
+		var cameraMatrix = makeLookAt(cameraPosition, targetPosition, up);
+		var viewMatrix = makeInverse(cameraMatrix);
+
+		var aspect = canvas.width / canvas.height;
+		var fieldOfViewRadians = radians(55);
+		var projectionMatrix = makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+
 		function drawScene() {
 			var now = getTimeInSeconds();
 			var deltaTime = now - then;
@@ -94,24 +110,9 @@ $(document).ready(function() {
 
 			rotation[1] += rotationSpeed * deltaTime;
 
-			var translation = [0, 0, 0];
-			var scale = [1, 1, 1];
-
-			var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
 			var rotationZMatrix = makeZRotation(rotation[2]);
 			var rotationYMatrix = makeYRotation(rotation[1]);
 			var rotationXMatrix = makeXRotation(rotation[0]);
-			var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
-
-			var up = [0, 1, 0];
-			var cameraPosition = [3, 3, 3];
-			var targetPosition = [0, 0, 0];
-			var cameraMatrix = makeLookAt(cameraPosition, targetPosition, up);
-			var viewMatrix = makeInverse(cameraMatrix);
-
-			var aspect = canvas.width / canvas.height;
-			var fieldOfViewRadians = radians(55);
-			var projectionMatrix = makePerspective(fieldOfViewRadians, aspect, 1, 2000);
 
 			var matrix = matrixMultiply(scaleMatrix, rotationZMatrix);
 			matrix = matrixMultiply(matrix, rotationYMatrix);
