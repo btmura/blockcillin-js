@@ -53,6 +53,10 @@ var createProgram = function(gl, shaders, opt_attribs, opt_locations) {
 	return program;
 };
 
+function getTimeInSeconds() {
+  return Date.now() * 0.001;
+}
+
 $(document).ready(function() {
 	var canvas = document.getElementById("canvas");
 	var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
@@ -86,11 +90,17 @@ $(document).ready(function() {
 			return degrees * Math.PI / 180;
 		}
 
-		var rotationSpeed = 1.2;
+		var then = getTimeInSeconds();
+
+		var rotationSpeed = 1;
 		var rotation = [radians(0), radians(0), radians(0)];
 
 		function drawScene() {
-			rotation[1] += rotationSpeed / 60.0;
+			var now = getTimeInSeconds();
+			var deltaTime = now - then;
+			then = now;
+
+			rotation[1] += rotationSpeed * deltaTime;
 
 			var translation = [0, 0, 0];
 			var scale = [1, 1, 1];
