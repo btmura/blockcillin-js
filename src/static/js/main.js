@@ -56,7 +56,12 @@ var createProgram = function(gl, shaders, opt_attribs, opt_locations) {
 $(document).ready(function() {
 	var canvas = document.getElementById("canvas");
 	var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-	// TODO(btmura): handle situation where WebGL is not available
+	if (!gl) {
+		return;
+	}
+
+	gl.enable(gl.CULL_FACE);
+	gl.enable(gl.DEPTH_TEST);
 
 	var vertexShader;
 	var fragmentShader;
@@ -92,7 +97,7 @@ $(document).ready(function() {
 		var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
 
 		var up = [0, 1, 0];
-		var cameraPosition = [-3, 5, 5];
+		var cameraPosition = [3, 3, 3];
 		var targetPosition = [0, 0, 0];
 		var cameraMatrix = makeLookAt(cameraPosition, targetPosition, up);
 		var viewMatrix = makeInverse(cameraMatrix);
@@ -115,30 +120,30 @@ $(document).ready(function() {
 			new Float32Array([
 				// Red
 				-1, 1, 1,
-				1, -1, 1,
 				-1, -1, 1,
+				1, -1, 1,
 
 				-1, 1, 1,
-				1, 1, 1,
 				1, -1, 1,
+				1, 1, 1,
 
 				// Blue
 				1, 1, 1,
-				1, -1, -1,
 				1, -1, 1,
+				1, -1, -1,
 
 				1, 1, 1,
-				1, 1, -1,
 				1, -1, -1,
+				1, 1, -1,
 
 				// Green
 				-1, 1, 1,
-				-1, 1, -1,
 				1, 1, -1,
+				-1, 1, -1,
 
 				-1, 1, 1,
-				1, 1, -1,
-				1, 1, 1
+				1, 1, 1,
+				1, 1, -1
 			]),
 			gl.STATIC_DRAW);
 		gl.enableVertexAttribArray(positionLocation);
@@ -178,6 +183,7 @@ $(document).ready(function() {
 		gl.enableVertexAttribArray(colorLocation);
 		gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
 
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 		gl.drawArrays(gl.TRIANGLES, 0, 18);
 	}
 });
