@@ -81,8 +81,8 @@ $(document).ready(function() {
 			return degrees * Math.PI / 180;
 		}
 
-		var translation = [0, 0, -5];
-		var rotation = [radians(45), radians(-45), radians(0)];
+		var translation = [0, 0, 0];
+		var rotation = [radians(0), radians(0), radians(0)];
 		var scale = [1, 1, 1];
 
 		var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
@@ -90,6 +90,12 @@ $(document).ready(function() {
 		var rotationYMatrix = makeYRotation(rotation[1]);
 		var rotationXMatrix = makeXRotation(rotation[0]);
 		var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
+
+		var up = [0, 1, 0];
+		var cameraPosition = [-3, 5, 5];
+		var targetPosition = [0, 0, 0];
+		var cameraMatrix = makeLookAt(cameraPosition, targetPosition, up);
+		var viewMatrix = makeInverse(cameraMatrix);
 
 		var aspect = canvas.width / canvas.height;
 		var fieldOfViewRadians = radians(55);
@@ -99,6 +105,7 @@ $(document).ready(function() {
 		matrix = matrixMultiply(matrix, rotationYMatrix);
 		matrix = matrixMultiply(matrix, rotationXMatrix);
 		matrix = matrixMultiply(matrix, translationMatrix);
+		matrix = matrixMultiply(matrix, viewMatrix);
 		matrix = matrixMultiply(matrix, projectionMatrix);
 
 		var buffer = gl.createBuffer();
