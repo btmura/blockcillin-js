@@ -1,5 +1,14 @@
+body {
+	background-color: #000000;
+	margin: 0;
+}
+
+body, a {
+	color: #ffffff;
+	font-family: sans-serif;
+}
+
 #canvas {
-	background-color: 0;
 	width: 400px;
 	height: 200px;
 }
