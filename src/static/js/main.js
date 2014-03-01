@@ -53,10 +53,6 @@ var createProgram = function(gl, shaders, opt_attribs, opt_locations) {
 	return program;
 };
 
-function getTimeInSeconds() {
-  return Date.now() * 0.001;
-}
-
 $(document).ready(function() {
 	var canvas = document.getElementById("canvas");
 	var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
@@ -85,10 +81,6 @@ $(document).ready(function() {
 		var positionLocation = gl.getAttribLocation(program, "a_position");
 		var colorLocation = gl.getAttribLocation(program, "a_color");
 		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
-
-		var radians = function(degrees) {
-			return degrees * Math.PI / 180;
-		}
 
 		var then = getTimeInSeconds();
 
