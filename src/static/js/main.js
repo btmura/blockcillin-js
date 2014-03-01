@@ -150,7 +150,25 @@ $(document).ready(function() {
 
 					-1, 1, 1,
 					1, 1, 1,
-					1, 1, -1
+					1, 1, -1,
+
+					// Yellow
+					-1, 1, -1,
+					1, -1, -1,
+					-1, -1, -1,
+
+					-1, 1, -1,
+					1, 1, -1,
+					1, -1, -1,
+
+					// Purple
+					-1, 1, 1,
+					-1, -1, -1,
+					-1, -1, 1,
+
+					-1, 1, 1,
+					-1, 1, -1,
+					-1, -1, -1
 				]),
 				gl.STATIC_DRAW);
 			gl.enableVertexAttribArray(positionLocation);
@@ -184,14 +202,30 @@ $(document).ready(function() {
 
 					0, 255, 0,
 					0, 255, 0,
-					0, 255, 0
+					0, 255, 0,
+
+					255, 255, 0,
+					255, 255, 0,
+					255, 255, 0,
+
+					255, 255, 0,
+					255, 255, 0,
+					255, 255, 0,
+
+					255, 0, 255,
+					255, 0, 255,
+					255, 0, 255,
+
+					255, 0, 255,
+					255, 0, 255,
+					255, 0, 255
 				]),
 				gl.STATIC_DRAW);
 			gl.enableVertexAttribArray(colorLocation);
 			gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
 
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-			gl.drawArrays(gl.TRIANGLES, 0, 18);
+			gl.drawArrays(gl.TRIANGLES, 0, 30);
 
 			requestAnimationFrame(drawScene);
 		}
