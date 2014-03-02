@@ -79,7 +79,7 @@ $(document).ready(function() {
 		gl.useProgram(program);
 
 		var positionLocation = gl.getAttribLocation(program, "a_position");
-		var colorLocation = gl.getAttribLocation(program, "a_color");
+		var texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
 		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
 		var then = getTimeInSeconds();
@@ -102,6 +102,20 @@ $(document).ready(function() {
 		var aspect = canvas.width / canvas.height;
 		var fieldOfViewRadians = radians(55);
 		var projectionMatrix = makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+
+		var texture = gl.createTexture();
+		gl.bindTexture(gl.TEXTURE_2D, texture);
+		// Fill the texture with a 1x1 blue pixel.
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+              new Uint8Array([0, 0, 255, 255]));
+
+		var image = new Image();
+		image.src = "images/texture.png";
+		image.addEventListener('load', function() {
+			gl.bindTexture(gl.TEXTURE_2D, texture);
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+			gl.generateMipmap(gl.TEXTURE_2D);
+		});
 
 		function drawScene() {
 			var now = getTimeInSeconds();
@@ -126,7 +140,7 @@ $(document).ready(function() {
 			gl.bufferData(
 				gl.ARRAY_BUFFER,
 				new Float32Array([
-					// Red
+					// Front
 					-1, 1, 1,
 					-1, -1, 1,
 					1, -1, 1,
@@ -135,7 +149,7 @@ $(document).ready(function() {
 					1, -1, 1,
 					1, 1, 1,
 
-					// Blue
+					// Right
 					1, 1, 1,
 					1, -1, 1,
 					1, -1, -1,
@@ -144,7 +158,7 @@ $(document).ready(function() {
 					1, -1, -1,
 					1, 1, -1,
 
-					// Green
+					// Top
 					-1, 1, 1,
 					1, 1, -1,
 					-1, 1, -1,
@@ -153,7 +167,7 @@ $(document).ready(function() {
 					1, 1, 1,
 					1, 1, -1,
 
-					// Yellow
+					// Back
 					-1, 1, -1,
 					1, -1, -1,
 					-1, -1, -1,
@@ -162,7 +176,7 @@ $(document).ready(function() {
 					1, 1, -1,
 					1, -1, -1,
 
-					// Purple
+					// Left
 					-1, 1, 1,
 					-1, -1, -1,
 					-1, -1, 1,
@@ -176,54 +190,59 @@ $(document).ready(function() {
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 			gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
-			var colorBuffer = gl.createBuffer();
-			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+			var textureBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+			gl.enableVertexAttribArray(texcoordLocation);
+			gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
 			gl.bufferData(
 				gl.ARRAY_BUFFER,
-				new Uint8Array([
-					255, 0, 0,
-					255, 0, 0,
-					255, 0, 0,
+				new Float32Array([
+					// Front
+					0, 0,
+					0, 1,
+					1, 1,
 
-					255, 0, 0,
-					255, 0, 0,
-					255, 0, 0,
+					0, 0,
+					1, 1,
+					1, 0,
 
-					0, 0, 255,
-					0, 0, 255,
-					0, 0, 255,
+					// Right
+					0, 0,
+					0, 1,
+					1, 1,
 
-					0, 0, 255,
-					0, 0, 255,
-					0, 0, 255,
+					0, 0,
+					1, 1,
+					1, 0,
 
-					0, 255, 0,
-					0, 255, 0,
-					0, 255, 0,
+					// Top
+					0, 1,
+					1, 0,
+					0, 0,
 
-					0, 255, 0,
-					0, 255, 0,
-					0, 255, 0,
+					0, 1,
+					1, 1,
+					1, 0,
 
-					255, 255, 0,
-					255, 255, 0,
-					255, 255, 0,
+					// Back
+					1, 0,
+					0, 1,
+					1, 1,
 
-					255, 255, 0,
-					255, 255, 0,
-					255, 255, 0,
+					1, 0,
+					0, 0,
+					0, 1,
 
-					255, 0, 255,
-					255, 0, 255,
-					255, 0, 255,
+					// Left
+					1, 0,
+					0, 1,
+					1, 1,
 
-					255, 0, 255,
-					255, 0, 255,
-					255, 0, 255
+					1, 0,
+					0, 0,
+					0, 1
 				]),
 				gl.STATIC_DRAW);
-			gl.enableVertexAttribArray(colorLocation);
-			gl.vertexAttribPointer(colorLocation, 3, gl.UNSIGNED_BYTE, true, 0, 0);
 
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			gl.drawArrays(gl.TRIANGLES, 0, 30);
