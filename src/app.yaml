@@ -5,16 +5,16 @@ api_version: go1
 
 handlers:
 - url: /css
-  static_dir: static/css
+  static_dir: client/css
 
 - url: /glsl
-  static_dir: static/glsl
+  static_dir: client/glsl
 
 - url: /images
-  static_dir: static/images
+  static_dir: client/images
 
 - url: /js
-  static_dir: static/js
+  static_dir: client/js
 
 - url: /.*
   script: _go_app
