@@ -1,4 +1,6 @@
-test("BC.Time.getTimeInSeconds", function() {
+module("BC.Time");
+
+test("getTimeInSeconds", function() {
 
 	function setTime(ms) {
 		Date.now = function() {
