@@ -3,10 +3,12 @@ package handlers
 import (
 	"net/http"
 
-	"blockcillin/template"
+	"server/template"
 )
 
-var indexTemplate = template.MustParseFiles("templates/index.html", "templates/common.html")
+var indexTemplate = template.MustParseFiles(
+	"shared/templates/index.html",
+	"shared/templates/common.html")
 
 type IndexTemplateArgs struct {
 	Compiled bool

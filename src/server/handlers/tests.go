@@ -3,10 +3,12 @@ package handlers
 import (
 	"net/http"
 
-	"blockcillin/template"
+	"server/template"
 )
 
-var testsTemplate = template.MustParseFiles("templates/tests.html", "templates/common.html")
+var testsTemplate = template.MustParseFiles(
+	"shared/templates/tests.html",
+	"shared/templates/common.html")
 
 func testsHandler(w http.ResponseWriter, r *http.Request) {
 	testsTemplate.Execute(w, nil)
