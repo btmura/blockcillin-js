@@ -20,8 +20,8 @@ func mustParseFiles(filenames ...string) *template.Template {
 
 // IndexArgs are arguments passed to the index template.
 type IndexArgs struct {
-	Compiled bool
-	Debug    bool
+	Compiled  bool
+	ShowTests bool
 }
 
 // ExecuteIndex executes the index template which runs the game.

@@ -1,3 +1,12 @@
+{{define "menu"}}
+	<p>
+		<a href="/">Home</a>
+		| <a href="https://blockcillin.blogspot.com" target="_blank">Blog</a>
+		| <a href="https://github.com/btmura/blockcillin" target="_blank">GitHub</a>
+		{{if .ShowTests}}| <a href="/tests">Tests</a>{{end}}
+	</p>
+{{end}}
+
 {{define "bcScripts"}}
 	<script src="js/bc.js"></script>
 	<script src="js/math.js"></script>

@@ -4,13 +4,7 @@
 		<link rel="stylesheet" type="text/css" href="css/site.css">
 	</head>
 	<body>
-		<p>
-			<a href="https://blockcillin.blogspot.com" target="_blank">Blog</a>
-			| <a href="https://github.com/btmura/blockcillin" target="_blank">GitHub</a>
-			{{if .Debug}}
-				| <a href="/tests" target="_blank">Tests</a>
-			{{end}}
-		</p>
+		{{template "menu" .}}
 		<canvas id="canvas"></canvas>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 		{{if .Compiled}}
