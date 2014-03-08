@@ -1,4 +1,11 @@
-module("BC.Time");
+module("BC.Time", {
+	setup: function() {
+		oldDateNow = Date.now;
+	},
+	teardown: function() {
+		Date.now = oldDateNow;
+	}
+});
 
 test("getTimeInSeconds", function() {
 
