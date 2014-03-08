@@ -13,6 +13,9 @@ handlers:
 - url: /js
   static_dir: client/js
 
+- url: /jstests
+  static_dir: client/jstests
+
 - url: /shaders
   static_dir: client/shaders
 
