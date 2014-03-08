@@ -1,3 +1,9 @@
-var radians = function(degrees) {
-	return degrees * Math.PI / 180;
-}
+var BC = {}
+
+BC.Math = (function() {
+	return {
+		radians: function(degrees) {
+			return  degrees * Math.PI / 180;
+		}
+	};
+}())

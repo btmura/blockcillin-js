@@ -85,7 +85,7 @@ $(document).ready(function() {
 		var then = getTimeInSeconds();
 
 		var rotationSpeed = 1;
-		var rotation = [radians(0), radians(0), radians(0)];
+		var rotation = [BC.Math.radians(0), BC.Math.radians(0), BC.Math.radians(0)];
 
 		var scale = [1, 1, 1];
 		var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
@@ -100,7 +100,7 @@ $(document).ready(function() {
 		var viewMatrix = makeInverse(cameraMatrix);
 
 		var aspect = canvas.width / canvas.height;
-		var fieldOfViewRadians = radians(55);
+		var fieldOfViewRadians = BC.Math.radians(55);
 		var projectionMatrix = makePerspective(fieldOfViewRadians, aspect, 1, 2000);
 
 		var texture = gl.createTexture();
