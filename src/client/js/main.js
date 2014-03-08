@@ -66,10 +66,10 @@ $(document).ready(function() {
 	var vertexShader;
 	var fragmentShader;
 	$.when(
-		$.get('/glsl/vertex.glsl', function(shaderSource) {
+		$.get('/shaders/vertex.glsl', function(shaderSource) {
 			vertexShader = loadShader(gl, shaderSource, gl.VERTEX_SHADER);
 		}),
-		$.get('/glsl/fragment.glsl', function(shaderSource) {
+		$.get('/shaders/fragment.glsl', function(shaderSource) {
 			fragmentShader = loadShader(gl, shaderSource, gl.FRAGMENT_SHADER);
 		})
 	).then(loadShaderSourceSuccess);

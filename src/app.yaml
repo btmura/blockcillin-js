@@ -7,14 +7,14 @@ handlers:
 - url: /css
   static_dir: client/css
 
-- url: /glsl
-  static_dir: client/glsl
-
 - url: /images
   static_dir: client/images
 
 - url: /js
   static_dir: client/js
+
+- url: /shaders
+  static_dir: client/shaders
 
 - url: /.*
   script: _go_app
