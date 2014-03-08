@@ -82,7 +82,7 @@ $(document).ready(function() {
 		var texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
 		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
-		var then = getTimeInSeconds();
+		var then = BC.Time.getTimeInSeconds();
 
 		var rotationSpeed = 1;
 		var rotation = [BC.Math.radians(0), BC.Math.radians(0), BC.Math.radians(0)];
@@ -118,7 +118,7 @@ $(document).ready(function() {
 		});
 
 		function drawScene() {
-			var now = getTimeInSeconds();
+			var now = BC.Time.getTimeInSeconds();
 			var deltaTime = now - then;
 			then = now;
 

@@ -1,3 +1,7 @@
-function getTimeInSeconds() {
-  return Date.now() * 0.001;
-}
+BC.Time = (function() {
+	return {
+		getTimeInSeconds : function() {
+			return Date.now() * 0.001;
+		}
+	};
+}())

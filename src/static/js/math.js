@@ -1,5 +1,3 @@
-var BC = {}
-
 BC.Math = (function() {
 	return {
 		radians: function(degrees) {
