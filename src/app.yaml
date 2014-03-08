@@ -13,6 +13,9 @@ handlers:
 - url: /js
   static_dir: resources/js
 
+- url: /jscompiled
+  static_dir: resources/jscompiled
+
 - url: /jstests
   static_dir: resources/jstests
 
