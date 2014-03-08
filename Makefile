@@ -1,6 +1,6 @@
 all:
 	java -jar compiler.jar \
-		--js src/static/js/module.js \
+		--js src/static/js/bc.js \
 		--js src/static/js/math.js \
 		--js src/static/js/time.js \
 		--js src/static/js/vector.js \
