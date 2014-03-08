@@ -6,7 +6,7 @@ import (
 	"blockcillin/template"
 )
 
-var testsTemplate = template.MustParseFiles("templates/tests.html")
+var testsTemplate = template.MustParseFiles("templates/tests.html", "templates/common.html")
 
 func testsHandler(w http.ResponseWriter, r *http.Request) {
 	testsTemplate.Execute(w, nil)

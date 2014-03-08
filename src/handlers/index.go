@@ -6,7 +6,7 @@ import (
 	"blockcillin/template"
 )
 
-var indexTemplate = template.MustParseFiles("templates/index.html")
+var indexTemplate = template.MustParseFiles("templates/index.html", "templates/common.html")
 
 type IndexTemplateArgs struct {
 	Compiled bool
