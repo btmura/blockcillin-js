@@ -35,7 +35,6 @@ BC.Game = (function() {
 
 				var then = BC.Time.getTimeInSeconds();
 
-				var rotationSpeed = 1;
 				var rotation = [BC.Math.radians(0), BC.Math.radians(0), BC.Math.radians(0)];
 
 				var scale = [1, 1, 1];
@@ -45,7 +44,7 @@ BC.Game = (function() {
 				var translationMatrix = BC.Matrix.makeTranslation(translation[0], translation[1], translation[2]);
 
 				var up = [0, 1, 0];
-				var cameraPosition = [3, 3, 3];
+				var cameraPosition = [0, 5, 5];
 				var targetPosition = [0, 0, 0];
 				var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
 				var viewMatrix = BC.Matrix.makeInverse(cameraMatrix);
@@ -68,12 +67,48 @@ BC.Game = (function() {
 					gl.generateMipmap(gl.TEXTURE_2D);
 				});
 
+				var rotationSpeed = [0, 0, 0];
+				$(document).keydown(function(event) {
+					switch (event.keyCode) {
+						// Space
+						case 32:
+							rotationSpeed[0] = 0;
+							rotationSpeed[1] = 0;
+							break;
+
+						// Left
+						case 37:
+							rotationSpeed[0] = 0;
+							rotationSpeed[1] = -1;
+							break;
+
+						// Up
+						case 38:
+							rotationSpeed[0] = -1;
+							rotationSpeed[1] = 0;
+							break;
+
+						// Right
+						case 39:
+							rotationSpeed[0] = 0;
+							rotationSpeed[1] = 1;
+							break;
+
+						// Down
+						case 40:
+							rotationSpeed[0] = 1;
+							rotationSpeed[1] = 0;
+							break;
+					}
+				});
+
 				function drawScene() {
 					var now = BC.Time.getTimeInSeconds();
 					var deltaTime = now - then;
 					then = now;
 
-					rotation[1] += rotationSpeed * deltaTime;
+					rotation[0] += rotationSpeed[0] * deltaTime;
+					rotation[1] += rotationSpeed[1] * deltaTime;
 
 					var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 					var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
