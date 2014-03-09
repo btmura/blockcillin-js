@@ -6,4 +6,4 @@ all:
 		--js src/res/js/vector.js \
 		--js src/res/js/matrix.js \
 		--js src/res/js/main.js \
-		--js_output_file src/res/jscompiled/blockcillin.js
+		--js_output_file src/res/js/compiled.js
