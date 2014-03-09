@@ -1,15 +1,6 @@
-var error = function(msg) {
-	if (window.console) {
-		if (window.console.error) {
-			window.console.error(msg);
-		} else if (window.console.log) {
-			window.console.log(msg);
-		}
-	}
-};
 
 var loadShader = function(gl, shaderSource, shaderType, opt_errorCallback) {
-	var errFn = opt_errorCallback || error;
+	var errFn = opt_errorCallback || BC.Util.error;
 	var shader = gl.createShader(shaderType);
 
 	gl.shaderSource(shader, shaderSource);
