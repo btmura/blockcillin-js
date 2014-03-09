@@ -1,4 +1,4 @@
-BC.WebGL = (function() {
+BC.GL = (function() {
 	return {
 		loadShader: function(gl, shaderSource, shaderType, opt_errorCallback) {
 			var errFn = opt_errorCallback || BC.Util.error;

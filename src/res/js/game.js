@@ -14,15 +14,15 @@ BC.Game = (function() {
 			var fragmentShader;
 			$.when(
 				$.get('/shaders/vertex.glsl', function(shaderSource) {
-					vertexShader = BC.WebGL.loadShader(gl, shaderSource, gl.VERTEX_SHADER);
+					vertexShader = BC.GL.loadShader(gl, shaderSource, gl.VERTEX_SHADER);
 				}),
 				$.get('/shaders/fragment.glsl', function(shaderSource) {
-					fragmentShader = BC.WebGL.loadShader(gl, shaderSource, gl.FRAGMENT_SHADER);
+					fragmentShader = BC.GL.loadShader(gl, shaderSource, gl.FRAGMENT_SHADER);
 				})
 			).then(loadShaderSourceSuccess);
 
 			function loadShaderSourceSuccess() {
-				var program = BC.WebGL.createProgram(gl, [vertexShader, fragmentShader]);
+				var program = BC.GL.createProgram(gl, [vertexShader, fragmentShader]);
 				gl.useProgram(program);
 
 				var positionLocation = gl.getAttribLocation(program, "a_position");
