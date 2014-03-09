@@ -88,20 +88,20 @@ $(document).ready(function() {
 		var rotation = [BC.Math.radians(0), BC.Math.radians(0), BC.Math.radians(0)];
 
 		var scale = [1, 1, 1];
-		var scaleMatrix = makeScale(scale[0], scale[1], scale[2]);
+		var scaleMatrix = BC.Matrix.makeScale(scale[0], scale[1], scale[2]);
 
 		var translation = [0, 0, 0];
-		var translationMatrix = makeTranslation(translation[0], translation[1], translation[2]);
+		var translationMatrix = BC.Matrix.makeTranslation(translation[0], translation[1], translation[2]);
 
 		var up = [0, 1, 0];
 		var cameraPosition = [3, 3, 3];
 		var targetPosition = [0, 0, 0];
-		var cameraMatrix = makeLookAt(cameraPosition, targetPosition, up);
-		var viewMatrix = makeInverse(cameraMatrix);
+		var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
+		var viewMatrix = BC.Matrix.makeInverse(cameraMatrix);
 
 		var aspect = canvas.width / canvas.height;
 		var fieldOfViewRadians = BC.Math.radians(55);
-		var projectionMatrix = makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+		var projectionMatrix = BC.Matrix.makePerspective(fieldOfViewRadians, aspect, 1, 2000);
 
 		var texture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -124,16 +124,16 @@ $(document).ready(function() {
 
 			rotation[1] += rotationSpeed * deltaTime;
 
-			var rotationZMatrix = makeZRotation(rotation[2]);
-			var rotationYMatrix = makeYRotation(rotation[1]);
-			var rotationXMatrix = makeXRotation(rotation[0]);
+			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
+			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
+			var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
 
-			var matrix = matrixMultiply(scaleMatrix, rotationZMatrix);
-			matrix = matrixMultiply(matrix, rotationYMatrix);
-			matrix = matrixMultiply(matrix, rotationXMatrix);
-			matrix = matrixMultiply(matrix, translationMatrix);
-			matrix = matrixMultiply(matrix, viewMatrix);
-			matrix = matrixMultiply(matrix, projectionMatrix);
+			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, translationMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, viewMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, projectionMatrix);
 
 			var buffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
