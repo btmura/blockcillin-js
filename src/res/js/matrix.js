@@ -1,7 +1,7 @@
 function makeLookAt(cameraPosition, target, up) {
-	var zAxis = normalize(subtractVectors(cameraPosition, target));
-	var xAxis = cross(up, zAxis);
-	var yAxis = cross(zAxis, xAxis);
+	var zAxis = BC.Math.normalize(BC.Math.subtractVectors(cameraPosition, target));
+	var xAxis = BC.Math.cross(up, zAxis);
+	var yAxis = BC.Math.cross(zAxis, xAxis);
 	return [
 		xAxis[0], xAxis[1], xAxis[2], 0,
 		yAxis[0], yAxis[1], yAxis[2], 0,
@@ -160,25 +160,25 @@ function makeInverse(m) {
 
 function matrixMultiply(m, n) {
 	return [
-		m[0]*n[0] + m[1]*n[4] + m[2]*n[8] + m[3]*n[12], 
-		m[0]*n[1] + m[1]*n[5] + m[2]*n[9] + m[3]*n[13], 
-		m[0]*n[2] + m[1]*n[6] + m[2]*n[10] + m[3]*n[14], 
+		m[0]*n[0] + m[1]*n[4] + m[2]*n[8] + m[3]*n[12],
+		m[0]*n[1] + m[1]*n[5] + m[2]*n[9] + m[3]*n[13],
+		m[0]*n[2] + m[1]*n[6] + m[2]*n[10] + m[3]*n[14],
 		m[0]*n[3] + m[1]*n[7] + m[2]*n[11] + m[3]*n[15],
 
 
-		m[4]*n[0] + m[5]*n[4] + m[6]*n[8] + m[7]*n[12], 
-		m[4]*n[1] + m[5]*n[5] + m[6]*n[9] + m[7]*n[13], 
-		m[4]*n[2] + m[5]*n[6] + m[6]*n[10] + m[7]*n[14], 
+		m[4]*n[0] + m[5]*n[4] + m[6]*n[8] + m[7]*n[12],
+		m[4]*n[1] + m[5]*n[5] + m[6]*n[9] + m[7]*n[13],
+		m[4]*n[2] + m[5]*n[6] + m[6]*n[10] + m[7]*n[14],
 		m[4]*n[3] + m[5]*n[7] + m[6]*n[11] + m[7]*n[15],
 
-		m[8]*n[0] + m[9]*n[4] + m[10]*n[8] + m[11]*n[12], 
-		m[8]*n[1] + m[9]*n[5] + m[10]*n[9] + m[11]*n[13], 
-		m[8]*n[2] + m[9]*n[6] + m[10]*n[10] + m[11]*n[14], 
+		m[8]*n[0] + m[9]*n[4] + m[10]*n[8] + m[11]*n[12],
+		m[8]*n[1] + m[9]*n[5] + m[10]*n[9] + m[11]*n[13],
+		m[8]*n[2] + m[9]*n[6] + m[10]*n[10] + m[11]*n[14],
 		m[8]*n[3] + m[9]*n[7] + m[10]*n[11] + m[11]*n[15],
 
-		m[12]*n[0] + m[13]*n[4] + m[14]*n[8] + m[15]*n[12], 
-		m[12]*n[1] + m[13]*n[5] + m[14]*n[9] + m[15]*n[13], 
-		m[12]*n[2] + m[13]*n[6] + m[14]*n[10] + m[15]*n[14], 
+		m[12]*n[0] + m[13]*n[4] + m[14]*n[8] + m[15]*n[12],
+		m[12]*n[1] + m[13]*n[5] + m[14]*n[9] + m[15]*n[13],
+		m[12]*n[2] + m[13]*n[6] + m[14]*n[10] + m[15]*n[14],
 		m[12]*n[3] + m[13]*n[7] + m[14]*n[11] + m[15]*n[15]
 	];
 }

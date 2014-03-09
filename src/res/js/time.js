@@ -1,6 +1,6 @@
 BC.Time = (function() {
 	return {
-		getTimeInSeconds : function() {
+		getTimeInSeconds: function() {
 			return Date.now() * 0.001;
 		}
 	};
