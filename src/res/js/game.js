@@ -169,7 +169,16 @@ BC.Game = (function() {
 
 							-1, 1, 1,
 							-1, 1, -1,
-							-1, -1, -1
+							-1, -1, -1,
+
+							// Bottom
+							-1, -1, 1,
+							-1, -1, -1,
+							1, -1, -1,
+
+							-1, -1, 1,
+							1, -1, -1,
+							1, -1, 1
 						]),
 						gl.STATIC_DRAW);
 					gl.enableVertexAttribArray(positionLocation);
@@ -226,12 +235,21 @@ BC.Game = (function() {
 
 							1, 0,
 							0, 0,
-							0, 1
+							0, 1,
+
+							// Bottom
+							0, 1,
+							0, 0,
+							1, 0,
+
+							0, 1,
+							1, 0,
+							1, 1
 						]),
 						gl.STATIC_DRAW);
 
 					gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-					gl.drawArrays(gl.TRIANGLES, 0, 30);
+					gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
 
 					requestAnimationFrame(drawScene);
 				}
