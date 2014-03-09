@@ -2,6 +2,10 @@ BC.Game = (function() {
 	return {
 		run: function() {
 			var canvas = document.getElementById("canvas");
+			if (!canvas) {
+				return;
+			}
+
 			var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 			if (!gl) {
 				return;
