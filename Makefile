@@ -1,9 +1,9 @@
 all:
 	java -jar compiler.jar \
-		--js src/resources/js/bc.js \
-		--js src/resources/js/math.js \
-		--js src/resources/js/time.js \
-		--js src/resources/js/vector.js \
-		--js src/resources/js/matrix.js \
-		--js src/resources/js/main.js \
-		--js_output_file src/resources/jscompiled/blockcillin.js
+		--js src/res/js/bc.js \
+		--js src/res/js/math.js \
+		--js src/res/js/time.js \
+		--js src/res/js/vector.js \
+		--js src/res/js/matrix.js \
+		--js src/res/js/main.js \
+		--js_output_file src/res/jscompiled/blockcillin.js

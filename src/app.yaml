@@ -5,22 +5,22 @@ api_version: go1
 
 handlers:
 - url: /css
-  static_dir: resources/css
+  static_dir: res/css
 
 - url: /images
-  static_dir: resources/images
+  static_dir: res/images
 
 - url: /js
-  static_dir: resources/js
+  static_dir: res/js
 
 - url: /jscompiled
-  static_dir: resources/jscompiled
+  static_dir: res/jscompiled
 
 - url: /jstests
-  static_dir: resources/jstests
+  static_dir: res/jstests
 
 - url: /shaders
-  static_dir: resources/shaders
+  static_dir: res/shaders
 
 - url: /.*
   script: _go_app
