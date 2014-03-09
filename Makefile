@@ -5,5 +5,6 @@ all:
 		--js src/res/js/matrix.js \
 		--js src/res/js/time.js \
 		--js src/res/js/util.js \
+		--js src/res/js/webgl.js \
 		--js src/res/js/main.js \
 		--js_output_file src/res/js/compiled.js
