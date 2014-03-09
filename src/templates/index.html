@@ -7,9 +7,9 @@
 		{{template "menu" .}}
 		<canvas id="canvas"></canvas>
 		{{if .Compiled}}
-			{{template "compiledbc"}}
+			{{template "bc-compiled"}}
 		{{else}}
-			{{template "bc"}}
+			{{template "bc-scripts"}}
 		{{end}}
 	</body>
 </html>

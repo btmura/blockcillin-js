@@ -2,7 +2,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 {{end}}
 
-{{define "bc"}}
+{{define "bc-scripts"}}
 	{{template "jquery"}}
 	<script src="js/bc.js"></script>
 	<script src="js/game.js"></script>
@@ -14,8 +14,13 @@
 	<script src="js/util.js"></script>
 {{end}}
 
-{{define "bctests"}}
-	{{template "bc"}}
+{{define "bc-compiled"}}
+	{{template "jquery"}}
+	<script src="js/blockcillin.js"></script>
+{{end}}
+
+{{define "bc-tests"}}
+	{{template "bc-scripts"}}
 	<script src="http://code.jquery.com/qunit/qunit-1.14.0.js"></script>
 	<script src="jstests/bc_test.js"></script>
 	<script src="jstests/game_test.js"></script>
@@ -24,9 +29,4 @@
 	<script src="jstests/matrix_test.js"></script>
 	<script src="jstests/time_test.js"></script>
 	<script src="jstests/util_test.js"></script>
-{{end}}
-
-{{define "compiledbc"}}
-	{{template "jquery"}}
-	<script src="js/blockcillin.js"></script>
 {{end}}
