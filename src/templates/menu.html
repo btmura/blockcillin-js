@@ -1,9 +1,9 @@
 {{define "menu"}}
 	<p>
-		<a href="/">Home</a>
-		| <a href="https://blockcillin.blogspot.com" target="_blank">Blog</a>
+		<a href="https://blockcillin.blogspot.com" target="_blank">Blog</a>
 		| <a href="https://github.com/btmura/blockcillin" target="_blank">GitHub</a>
 		{{if .ShowDebugLink}}| <a href="/debug">Debug</a>{{end}}
+		{{if .ShowReleaseLink}}| <a href="/">Release</a>{{end}}
 		{{if .ShowTestLink}}| <a href="/test">Test</a>{{end}}
 	</p>
 {{end}}
