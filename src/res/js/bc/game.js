@@ -36,7 +36,7 @@ var BC = (function(parent) {
 		var translationMatrix = BC.Matrix.makeTranslation(translation[0], translation[1], translation[2]);
 
 		var up = [0, 1, 0];
-		var cameraPosition = [0, 5, 5];
+		var cameraPosition = [0, 0, 2];
 		var targetPosition = [0, 0, 0];
 		var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
 		var viewMatrix = BC.Matrix.makeInverse(cameraMatrix);
@@ -94,6 +94,34 @@ var BC = (function(parent) {
 			}
 		});
 
+		var numSlices = 12;
+		var circlePoints = BC.Math.circlePoints(1, numSlices);
+		var points = [];
+		for (var i = 0, j = 0, k = 0; i < numSlices; i++) {
+			// 1st point - origin
+			points[j++] = 0;
+			points[j++] = 0;
+			points[j++] = 0;
+
+			// 2nd point - circle point
+			points[j++] = circlePoints[k++];
+			points[j++] = circlePoints[k++];
+			points[j++] = 0;
+
+			// We'll reuse the first point at the end so make sure we're still in bounds.
+			k %= circlePoints.length;
+
+			// 3rd point - next circle point
+			points[j++] = circlePoints[k++];
+			points[j++] = circlePoints[k++];
+			points[j++] = 0;
+
+			// Decrement since last point will be reused.
+			k -= 2;
+		}
+
+		var pointData = new Float32Array(points);
+
 		function drawScene() {
 			var now = BC.Time.getTimeInSeconds();
 			var deltaTime = now - then;
@@ -115,68 +143,12 @@ var BC = (function(parent) {
 
 			var buffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-			gl.bufferData(
-				gl.ARRAY_BUFFER,
-				new Float32Array([
-					// Front
-					-1, 1, 1,
-					-1, -1, 1,
-					1, -1, 1,
-
-					-1, 1, 1,
-					1, -1, 1,
-					1, 1, 1,
-
-					// Right
-					1, 1, 1,
-					1, -1, 1,
-					1, -1, -1,
-
-					1, 1, 1,
-					1, -1, -1,
-					1, 1, -1,
-
-					// Top
-					-1, 1, 1,
-					1, 1, -1,
-					-1, 1, -1,
-
-					-1, 1, 1,
-					1, 1, 1,
-					1, 1, -1,
-
-					// Back
-					-1, 1, -1,
-					1, -1, -1,
-					-1, -1, -1,
-
-					-1, 1, -1,
-					1, 1, -1,
-					1, -1, -1,
-
-					// Left
-					-1, 1, 1,
-					-1, -1, -1,
-					-1, -1, 1,
-
-					-1, 1, 1,
-					-1, 1, -1,
-					-1, -1, -1,
-
-					// Bottom
-					-1, -1, 1,
-					-1, -1, -1,
-					1, -1, -1,
-
-					-1, -1, 1,
-					1, -1, -1,
-					1, -1, 1
-				]),
-				gl.STATIC_DRAW);
+			gl.bufferData(gl.ARRAY_BUFFER, pointData, gl.STATIC_DRAW);
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 			gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
+			/*
 			var textureBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
 			gl.enableVertexAttribArray(texcoordLocation);
@@ -184,64 +156,15 @@ var BC = (function(parent) {
 			gl.bufferData(
 				gl.ARRAY_BUFFER,
 				new Float32Array([
-					// Front
 					0, 0,
 					0, 1,
 					1, 1,
-
-					0, 0,
-					1, 1,
-					1, 0,
-
-					// Right
-					0, 0,
-					0, 1,
-					1, 1,
-
-					0, 0,
-					1, 1,
-					1, 0,
-
-					// Top
-					0, 1,
-					1, 0,
-					0, 0,
-
-					0, 1,
-					1, 1,
-					1, 0,
-
-					// Back
-					1, 0,
-					0, 1,
-					1, 1,
-
-					1, 0,
-					0, 0,
-					0, 1,
-
-					// Left
-					1, 0,
-					0, 1,
-					1, 1,
-
-					1, 0,
-					0, 0,
-					0, 1,
-
-					// Bottom
-					0, 1,
-					0, 0,
-					1, 0,
-
-					0, 1,
-					1, 0,
-					1, 1
 				]),
 				gl.STATIC_DRAW);
+			*/
 
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-			gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
+			gl.drawArrays(gl.TRIANGLES, 0, 3 * numSlices);
 
 			requestAnimationFrame(drawScene);
 		}
