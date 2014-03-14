@@ -8,12 +8,14 @@ import (
 var indexTemplate = mustParseFiles(
 	"templates/index.html",
 	"templates/menu.html",
-	"templates/scripts.html")
+	"templates/scripts.html",
+	"templates/shaders.html")
 
 var testTemplate = mustParseFiles(
 	"templates/test.html",
 	"templates/menu.html",
-	"templates/scripts.html")
+	"templates/scripts.html",
+	"templates/shaders.html")
 
 // mustParseFiles creates a template out of the filenames or panics.
 func mustParseFiles(filenames ...string) *template.Template {

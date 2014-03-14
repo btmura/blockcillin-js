@@ -13,8 +13,5 @@ handlers:
 - url: /js
   static_dir: res/js
 
-- url: /shaders
-  static_dir: res/shaders
-
 - url: /.*
   script: _go_app

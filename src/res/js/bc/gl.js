@@ -2,12 +2,26 @@ var BC = (function(parent) {
 
 	var my = parent.GL = parent.GL || {}
 
-	my.loadShader = function(gl, shaderSource, shaderType, opt_errorCallback) {
+	/**
+	 * Loads a shader from a script tag.
+	 *
+	 * @param {WebGLContext} gl - the WebGLContext to use
+	 * @param {string} scriptId - id of the script tag
+	 * @param {number} shaderType - type of the shader
+	 * @param {function(string): void} opt_errorCallback - callback for errors
+	 * @return {WebGLShader} the created shader
+	 */
+	my.loadShader = function(gl, scriptId, shaderType, opt_errorCallback) {
 		var errFn = opt_errorCallback || BC.Util.error;
+		var shaderScript = document.getElementById(scriptId);
+		if (!shaderScript) {
+			errFn("** Error getting script element:" + scriptId);
+			return null;
+		}
+
 		var shader = gl.createShader(shaderType);
-
+		var shaderSource = shaderScript.text;
 		gl.shaderSource(shader, shaderSource);
-
 		gl.compileShader(shader);
 
 		var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
