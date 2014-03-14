@@ -2,8 +2,31 @@ var BC = (function(parent) {
 
 	var my = parent.Math = parent.Math || {};
 
+	/**
+	 * Converts degrees into radians.
+	 *
+	 * @param {Number} degrees - degrees to convert to radians
+	 * @returns {@number} equivalent radians
+	 */
 	my.radians = function(degrees) {
 		return  degrees * Math.PI / 180;
+	}
+
+	/**
+	 * Return array of points on a circle.
+	 *
+	 * @param {Number} radius - radius of the circle
+	 * @param {Number} count - number of points on the circle
+	 * @returns {Array} array with x and y values
+	 */
+	my.circlePoints = function(radius, count) {
+		var theta = 2 * Math.PI / count;
+		var points = [];
+		for (var i = 0; i < count; i++) {
+			points[i * 2] = radius * Math.cos(i * theta);
+			points[i * 2 + 1] = radius * Math.sin(i * theta);
+		}
+		return points;
 	}
 
 	my.cross = function(a, b) {
