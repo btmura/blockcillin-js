@@ -2,6 +2,11 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 {{end}}
 
+{{define "qunit"}}
+	<script src="http://code.jquery.com/qunit/qunit-1.14.0.js"></script>
+	<script src="js/qunit/qunit-close-enough.js"></script>
+{{end}}
+
 {{define "bc-scripts"}}
 	{{template "jquery"}}
 	<script src="js/game.js"></script>
@@ -20,7 +25,7 @@
 
 {{define "bc-tests"}}
 	{{template "bc-scripts"}}
-	<script src="http://code.jquery.com/qunit/qunit-1.14.0.js"></script>
+	{{template "qunit"}}
 	<script src="jstests/game_test.js"></script>
 	<script src="jstests/gl_test.js"></script>
 	<script src="jstests/math_test.js"></script>
