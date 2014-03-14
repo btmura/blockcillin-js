@@ -95,29 +95,42 @@ var BC = (function(parent) {
 		});
 
 		var numSlices = 12;
-		var circlePoints = BC.Math.circlePoints(1, numSlices);
+		var innerRadius = 0.7;
+		var outerRadius = 1;
+
+		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
+		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
+
 		var points = [];
-		for (var i = 0, j = 0, k = 0; i < numSlices; i++) {
-			// 1st point - origin
-			points[j++] = 0;
-			points[j++] = 0;
-			points[j++] = 0;
+		for (var s = 0, i = 0, p = 0; s < numSlices; s++, p += 2) {
+			// Calculate index for next point. Use modulus since we reuse the last point.
+			var np = (p + 2) % outerCirclePoints.length;
 
-			// 2nd point - circle point
-			points[j++] = circlePoints[k++];
-			points[j++] = circlePoints[k++];
-			points[j++] = 0;
+			// 1st triangle of two for quad slice.
+			points[i++] = innerCirclePoints[p];
+			points[i++] = innerCirclePoints[p + 1];
+			points[i++] = 0;
 
-			// We'll reuse the first point at the end so make sure we're still in bounds.
-			k %= circlePoints.length;
+			points[i++] = outerCirclePoints[p];
+			points[i++] = outerCirclePoints[p + 1];
+			points[i++] = 0;
 
-			// 3rd point - next circle point
-			points[j++] = circlePoints[k++];
-			points[j++] = circlePoints[k++];
-			points[j++] = 0;
+			points[i++] = outerCirclePoints[np];
+			points[i++] = outerCirclePoints[np + 1];
+			points[i++] = 0;
 
-			// Decrement since last point will be reused.
-			k -= 2;
+			// 2nd triangle of two for quad slice.
+			points[i++] = innerCirclePoints[p];
+			points[i++] = innerCirclePoints[p + 1];
+			points[i++] = 0;
+
+			points[i++] = outerCirclePoints[np];
+			points[i++] = outerCirclePoints[np + 1];
+			points[i++] = 0;
+
+			points[i++] = innerCirclePoints[np];
+			points[i++] = innerCirclePoints[np + 1];
+			points[i++] = 0;
 		}
 
 		var pointData = new Float32Array(points);
@@ -164,7 +177,7 @@ var BC = (function(parent) {
 			*/
 
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-			gl.drawArrays(gl.TRIANGLES, 0, 3 * numSlices);
+			gl.drawArrays(gl.TRIANGLES, 0, 3 * numSlices * 2);
 
 			requestAnimationFrame(drawScene);
 		}
