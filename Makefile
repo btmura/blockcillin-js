@@ -1,5 +1,5 @@
 COMPILED_JS = src/res/js/blockcillin.js
-JS_SOURCES = $(filter-out $(COMPILED_JS), $(wildcard src/res/js/*.js))
+JS_SOURCES = $(wildcard src/res/js/bc/*.js)
 JS_FLAGS = $(addprefix --js ,$(JS_SOURCES))
 
 all:
