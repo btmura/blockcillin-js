@@ -13,12 +13,6 @@ handlers:
 - url: /js
   static_dir: res/js
 
-- url: /jscompiled
-  static_dir: res/jscompiled
-
-- url: /jstests
-  static_dir: res/jstests
-
 - url: /shaders
   static_dir: res/shaders
 
