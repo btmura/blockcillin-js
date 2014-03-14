@@ -36,7 +36,7 @@ var BC = (function(parent) {
 		var translationMatrix = BC.Matrix.makeTranslation(translation[0], translation[1], translation[2]);
 
 		var up = [0, 1, 0];
-		var cameraPosition = [0, 0, 2];
+		var cameraPosition = [0, 1, 2];
 		var targetPosition = [0, 0, 0];
 		var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
 		var viewMatrix = BC.Matrix.makeInverse(cameraMatrix);
@@ -97,6 +97,8 @@ var BC = (function(parent) {
 		var numSlices = 12;
 		var innerRadius = 0.7;
 		var outerRadius = 1;
+		var maxY = 0.15;
+		var minY = -0.15;
 
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
@@ -106,31 +108,61 @@ var BC = (function(parent) {
 			// Calculate index for next point. Use modulus since we reuse the last point.
 			var np = (p + 2) % outerCirclePoints.length;
 
+			// TOP FACE
+
 			// 1st triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
-			points[i++] = innerCirclePoints[p + 1];
-			points[i++] = 0;
+			points[i++] = maxY;
+			points[i++] = -innerCirclePoints[p + 1];
 
 			points[i++] = outerCirclePoints[p];
-			points[i++] = outerCirclePoints[p + 1];
-			points[i++] = 0;
+			points[i++] = maxY;
+			points[i++] = -outerCirclePoints[p + 1];
 
 			points[i++] = outerCirclePoints[np];
-			points[i++] = outerCirclePoints[np + 1];
-			points[i++] = 0;
+			points[i++] = maxY;
+			points[i++] = -outerCirclePoints[np + 1];
 
 			// 2nd triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
-			points[i++] = innerCirclePoints[p + 1];
-			points[i++] = 0;
+			points[i++] = maxY;
+			points[i++] = -innerCirclePoints[p + 1];
 
 			points[i++] = outerCirclePoints[np];
-			points[i++] = outerCirclePoints[np + 1];
-			points[i++] = 0;
+			points[i++] = maxY;
+			points[i++] = -outerCirclePoints[np + 1];
 
 			points[i++] = innerCirclePoints[np];
-			points[i++] = innerCirclePoints[np + 1];
-			points[i++] = 0;
+			points[i++] = maxY;
+			points[i++] = -innerCirclePoints[np + 1];
+
+			// BOTTOM FACE
+
+			// 1st triangle of two for quad slice.
+			points[i++] = innerCirclePoints[p];
+			points[i++] = minY;
+			points[i++] = -innerCirclePoints[p + 1];
+
+			points[i++] = outerCirclePoints[np];
+			points[i++] = minY;
+			points[i++] = -outerCirclePoints[np + 1];
+
+			points[i++] = outerCirclePoints[p];
+			points[i++] = minY;
+			points[i++] = -outerCirclePoints[p + 1];
+
+			// 2nd triangle of two for quad slice.
+			points[i++] = innerCirclePoints[p];
+			points[i++] = minY;
+			points[i++] = -innerCirclePoints[p + 1];
+
+			points[i++] = innerCirclePoints[np];
+			points[i++] = minY;
+			points[i++] = -innerCirclePoints[np + 1];
+
+			points[i++] = outerCirclePoints[np];
+			points[i++] = minY;
+			points[i++] = -outerCirclePoints[np + 1];
 		}
 
 		var pointData = new Float32Array(points);
@@ -177,7 +209,7 @@ var BC = (function(parent) {
 			*/
 
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-			gl.drawArrays(gl.TRIANGLES, 0, 3 * numSlices * 2);
+			gl.drawArrays(gl.TRIANGLES, 0, points.length / 3);
 
 			requestAnimationFrame(drawScene);
 		}
