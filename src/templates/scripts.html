@@ -7,7 +7,7 @@
 	<script src="js/qunit-plugins/qunit-close-enough.js"></script>
 {{end}}
 
-{{define "bc-scripts"}}
+{{define "bc"}}
 	{{template "jquery"}}
 	<script src="js/bc/game.js"></script>
 	<script src="js/bc/gl.js"></script>
@@ -24,7 +24,7 @@
 {{end}}
 
 {{define "bc-tests"}}
-	{{template "bc-scripts"}}
+	{{template "bc"}}
 	{{template "qunit"}}
 	<script src="js/bc-tests/game_test.js"></script>
 	<script src="js/bc-tests/gl_test.js"></script>
