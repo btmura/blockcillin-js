@@ -252,3 +252,7 @@ var BC = (function(parent) {
 	return parent;
 
 }(BC || {}))
+
+$(document).ready(function() {
+	BC.Game.run();
+});
