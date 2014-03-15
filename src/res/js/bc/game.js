@@ -48,8 +48,7 @@ var BC = (function(parent) {
 		var texture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 		// Fill the texture with a 1x1 blue pixel.
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-              new Uint8Array([0, 0, 255, 255]));
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
 
 		var image = new Image();
 		image.src = "images/texture.png";
@@ -103,8 +102,9 @@ var BC = (function(parent) {
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
 
-		var points = [];
-		for (var s = 0, i = 0, p = 0; s < numSlices; s++, p += 2) {
+		var points = []; // 3D points
+		var textureCoords = []; // 2D points
+		for (var s = 0, i = 0, p = 0, t = 0; s < numSlices; s++, p += 2) {
 			// Calculate index for next point. Use modulus since we reuse the last point.
 			var np = (p + 2) % outerCirclePoints.length;
 
@@ -123,6 +123,15 @@ var BC = (function(parent) {
 			points[i++] = maxY;
 			points[i++] = -outerCirclePoints[np + 1];
 
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 0;
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 0;
+
 			// 2nd triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
 			points[i++] = maxY;
@@ -135,6 +144,15 @@ var BC = (function(parent) {
 			points[i++] = innerCirclePoints[np];
 			points[i++] = maxY;
 			points[i++] = -innerCirclePoints[np + 1];
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 0;
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 1;
 
 			// BOTTOM FACE
 
@@ -151,6 +169,15 @@ var BC = (function(parent) {
 			points[i++] = minY;
 			points[i++] = -outerCirclePoints[p + 1];
 
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 0;
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 0;
+
 			// 2nd triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
 			points[i++] = minY;
@@ -163,6 +190,15 @@ var BC = (function(parent) {
 			points[i++] = outerCirclePoints[np];
 			points[i++] = minY;
 			points[i++] = -outerCirclePoints[np + 1];
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 0;
 
 			// OUTER FACE
 
@@ -179,6 +215,15 @@ var BC = (function(parent) {
 			points[i++] = maxY;
 			points[i++] = -outerCirclePoints[np + 1];
 
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 0;
+
 			// 2nd triangle of two for quad slice.
 			points[i++] = outerCirclePoints[p];
 			points[i++] = minY;
@@ -191,6 +236,15 @@ var BC = (function(parent) {
 			points[i++] = outerCirclePoints[p];
 			points[i++] = maxY;
 			points[i++] = -outerCirclePoints[p + 1];
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 0;
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 0;
 
 			// INNER FACE
 
@@ -207,6 +261,15 @@ var BC = (function(parent) {
 			points[i++] = minY;
 			points[i++] = -innerCirclePoints[np + 1];
 
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 0;
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 1;
+
 			// 2nd triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
 			points[i++] = minY;
@@ -219,9 +282,19 @@ var BC = (function(parent) {
 			points[i++] = innerCirclePoints[np];
 			points[i++] = maxY;
 			points[i++] = -innerCirclePoints[np + 1];
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 1;
+
+			textureCoords[t++] = 0;
+			textureCoords[t++] = 0;
+
+			textureCoords[t++] = 1;
+			textureCoords[t++] = 0;
 		}
 
 		var pointData = new Float32Array(points);
+		var textureCoordData = new Float32Array(textureCoords);
 
 		function drawScene() {
 			var now = BC.Time.getTimeInSeconds();
@@ -249,20 +322,11 @@ var BC = (function(parent) {
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 			gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
-			/*
 			var textureBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
 			gl.enableVertexAttribArray(texcoordLocation);
 			gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-			gl.bufferData(
-				gl.ARRAY_BUFFER,
-				new Float32Array([
-					0, 0,
-					0, 1,
-					1, 1,
-				]),
-				gl.STATIC_DRAW);
-			*/
+			gl.bufferData(gl.ARRAY_BUFFER, textureCoordData, gl.STATIC_DRAW);
 
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			gl.drawArrays(gl.TRIANGLES, 0, points.length / 3);
