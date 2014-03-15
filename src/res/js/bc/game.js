@@ -163,6 +163,62 @@ var BC = (function(parent) {
 			points[i++] = outerCirclePoints[np];
 			points[i++] = minY;
 			points[i++] = -outerCirclePoints[np + 1];
+
+			// OUTER FACE
+
+			// 1st triangle of two for quad slice.
+			points[i++] = outerCirclePoints[p];
+			points[i++] = minY;
+			points[i++] = -outerCirclePoints[p + 1];
+
+			points[i++] = outerCirclePoints[np];
+			points[i++] = minY;
+			points[i++] = -outerCirclePoints[np + 1];
+
+			points[i++] = outerCirclePoints[np];
+			points[i++] = maxY;
+			points[i++] = -outerCirclePoints[np + 1];
+
+			// 2nd triangle of two for quad slice.
+			points[i++] = outerCirclePoints[p];
+			points[i++] = minY;
+			points[i++] = -outerCirclePoints[p + 1];
+
+			points[i++] = outerCirclePoints[np];
+			points[i++] = maxY;
+			points[i++] = -outerCirclePoints[np + 1];
+
+			points[i++] = outerCirclePoints[p];
+			points[i++] = maxY;
+			points[i++] = -outerCirclePoints[p + 1];
+
+			// INNER FACE
+
+			// 1st triangle of two for quad slice.
+			points[i++] = innerCirclePoints[p];
+			points[i++] = minY;
+			points[i++] = -innerCirclePoints[p + 1];
+
+			points[i++] = innerCirclePoints[np];
+			points[i++] = maxY;
+			points[i++] = -innerCirclePoints[np + 1];
+
+			points[i++] = innerCirclePoints[np];
+			points[i++] = minY;
+			points[i++] = -innerCirclePoints[np + 1];
+
+			// 2nd triangle of two for quad slice.
+			points[i++] = innerCirclePoints[p];
+			points[i++] = minY;
+			points[i++] = -innerCirclePoints[p + 1];
+
+			points[i++] = innerCirclePoints[p];
+			points[i++] = maxY;
+			points[i++] = -innerCirclePoints[p + 1];
+
+			points[i++] = innerCirclePoints[np];
+			points[i++] = maxY;
+			points[i++] = -innerCirclePoints[np + 1];
 		}
 
 		var pointData = new Float32Array(points);
