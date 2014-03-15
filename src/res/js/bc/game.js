@@ -93,20 +93,56 @@ var BC = (function(parent) {
 			}
 		});
 
-		var numSlices = 16;
-		var innerRadius = 0.7;
+		var numSlices = 20;
+		var innerRadius = 0.75;
 		var outerRadius = 1;
-		var maxY = 0.2;
-		var minY = -0.2;
+		var maxY = 0.15;
+		var minY = -0.15;
 
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
 
+		var tileSet = BC.GL.textureTileSet(4, 4);
+		var tiles = [
+			tileSet.tile(0, 0),
+			tileSet.tile(0, 1),
+			tileSet.tile(0, 2),
+			tileSet.tile(0, 3),
+			tileSet.tile(1, 0),
+			tileSet.tile(1, 1)
+		];
+
 		var points = []; // 3D points
+
 		var textureCoords = []; // 2D points
-		for (var s = 0, i = 0, p = 0, t = 0; s < numSlices; s++, p += 2) {
+		var t = 0;
+
+		var setTextureCoords = function(tile, s1, t1, s2, t2, s3, t3) {
+			var tc = tile.textureCoord(s1, t1);
+			textureCoords[t++] = tc[0];
+			textureCoords[t++] = tc[1];
+
+			tc = tile.textureCoord(s2, t2);
+			textureCoords[t++] = tc[0];
+			textureCoords[t++] = tc[1];
+
+			tc = tile.textureCoord(s3, t3);
+			textureCoords[t++] = tc[0];
+			textureCoords[t++] = tc[1];
+		};
+
+		var tileIndex = 0;
+		var prevTileIndex = 0;
+
+		for (var s = 0, i = 0, p = 0; s < numSlices; s++, p += 2) {
 			// Calculate index for next point. Use modulus since we reuse the last point.
 			var np = (p + 2) % outerCirclePoints.length;
+
+			while (prevTileIndex === tileIndex) {
+				tileIndex = Math.floor(Math.random() * tiles.length);
+			}
+			prevTileIndex = tileIndex;
+			var tile = tiles[tileIndex];
 
 			// TOP FACE
 
@@ -123,14 +159,7 @@ var BC = (function(parent) {
 			points[i++] = maxY;
 			points[i++] = -outerCirclePoints[np + 1];
 
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 0;
-
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 0;
+			setTextureCoords(tile, 1, 1, 1, 0, 0, 0);
 
 			// 2nd triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
@@ -145,14 +174,7 @@ var BC = (function(parent) {
 			points[i++] = maxY;
 			points[i++] = -innerCirclePoints[np + 1];
 
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 0;
-
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 1;
+			setTextureCoords(tile, 1, 1, 0, 0, 0, 1);
 
 			// BOTTOM FACE
 
@@ -169,14 +191,7 @@ var BC = (function(parent) {
 			points[i++] = minY;
 			points[i++] = -outerCirclePoints[p + 1];
 
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 0;
-
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 0;
+			setTextureCoords(tile, 1, 1, 0, 0, 1, 0);
 
 			// 2nd triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
@@ -191,14 +206,7 @@ var BC = (function(parent) {
 			points[i++] = minY;
 			points[i++] = -outerCirclePoints[np + 1];
 
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 0;
+			setTextureCoords(tile, 1, 1, 0, 1, 0, 0);
 
 			// OUTER FACE
 
@@ -215,14 +223,7 @@ var BC = (function(parent) {
 			points[i++] = maxY;
 			points[i++] = -outerCirclePoints[np + 1];
 
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 0;
+			setTextureCoords(tile, 0, 1, 1, 1, 1, 0);
 
 			// 2nd triangle of two for quad slice.
 			points[i++] = outerCirclePoints[p];
@@ -237,14 +238,7 @@ var BC = (function(parent) {
 			points[i++] = maxY;
 			points[i++] = -outerCirclePoints[p + 1];
 
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 0;
-
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 0;
+			setTextureCoords(tile, 0, 1, 1, 0, 0, 0);
 
 			// INNER FACE
 
@@ -261,14 +255,7 @@ var BC = (function(parent) {
 			points[i++] = minY;
 			points[i++] = -innerCirclePoints[np + 1];
 
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 0;
-
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 1;
+			setTextureCoords(tile, 0, 1, 1, 0, 1, 1);
 
 			// 2nd triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
@@ -283,14 +270,7 @@ var BC = (function(parent) {
 			points[i++] = maxY;
 			points[i++] = -innerCirclePoints[np + 1];
 
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 1;
-
-			textureCoords[t++] = 0;
-			textureCoords[t++] = 0;
-
-			textureCoords[t++] = 1;
-			textureCoords[t++] = 0;
+			setTextureCoords(tile, 0, 1, 0, 0, 1, 0);
 		}
 
 		var pointData = new Float32Array(points);
