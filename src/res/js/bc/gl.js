@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.GL = parent.GL || {}
+	var my = parent.GL = parent.GL || {};
 
 	/**
 	 * Loads a shader from a script tag.
@@ -33,7 +33,7 @@ var BC = (function(parent) {
 		}
 
 		return shader;
-	}
+	};
 
 	my.createProgram = function(gl, shaders, opt_attribs, opt_locations) {
 		var program = gl.createProgram();
@@ -59,7 +59,45 @@ var BC = (function(parent) {
 			return null;
 		}
 		return program;
-	}
+	};
+
+	/**
+	 * Returns a tile set representing a texture split up into multiple.
+	 *
+	 * @param {number} numRows - rows the tile map has
+	 * @param {number} numCols - columns the tile map has
+	 * @return {Object} the tile map to query for tiles
+	 */
+	my.textureTileSet = function(numRows, numCols) {
+		var tw = 1.0 / numRows;
+		var th = 1.0 / numCols;
+		return {
+
+			/**
+			 * Returns the tile at a certain row and column.
+			 *
+			 * @param {number} row - zero-based index from top
+			 * @param {number} col - zero-based index from left
+			 * @return {Object} the tile at that row and column
+			 */
+			tile : function(row, col) {
+				var tx = tw * col;
+				var ty = th * row;
+				return {
+
+					/**
+					 * Translates the relative position to absolute position.
+					 *
+					 * @param {number} s - s coord from left as if one texture
+					 * @param {number} t - t coord from top as if one texture
+					 */
+					textureCoord : function(s, t) {
+						return [tx + tw*s, ty + th*t];
+					}
+				};
+			}
+		};
+	};
 
 	return parent;
 
