@@ -93,11 +93,11 @@ var BC = (function(parent) {
 			}
 		});
 
-		var numSlices = 12;
+		var numSlices = 16;
 		var innerRadius = 0.7;
 		var outerRadius = 1;
-		var maxY = 0.15;
-		var minY = -0.15;
+		var maxY = 0.2;
+		var minY = -0.2;
 
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
