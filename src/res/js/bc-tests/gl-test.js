@@ -1,54 +1,58 @@
 module("BC.GL");
 
 test("textureTileSet", function() {
-	var ts = BC.GL.textureTileSet(1, 1, 0);
-	var t = ts.tile(0, 0);
-	deepEqual(t.textureCoord(0, 0), [0, 0], "tile: (0, 0) coord: (0, 0) inset: 0");
-	deepEqual(t.textureCoord(1, 0), [1, 0], "tile: (0, 0) coord: (1, 0) inset: 0");
-	deepEqual(t.textureCoord(1, 1), [1, 1], "tile: (0, 0) coord: (1, 1) inset: 0");
-	deepEqual(t.textureCoord(0, 1), [0, 1], "tile: (0, 0) coord: (0, 1) inset: 0");
+	var inset = 0;
+	var tileSet = BC.GL.textureTileSet(1, 1, inset);
+	QUnit.assert.tile(tileSet, 0, 0, [0, 0], [1, 0], [1, 1], [0, 1], inset);
 });
 
 test("textureTileSet_inset", function() {
 	var inset = 0.1;
-	var ts = BC.GL.textureTileSet(1, 1, inset);
-	var t = ts.tile(0, 0);
-	deepEqual(t.textureCoord(0, 0), [0 + inset, 0 + inset], "tile: (0, 0) coord: (0, 0) inset: 0.1");
-	deepEqual(t.textureCoord(1, 0), [1 - inset, 0 + inset], "tile: (0, 0) coord: (1, 0) inset: 0.1");
-	deepEqual(t.textureCoord(1, 1), [1 - inset, 1 - inset], "tile: (0, 0) coord: (1, 1) inset: 0.1");
-	deepEqual(t.textureCoord(0, 1), [0 + inset, 1 - inset], "tile: (0, 0) coord: (0, 1) inset: 0.1");
+	var tileSet = BC.GL.textureTileSet(1, 1, inset);
+	QUnit.assert.tile(tileSet, 0, 0, [0, 0], [1, 0], [1, 1], [0, 1], inset);
 });
 
 test("textureTileSet_multipleTiles", function() {
-	var ts = BC.GL.textureTileSet(2, 2, 0);
-	var t = ts.tile(0, 0);
-	deepEqual(t.textureCoord(0, 0), [0, 0], "tile: (0, 0) coord: (0, 0) inset: 0");
-	deepEqual(t.textureCoord(1, 0), [0.5, 0], "tile: (0, 0) coord: (1, 0) inset: 0");
-	deepEqual(t.textureCoord(1, 1), [0.5, 0.5], "tile: (0, 0) coord: (1, 1) inset: 0");
-	deepEqual(t.textureCoord(0, 1), [0, 0.5], "tile: (0, 0) coord: (0, 1) inset: 0");
-
-	var t = ts.tile(0, 1);
-	deepEqual(t.textureCoord(0, 0), [0.5, 0], "tile: (0, 1) coord: (0, 0) inset: 0");
-	deepEqual(t.textureCoord(1, 0), [1, 0], "tile: (0, 1) coord: (1, 0) inset: 0");
-	deepEqual(t.textureCoord(1, 1), [1, 0.5], "tile: (0, 1) coord: (1, 1) inset: 0");
-	deepEqual(t.textureCoord(0, 1), [0.5, 0.5], "tile: (0, 1) coord: (0, 1) inset: 0");
+	var inset = 0;
+	var tileSet = BC.GL.textureTileSet(2, 2, inset);
+	QUnit.assert.tile(tileSet, 0, 0, [0, 0], [0.5, 0], [0.5, 0.5], [0, 0.5], inset);
+	QUnit.assert.tile(tileSet, 0, 1, [0.5, 0], [1, 0], [1, 0.5], [0.5, 0.5], inset);
 });
 
-test("textureTileSet_multipleTiles", function() {
-	var close = QUnit.assert.close;
-	var maxErr = 0.0001;
-
+test("textureTileSet_multipleTiles_inset", function() {
 	var inset = 0.2;
-	var ts = BC.GL.textureTileSet(2, 2, inset);
-	var t = ts.tile(0, 0);
-	close(t.textureCoord(0, 0), [0 + inset, 0 + inset], maxErr, "tile: (0, 0) coord: (0, 0) inset: 0.2");
-	close(t.textureCoord(1, 0), [0.5 - inset, 0 + inset], maxErr, "tile: (0, 0) coord: (1, 0) inset: 0.2");
-	close(t.textureCoord(1, 1), [0.5 - inset, 0.5 - inset], maxErr, "tile: (0, 0) coord: (1, 1) inset: 0.2");
-	close(t.textureCoord(0, 1), [0 + inset, 0.5 - inset], maxErr, "tile: (0, 0) coord: (0, 1) inset: 0.2");
+	var tileSet = BC.GL.textureTileSet(2, 2, inset);
+	QUnit.assert.tile(tileSet, 0, 0, [0, 0], [0.5, 0], [0.5, 0.5], [0, 0.5], inset);
+	QUnit.assert.tile(tileSet, 0, 1, [0.5, 0], [1, 0], [1, 0.5], [0.5, 0.5], inset);
+});
 
-	var t = ts.tile(0, 1);
-	close(t.textureCoord(0, 0), [0.5 + inset, 0 + inset], maxErr, "tile: (0, 1) coord: (0, 0) inset: 0.2");
-	close(t.textureCoord(1, 0), [1 - inset, 0 + inset], maxErr, "tile: (0, 1) coord: (1, 0) inset: 0.2");
-	close(t.textureCoord(1, 1), [1 - inset, 0.5 - inset], maxErr, "tile: (0, 1) coord: (1, 1) inset: 0.2");
-	close(t.textureCoord(0, 1), [0.5 + inset, 0.5 - inset], maxErr, "tile: (0, 1) coord: (0, 1) inset: 0.2");
+QUnit.extend(QUnit.assert, {
+	tile: function(tileSet, tileX, tileY, topLeft, topRight, bottomRight, bottomLeft, inset) {
+		var close = QUnit.assert.close;
+		var maxErr = 0.0001;
+
+		var addInset = function(textureCoords, sInset, tInset) {
+			return [textureCoords[0] + sInset, textureCoords[1] + tInset];
+		};
+
+		var	message = function(tileX, tileY, s, t, inset) {
+			return "tile: (" + tileX + ", " + tileY +
+				") coord: (" + s + ", " + t +
+				") inset: " + inset;
+		};
+
+		var tile = tileSet.tile(tileX, tileY);
+
+		close(tile.textureCoord(0, 0), addInset(topLeft, inset, inset), maxErr,
+			message(tileX, tileY, 0, 0, inset));
+
+		close(tile.textureCoord(1, 0), addInset(topRight, -inset, inset), maxErr,
+			message(tileX, tileY, 1, 0, inset));
+
+		close(tile.textureCoord(1, 1), addInset(bottomRight, -inset, -inset), maxErr,
+			message(tileX, tileY, 1, 1, inset));
+
+		close(tile.textureCoord(0, 1), addInset(bottomLeft, inset, -inset), maxErr,
+			message(tileX, tileY, 0, 1, inset));
+	}
 });
