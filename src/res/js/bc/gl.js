@@ -66,9 +66,10 @@ var BC = (function(parent) {
 	 *
 	 * @param {number} numRows - rows the tile map has
 	 * @param {number} numCols - columns the tile map has
+	 * @param {number} inset - amount to inset from 0 to 1
 	 * @return {Object} the tile map to query for tiles
 	 */
-	my.textureTileSet = function(numRows, numCols) {
+	my.textureTileSet = function(numRows, numCols, inset) {
 		var tw = 1.0 / numRows;
 		var th = 1.0 / numCols;
 		return {
@@ -92,7 +93,10 @@ var BC = (function(parent) {
 					 * @param {number} t - t coord from top as if one texture
 					 */
 					textureCoord : function(s, t) {
-						return [tx + tw*s, ty + th*t];
+						return [
+							tx + inset + (tw - inset*2) * s,
+							ty + inset + (th - inset*2) * t
+						];
 					}
 				};
 			}

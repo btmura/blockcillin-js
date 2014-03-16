@@ -102,7 +102,7 @@ var BC = (function(parent) {
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
 
-		var tileSet = BC.GL.textureTileSet(4, 4);
+		var tileSet = BC.GL.textureTileSet(4, 4, 0.01);
 		var tiles = [
 			tileSet.tile(0, 0),
 			tileSet.tile(0, 1),
