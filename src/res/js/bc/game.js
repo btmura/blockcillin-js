@@ -36,7 +36,7 @@ var BC = (function(parent) {
 		var translationMatrix = BC.Matrix.makeTranslation(translation[0], translation[1], translation[2]);
 
 		var up = [0, 1, 0];
-		var cameraPosition = [0, 1, 2];
+		var cameraPosition = [0, 0.75, 2];
 		var targetPosition = [0, 0, 0];
 		var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
 		var viewMatrix = BC.Matrix.makeInverse(cameraMatrix);
@@ -47,11 +47,11 @@ var BC = (function(parent) {
 
 		var texture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, texture);
-		// Fill the texture with a 1x1 blue pixel.
+		// Fill the texture with a 1x1 red pixel.
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
 
 		var image = new Image();
-		image.src = "images/texture.png";
+		image.src = "images/block-texture.png";
 		image.addEventListener('load', function() {
 			gl.bindTexture(gl.TEXTURE_2D, texture);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
@@ -93,7 +93,7 @@ var BC = (function(parent) {
 			}
 		});
 
-		var numSlices = 20;
+		var numSlices = 24;
 		var innerRadius = 0.75;
 		var outerRadius = 1;
 		var maxY = 0.15;
