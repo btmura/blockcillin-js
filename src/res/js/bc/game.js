@@ -159,7 +159,7 @@ var BC = (function(parent) {
 			points[i++] = maxY;
 			points[i++] = -outerCirclePoints[np + 1];
 
-			setTextureCoords(tile, 1, 1, 1, 0, 0, 0);
+			setTextureCoords(tile, 0, 0, 0, 1, 1, 1);
 
 			// 2nd triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
@@ -174,7 +174,7 @@ var BC = (function(parent) {
 			points[i++] = maxY;
 			points[i++] = -innerCirclePoints[np + 1];
 
-			setTextureCoords(tile, 1, 1, 0, 0, 0, 1);
+			setTextureCoords(tile, 0, 0, 1, 1, 1, 0);
 
 			// BOTTOM FACE
 
@@ -191,7 +191,7 @@ var BC = (function(parent) {
 			points[i++] = minY;
 			points[i++] = -outerCirclePoints[p + 1];
 
-			setTextureCoords(tile, 1, 1, 0, 0, 1, 0);
+			setTextureCoords(tile, 0, 0, 1, 1, 0, 1);
 
 			// 2nd triangle of two for quad slice.
 			points[i++] = innerCirclePoints[p];
@@ -206,7 +206,7 @@ var BC = (function(parent) {
 			points[i++] = minY;
 			points[i++] = -outerCirclePoints[np + 1];
 
-			setTextureCoords(tile, 1, 1, 0, 1, 0, 0);
+			setTextureCoords(tile, 0, 0, 1, 0, 1, 1);
 
 			// OUTER FACE
 
