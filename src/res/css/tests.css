@@ -4,10 +4,9 @@ body {
 
 body, a {
 	color: #ffffff;
-	font-family: sans-serif;
 }
 
-#canvas {
-	width: 400px;
-	height: 200px;
+#menu {
+	font-family: monospace;
+	text-align: center;
 }
