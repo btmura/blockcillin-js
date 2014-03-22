@@ -289,7 +289,7 @@ var BC = (function(parent) {
 		// Creates the projection matrix based upon the current canvas dimensions.
 		function makeProjectionMatrix() {
 			var aspect = canvas.width / canvas.height;
-			var fieldOfViewRadians = BC.Math.radians(55);
+			var fieldOfViewRadians = BC.Math.radians(90);
 			return BC.Matrix.makePerspective(fieldOfViewRadians, aspect, 1, 2000);
 		}
 
