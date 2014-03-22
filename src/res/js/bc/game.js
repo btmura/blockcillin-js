@@ -48,7 +48,7 @@ var BC = (function(parent) {
 
 		var image = new Image();
 		image.src = "images/block-texture.png";
-		image.addEventListener('load', function() {
+		$(image).load(function() {
 			gl.bindTexture(gl.TEXTURE_2D, texture);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
 			gl.generateMipmap(gl.TEXTURE_2D);
