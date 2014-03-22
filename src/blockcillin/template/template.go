@@ -5,21 +5,12 @@ import (
 	"net/http"
 )
 
-var indexTemplate = mustParseFiles(
-	"templates/index.html",
-	"templates/menu.html",
-	"templates/scripts.html",
-	"templates/shaders.html")
+var indexTemplate = newTemplate("index.html")
+var testTemplate = newTemplate("tests.html")
 
-var testTemplate = mustParseFiles(
-	"templates/tests.html",
-	"templates/menu.html",
-	"templates/scripts.html",
-	"templates/shaders.html")
-
-// mustParseFiles creates a template out of the filenames or panics.
-func mustParseFiles(filenames ...string) *template.Template {
-	return template.Must(template.ParseFiles(filenames...))
+// newTemplate creates a template with a name that must match one of the globbed templates.
+func newTemplate(name string) *template.Template {
+	return template.Must(template.New(name).ParseGlob("templates/*.html"))
 }
 
 // IndexArgs are arguments passed to the index template.
