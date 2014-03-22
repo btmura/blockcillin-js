@@ -12,7 +12,7 @@ var indexTemplate = mustParseFiles(
 	"templates/shaders.html")
 
 var testTemplate = mustParseFiles(
-	"templates/test.html",
+	"templates/tests.html",
 	"templates/menu.html",
 	"templates/scripts.html",
 	"templates/shaders.html")
