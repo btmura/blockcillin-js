@@ -7,10 +7,9 @@
 	<body>
 		{{template "menu" .}}
 		<canvas id="canvas"></canvas>
-		{{if .Compiled}}
-			{{template "bc-compiled"}}
-		{{else}}
-			{{template "bc"}}
+		{{template "bc-prereqs"}}
+		{{range .ScriptPaths}}
+			<script src="{{.}}"></script>
 		{{end}}
 	</body>
 </html>
