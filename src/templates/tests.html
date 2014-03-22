@@ -8,9 +8,6 @@
 		{{template "menu" .}}
 		<div id="qunit"></div>
 		<div id="qunit-fixture"></div>
-		{{template "bc-test-prereqs"}}
-		{{range .ScriptPaths}}
-			<script src="{{.}}"></script>
-		{{end}}
+		{{template "bc-tests"}}
 	</body>
 </html>

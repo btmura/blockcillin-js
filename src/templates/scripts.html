@@ -7,12 +7,30 @@
 	<script src="js/qunit-plugins/qunit-close-enough.js"></script>
 {{end}}
 
-{{define "bc-prereqs"}}
+{{define "bc"}}
 	{{template "jquery"}}
 	{{template "shaders"}}
+	<script src="js/bc/game.js"></script>
+	<script src="js/bc/gl.js"></script>
+	<script src="js/bc/math.js"></script>
+	<script src="js/bc/matrix.js"></script>
+	<script src="js/bc/time.js"></script>
+	<script src="js/bc/util.js"></script>
 {{end}}
 
-{{define "bc-test-prereqs"}}
-	{{template "bc-prereqs"}}
+{{define "bc-compiled"}}
+	{{template "jquery"}}
+	{{template "shaders"}}
+	<script src="js/bc-compiled/bc.js"></script>
+{{end}}
+
+{{define "bc-tests"}}
+	{{template "bc"}}
 	{{template "qunit"}}
+	<script src="js/bc-tests/game-test.js"></script>
+	<script src="js/bc-tests/gl-test.js"></script>
+	<script src="js/bc-tests/math-test.js"></script>
+	<script src="js/bc-tests/matrix-test.js"></script>
+	<script src="js/bc-tests/time-test.js"></script>
+	<script src="js/bc-tests/util-test.js"></script>
 {{end}}

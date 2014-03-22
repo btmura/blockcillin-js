@@ -10,13 +10,13 @@ import (
 func init() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/debug", debugHandler)
-	http.HandleFunc("/tests", testsHandler)
+	http.HandleFunc("/tests", testHandler)
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	dev := appengine.IsDevAppServer()
 	args := &template.Args{
-		ResourceSet:     template.Release,
+		Compiled:        true,
 		ShowDebugLink:   dev,
 		ShowReleaseLink: dev,
 		ShowTestLink:    dev,
@@ -26,7 +26,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func debugHandler(w http.ResponseWriter, r *http.Request) {
 	args := &template.Args{
-		ResourceSet:     template.Debug,
 		ShowDebugLink:   true,
 		ShowReleaseLink: true,
 		ShowTestLink:    true,
@@ -34,12 +33,11 @@ func debugHandler(w http.ResponseWriter, r *http.Request) {
 	template.ExecuteIndex(w, args)
 }
 
-func testsHandler(w http.ResponseWriter, r *http.Request) {
+func testHandler(w http.ResponseWriter, r *http.Request) {
 	args := &template.Args{
-		ResourceSet:     template.Tests,
 		ShowDebugLink:   true,
 		ShowReleaseLink: true,
 		ShowTestLink:    true,
 	}
-	template.ExecuteTests(w, args)
+	template.ExecuteTest(w, args)
 }
