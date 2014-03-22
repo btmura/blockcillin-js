@@ -41,10 +41,6 @@ var BC = (function(parent) {
 		var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
 		var viewMatrix = BC.Matrix.makeInverse(cameraMatrix);
 
-		var aspect = canvas.width / canvas.height;
-		var fieldOfViewRadians = BC.Math.radians(55);
-		var projectionMatrix = BC.Matrix.makePerspective(fieldOfViewRadians, aspect, 1, 2000);
-
 		var texture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, texture);
 		// Fill the texture with a 1x1 red pixel.
@@ -276,7 +272,40 @@ var BC = (function(parent) {
 		var pointData = new Float32Array(points);
 		var textureCoordData = new Float32Array(textureCoords);
 
+		// Sets the canvas's width and height to the size it's being displayed at.
+		function resizeCanvas() {
+			// Compare current dimensions to displayed dimensions and set them if different.
+			if (canvas.width != canvas.clientWidth || canvas.height != canvas.clientHeight) {
+				canvas.width = canvas.clientWidth;
+				canvas.height = canvas.clientHeight;
+				return true;
+			}
+			return false;
+		}
+
+		// Initially resize the canvas since setting the width to 100% width just scales.
+		resizeCanvas();
+
+		// Creates the projection matrix based upon the current canvas dimensions.
+		function makeProjectionMatrix() {
+			var aspect = canvas.width / canvas.height;
+			var fieldOfViewRadians = BC.Math.radians(55);
+			return BC.Matrix.makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+		}
+
+		// Create the inital projection matrix.
+		var projectionMatrix = makeProjectionMatrix();
+
+		// Set a window resize event listener to adjust the canvas and projection matrix.
+		$(window).resize(function() {
+			if (resizeCanvas()) {
+				projectionMatrix = makeProjectionMatrix();
+			}
+		});
+
 		function drawScene() {
+			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
 			var now = BC.Time.getTimeInSeconds();
 			var deltaTime = now - then;
 			then = now;
