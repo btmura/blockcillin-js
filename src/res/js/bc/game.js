@@ -308,9 +308,20 @@ var BC = (function(parent) {
 		});
 
 		var buffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+		gl.bufferData(gl.ARRAY_BUFFER, pointData, gl.STATIC_DRAW);
+
 		var textureBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, textureCoordData, gl.STATIC_DRAW);
+
 		var selectorPointBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, selectorPointBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, selectorPoints, gl.STATIC_DRAW);
+
 		var selectorTextureBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, selectorTextureBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, selectorTextureCoords, gl.STATIC_DRAW);
 
 		function drawScene() {
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -333,35 +344,31 @@ var BC = (function(parent) {
 			matrix = BC.Matrix.matrixMultiply(matrix, viewMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, projectionMatrix);
 
+			gl.uniformMatrix4fv(matrixLocation, false, matrix);
+
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 			// Draw ring of blocks
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-			gl.bufferData(gl.ARRAY_BUFFER, pointData, gl.STATIC_DRAW);
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-			gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
 			gl.enableVertexAttribArray(texcoordLocation);
 			gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-			gl.bufferData(gl.ARRAY_BUFFER, textureCoordData, gl.STATIC_DRAW);
 
 			gl.drawArrays(gl.TRIANGLES, 0, points.length / 3);
 
 			// Draw selector
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, selectorPointBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, selectorPoints, gl.STATIC_DRAW);
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-			gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, selectorTextureBuffer);
 			gl.enableVertexAttribArray(texcoordLocation);
 			gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-			gl.bufferData(gl.ARRAY_BUFFER, selectorTextureCoords, gl.STATIC_DRAW);
 
 			gl.drawArrays(gl.TRIANGLES, 0, selectorPoints.length / 3);
 
