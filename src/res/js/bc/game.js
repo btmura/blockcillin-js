@@ -272,7 +272,7 @@ var BC = (function(parent) {
 		var pointData = new Float32Array(points);
 		var textureCoordData = new Float32Array(textureCoords);
 
-		var selector = BC.Graphics.selector();
+		var selector = BC.Selector.selector();
 		var selectorPoints = new Float32Array(selector.points);
 		var selectorTextureCoords = new Float32Array(selector.textureCoords);
 

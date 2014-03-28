@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Graphics = parent.Graphics || {};
+	var my = parent.Selector = parent.Selector || {};
 
 	my.selector = function() {
 		return {
