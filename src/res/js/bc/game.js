@@ -272,10 +272,6 @@ var BC = (function(parent) {
 		var pointData = new Float32Array(points);
 		var textureCoordData = new Float32Array(textureCoords);
 
-		var selector = BC.Selector.selector();
-		var selectorPoints = new Float32Array(selector.points);
-		var selectorTextureCoords = new Float32Array(selector.textureCoords);
-
 		// Sets the canvas's width and height to the size it's being displayed at.
 		function resizeCanvas() {
 			// Compare current dimensions to displayed dimensions and set them if different.
@@ -314,6 +310,10 @@ var BC = (function(parent) {
 		var textureBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, textureCoordData, gl.STATIC_DRAW);
+
+		var selector = BC.Selector.selector();
+		var selectorPoints = new Float32Array(selector.points);
+		var selectorTextureCoords = new Float32Array(selector.textureCoords);
 
 		var selectorPointBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, selectorPointBuffer);
