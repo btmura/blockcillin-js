@@ -311,17 +311,7 @@ var BC = (function(parent) {
 		gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, textureCoordData, gl.STATIC_DRAW);
 
-		var selector = BC.Selector.selector();
-		var selectorPoints = new Float32Array(selector.points);
-		var selectorTextureCoords = new Float32Array(selector.textureCoords);
-
-		var selectorPointBuffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, selectorPointBuffer);
-		gl.bufferData(gl.ARRAY_BUFFER, selectorPoints, gl.STATIC_DRAW);
-
-		var selectorTextureBuffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, selectorTextureBuffer);
-		gl.bufferData(gl.ARRAY_BUFFER, selectorTextureCoords, gl.STATIC_DRAW);
+		var selector = BC.Selector.makeSelector(gl);
 
 		function drawScene() {
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -360,17 +350,8 @@ var BC = (function(parent) {
 
 			gl.drawArrays(gl.TRIANGLES, 0, points.length / 3);
 
-			// Draw selector
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, selectorPointBuffer);
-			gl.enableVertexAttribArray(positionLocation);
-			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, selectorTextureBuffer);
-			gl.enableVertexAttribArray(texcoordLocation);
-			gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-			gl.drawArrays(gl.TRIANGLES, 0, selectorPoints.length / 3);
+			// Draw the selector
+			selector.draw(positionLocation, texcoordLocation);
 
 			requestAnimationFrame(drawScene);
 		}
