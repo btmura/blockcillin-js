@@ -44,8 +44,9 @@ var BC = (function(parent) {
 
 		var texture = gl.createTexture();
 		gl.bindTexture(gl.TEXTURE_2D, texture);
-		// Fill the texture with a 1x1 red pixel.
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
+
+		// Fill the texture with a 1x1 black pixel.
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 255]));
 
 		var image = new Image();
 		image.src = "images/block-texture.png";
