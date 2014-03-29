@@ -7,16 +7,27 @@ var BC = (function(parent) {
 			0, 0, 0,
 			1, 0, 0,
 			1, 1, 0,
+			0, 1, 0
 		]);
 
 		var pointBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);
 
+		var indices = new Uint16Array([
+			0, 1, 2,
+			0, 2, 3
+		]);
+
+		var indexBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+
 		var textureCoords = new Float32Array([
 			0, 0,
 			1, 0,
-			1, 1
+			1, 1,
+			0, 1
 		]);
 
 		var textureCoordBuffer = gl.createBuffer();
@@ -32,7 +43,8 @@ var BC = (function(parent) {
 			gl.enableVertexAttribArray(textureCoordLocation);
 			gl.vertexAttribPointer(textureCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
-			gl.drawArrays(gl.TRIANGLES, 0, points.length / 3);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+			gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
 		}
 
 		return {
