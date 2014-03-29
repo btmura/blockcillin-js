@@ -108,6 +108,8 @@ var BC = (function(parent) {
 			tileSet.tile(1, 1)
 		];
 
+		var selectorTextureTile = tileSet.tile(1, 2);
+
 		var points = []; // 3D points
 
 		var textureCoords = []; // 2D points
@@ -311,7 +313,7 @@ var BC = (function(parent) {
 		gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, textureCoordData, gl.STATIC_DRAW);
 
-		var selector = BC.Selector.makeSelector(gl);
+		var selector = BC.Selector.makeSelector(gl, selectorTextureTile);
 
 		function drawScene() {
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
