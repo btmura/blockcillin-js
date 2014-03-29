@@ -2,23 +2,64 @@ var BC = (function(parent) {
 
 	var my = parent.Selector = parent.Selector || {};
 
-	my.makeSelector = function(gl, textureTile) {
-		var points = new Float32Array([
-			0, 0, 0,
-			1, 0, 0,
-			1, 1, 0,
-			0, 1, 0
-		]);
+	my.makeSelector = function(gl, bs, textureTile) {
+		var lp = bs.outerCirclePoints.length - 2;
+		var mp = 0;
+		var rp = 2;
+
+		// Add padding to put selector in front of the blocks.
+		var padding = 0.001;
+
+		var points = [];
+		var i = 0;
+
+		// Left square - counter clockwise from lower left
+
+		points[i++] = bs.outerCirclePoints[lp] + padding;
+		points[i++] = bs.minY;
+		points[i++] = -bs.outerCirclePoints[lp + 1] - padding;
+
+		points[i++] = bs.outerCirclePoints[mp] + padding;
+		points[i++] = bs.minY;
+		points[i++] = -bs.outerCirclePoints[mp + 1] - padding;
+
+		points[i++] = bs.outerCirclePoints[mp] + padding;
+		points[i++] = bs.maxY;
+		points[i++] = -bs.outerCirclePoints[mp + 1] - padding;
+
+		points[i++] = bs.outerCirclePoints[lp] + padding;
+		points[i++] = bs.maxY;
+		points[i++] = -bs.outerCirclePoints[lp + 1] - padding;
+
+		// Right square
+
+		points[i++] = bs.outerCirclePoints[mp] + padding;
+		points[i++] = bs.minY;
+		points[i++] = -bs.outerCirclePoints[mp + 1] - padding;
+
+		points[i++] = bs.outerCirclePoints[rp] + padding;
+		points[i++] = bs.minY;
+		points[i++] = -bs.outerCirclePoints[rp + 1] - padding;
+
+		points[i++] = bs.outerCirclePoints[rp] + padding;
+		points[i++] = bs.maxY;
+		points[i++] = -bs.outerCirclePoints[rp + 1] - padding;
+
+		points[i++] = bs.outerCirclePoints[mp] + padding;
+		points[i++] = bs.maxY;
+		points[i++] = -bs.outerCirclePoints[mp + 1] - padding;
 
 		var pointBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
-		gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW);
 
-		var tc1 = textureTile.textureCoord(0, 0);
-		var tc2 = textureTile.textureCoord(1, 0);
-		var tc3 = textureTile.textureCoord(1, 1);
-		var tc4 = textureTile.textureCoord(0, 1);
-		var textureCoords = new Float32Array(tc1.concat(tc2).concat(tc3).concat(tc4));
+		// Map the four corners of the texture title.
+		var ll = textureTile.textureCoord(0, 0);
+		var lr = textureTile.textureCoord(1, 0);
+		var ur = textureTile.textureCoord(1, 1);
+		var ul = textureTile.textureCoord(0, 1);
+
+		var textureCoords = new Float32Array([].concat(ll, lr, ur, ul, ll, lr, ur, ul));
 
 		var textureCoordBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
@@ -26,7 +67,10 @@ var BC = (function(parent) {
 
 		var indices = new Uint16Array([
 			0, 1, 2,
-			0, 2, 3
+			0, 2, 3,
+
+			4, 5, 6,
+			4, 6, 7
 		]);
 
 		var indexBuffer = gl.createBuffer();
@@ -34,6 +78,8 @@ var BC = (function(parent) {
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
 		function draw(positionLocation, textureCoordLocation) {
+			gl.enable(gl.BLEND);
+
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
@@ -44,6 +90,8 @@ var BC = (function(parent) {
 
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 			gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+
+			gl.disable(gl.BLEND);
 		}
 
 		return {

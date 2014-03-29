@@ -15,6 +15,7 @@ var BC = (function(parent) {
 
 		gl.enable(gl.CULL_FACE);
 		gl.enable(gl.DEPTH_TEST);
+		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 		var vertexShader = BC.GL.loadShader(gl, 'vertex-shader', gl.VERTEX_SHADER);
 		var fragmentShader = BC.GL.loadShader(gl, 'fragment-shader', gl.FRAGMENT_SHADER);
@@ -36,7 +37,7 @@ var BC = (function(parent) {
 		var translationMatrix = BC.Matrix.makeTranslation(translation[0], translation[1], translation[2]);
 
 		var up = [0, 1, 0];
-		var cameraPosition = [0, 0.75, 2];
+		var cameraPosition = [2, 0.75, 0];
 		var targetPosition = [0, 0, 0];
 		var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
 		var viewMatrix = BC.Matrix.makeInverse(cameraMatrix);
@@ -97,6 +98,16 @@ var BC = (function(parent) {
 
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
+
+		var boardSpec = {
+			numSlice: numSlices,
+			innerRadius: innerRadius,
+			outerRadius: outerRadius,
+			innerCirclePoints: innerCirclePoints,
+			outerCirclePoints: outerCirclePoints,
+			maxY: maxY,
+			minY: minY
+		};
 
 		var tileSet = BC.GL.textureTileSet(4, 4, 0.01);
 		var tiles = [
@@ -313,7 +324,7 @@ var BC = (function(parent) {
 		gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, textureCoordData, gl.STATIC_DRAW);
 
-		var selector = BC.Selector.makeSelector(gl, selectorTextureTile);
+		var selector = BC.Selector.makeSelector(gl, boardSpec, selectorTextureTile);
 
 		function drawScene() {
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
