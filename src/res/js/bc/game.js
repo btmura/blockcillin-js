@@ -59,32 +59,17 @@ var BC = (function(parent) {
 			switch (event.keyCode) {
 				// Space
 				case 32:
-					rotationSpeed[0] = 0;
 					rotationSpeed[1] = 0;
 					break;
 
 				// Left
 				case 37:
-					rotationSpeed[0] = 0;
 					rotationSpeed[1] = -1;
-					break;
-
-				// Up
-				case 38:
-					rotationSpeed[0] = -1;
-					rotationSpeed[1] = 0;
 					break;
 
 				// Right
 				case 39:
-					rotationSpeed[0] = 0;
 					rotationSpeed[1] = 1;
-					break;
-
-				// Down
-				case 40:
-					rotationSpeed[0] = 1;
-					rotationSpeed[1] = 0;
 					break;
 			}
 		});
@@ -148,6 +133,9 @@ var BC = (function(parent) {
 		var ring = BC.Ring.makeRing(gl, metrics, ringTextureTiles);
 		var selector = BC.Selector.makeSelector(gl, metrics, selectorTextureTile);
 
+		var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
+		var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
+
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -159,12 +147,8 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
 			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
 
-			rotation[0] += rotationSpeed[0] * deltaTime;
 			rotation[1] += rotationSpeed[1] * deltaTime;
-
-			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
-			var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
 
 			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
