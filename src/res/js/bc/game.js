@@ -23,18 +23,14 @@ var BC = (function(parent) {
 		gl.useProgram(program);
 
 		var positionLocation = gl.getAttribLocation(program, "a_position");
-		var texcoordLocation = gl.getAttribLocation(program, "a_texcoord");
+		var textureCoordLocation = gl.getAttribLocation(program, "a_texcoord");
 		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
 		var then = BC.Time.getTimeInSeconds();
 
-		var rotation = [BC.Math.radians(0), BC.Math.radians(0), BC.Math.radians(0)];
-
+		var rotation = [0, 0, 0];
 		var scale = [1, 1, 1];
 		var scaleMatrix = BC.Matrix.makeScale(scale[0], scale[1], scale[2]);
-
-		var translation = [0, 0, 0];
-		var translationMatrix = BC.Matrix.makeTranslation(translation[0], translation[1], translation[2]);
 
 		var up = [0, 1, 0];
 		var cameraPosition = [0, 0.75, 2];
@@ -151,6 +147,7 @@ var BC = (function(parent) {
 		var selector = BC.Selector.makeSelector(gl, metrics, selectorTextureTile);
 
 		function drawScene() {
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
 			var now = BC.Time.getTimeInSeconds();
@@ -167,15 +164,17 @@ var BC = (function(parent) {
 			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, translationMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, viewMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, projectionMatrix);
 
 			gl.uniformMatrix4fv(matrixLocation, false, matrix);
+			ring.draw(positionLocation, textureCoordLocation);
 
-			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-			ring.draw(positionLocation, texcoordLocation);
-			selector.draw(positionLocation, texcoordLocation);
+			matrix = BC.Matrix.matrixMultiply(scaleMatrix, viewMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, projectionMatrix);
+			gl.uniformMatrix4fv(matrixLocation, false, matrix);
+
+			selector.draw(positionLocation, textureCoordLocation);
 
 			requestAnimationFrame(drawScene);
 		}

@@ -5,7 +5,7 @@ var BC = (function(parent) {
 	my.makeSelector = function(gl, metrics, textureTile) {
 		var minY = metrics.minY;
 		var maxY = metrics.maxY;
-		var outerRadius = metrics.outerRadius + 0.002;
+		var outerRadius = metrics.outerRadius + 0.01;
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, metrics.numSlices, -Math.PI / 2);
 
 		var lp = outerCirclePoints.length - 2;
