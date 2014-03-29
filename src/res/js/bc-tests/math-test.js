@@ -34,4 +34,9 @@ test("circlePoints", function() {
 
 	close(circlePoints(1, 4), [1, 0, 0, 1, -1, 0, 0, -1], maxErr,  "4 points - radius 1");
 	close(circlePoints(2, 4), [2, 0, 0, 2, -2, 0, 0, -2], maxErr,  "4 points - radius 2");
+
+	close(circlePoints(1, 4, Math.PI), [-1, 0, 0, -1, 1, 0, 0, 1], maxErr,
+		"4 points - radius 1 - offset 180");
+	close(circlePoints(2, 4, Math.PI), [-2, 0, 0, -2, 2, 0, 0, 2], maxErr,
+		"4 points - radius 2 - offset 180");
 });

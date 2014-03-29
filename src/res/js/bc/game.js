@@ -37,7 +37,7 @@ var BC = (function(parent) {
 		var translationMatrix = BC.Matrix.makeTranslation(translation[0], translation[1], translation[2]);
 
 		var up = [0, 1, 0];
-		var cameraPosition = [2, 0.75, 0];
+		var cameraPosition = [0, 0.75, 2];
 		var targetPosition = [0, 0, 0];
 		var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
 		var viewMatrix = BC.Matrix.makeInverse(cameraMatrix);
@@ -99,12 +99,10 @@ var BC = (function(parent) {
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
 
-		var boardSpec = {
-			numSlice: numSlices,
+		var metrics = {
+			numSlices: numSlices,
 			innerRadius: innerRadius,
 			outerRadius: outerRadius,
-			innerCirclePoints: innerCirclePoints,
-			outerCirclePoints: outerCirclePoints,
 			maxY: maxY,
 			minY: minY
 		};
@@ -324,7 +322,7 @@ var BC = (function(parent) {
 		gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, textureCoordData, gl.STATIC_DRAW);
 
-		var selector = BC.Selector.makeSelector(gl, boardSpec, selectorTextureTile);
+		var selector = BC.Selector.makeSelector(gl, metrics, selectorTextureTile);
 
 		function drawScene() {
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);

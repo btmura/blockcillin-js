@@ -2,8 +2,13 @@ var BC = (function(parent) {
 
 	var my = parent.Selector = parent.Selector || {};
 
-	my.makeSelector = function(gl, bs, textureTile) {
-		var lp = bs.outerCirclePoints.length - 2;
+	my.makeSelector = function(gl, metrics, textureTile) {
+		var minY = metrics.minY;
+		var maxY = metrics.maxY;
+		var outerRadius = metrics.outerRadius + 0.005;
+		var outerCirclePoints = BC.Math.circlePoints(outerRadius, metrics.numSlices, -Math.PI / 2);
+
+		var lp = outerCirclePoints.length - 2;
 		var mp = 0;
 		var rp = 2;
 
@@ -15,39 +20,39 @@ var BC = (function(parent) {
 
 		// Left square - counter clockwise from lower left
 
-		points[i++] = bs.outerCirclePoints[lp] + padding;
-		points[i++] = bs.minY;
-		points[i++] = -bs.outerCirclePoints[lp + 1] - padding;
+		points[i++] = outerCirclePoints[lp] + padding;
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[lp + 1] - padding;
 
-		points[i++] = bs.outerCirclePoints[mp] + padding;
-		points[i++] = bs.minY;
-		points[i++] = -bs.outerCirclePoints[mp + 1] - padding;
+		points[i++] = outerCirclePoints[mp] + padding;
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[mp + 1] - padding;
 
-		points[i++] = bs.outerCirclePoints[mp] + padding;
-		points[i++] = bs.maxY;
-		points[i++] = -bs.outerCirclePoints[mp + 1] - padding;
+		points[i++] = outerCirclePoints[mp] + padding;
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[mp + 1] - padding;
 
-		points[i++] = bs.outerCirclePoints[lp] + padding;
-		points[i++] = bs.maxY;
-		points[i++] = -bs.outerCirclePoints[lp + 1] - padding;
+		points[i++] = outerCirclePoints[lp] + padding;
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[lp + 1] - padding;
 
 		// Right square
 
-		points[i++] = bs.outerCirclePoints[mp] + padding;
-		points[i++] = bs.minY;
-		points[i++] = -bs.outerCirclePoints[mp + 1] - padding;
+		points[i++] = outerCirclePoints[mp] + padding;
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[mp + 1] - padding;
 
-		points[i++] = bs.outerCirclePoints[rp] + padding;
-		points[i++] = bs.minY;
-		points[i++] = -bs.outerCirclePoints[rp + 1] - padding;
+		points[i++] = outerCirclePoints[rp] + padding;
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[rp + 1] - padding;
 
-		points[i++] = bs.outerCirclePoints[rp] + padding;
-		points[i++] = bs.maxY;
-		points[i++] = -bs.outerCirclePoints[rp + 1] - padding;
+		points[i++] = outerCirclePoints[rp] + padding;
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[rp + 1] - padding;
 
-		points[i++] = bs.outerCirclePoints[mp] + padding;
-		points[i++] = bs.maxY;
-		points[i++] = -bs.outerCirclePoints[mp + 1] - padding;
+		points[i++] = outerCirclePoints[mp] + padding;
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[mp + 1] - padding;
 
 		var pointBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);

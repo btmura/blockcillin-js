@@ -17,14 +17,16 @@ var BC = (function(parent) {
 	 *
 	 * @param {Number} radius - radius of the circle
 	 * @param {Number} count - number of points on the circle
+	 * @param {Number} offset - starting radian offset
 	 * @returns {Array} array with x and y values
 	 */
-	my.circlePoints = function(radius, count) {
+	my.circlePoints = function(radius, count, offset) {
+		offset = offset || 0;
 		var theta = 2 * Math.PI / count;
 		var points = [];
 		for (var i = 0; i < count; i++) {
-			points[i * 2] = radius * Math.cos(i * theta);
-			points[i * 2 + 1] = radius * Math.sin(i * theta);
+			points[i * 2] = radius * Math.cos(offset + i * theta);
+			points[i * 2 + 1] = radius * Math.sin(offset + i * theta);
 		}
 		return points;
 	}
