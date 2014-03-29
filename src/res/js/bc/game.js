@@ -49,7 +49,7 @@ var BC = (function(parent) {
 		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 255]));
 
 		var image = new Image();
-		image.src = "images/block-texture.png";
+		image.src = "images/textures.png";
 		$(image).load(function() {
 			gl.bindTexture(gl.TEXTURE_2D, texture);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
