@@ -108,7 +108,7 @@ var BC = (function(parent) {
 			minY: minY
 		};
 
-		var tileSet = BC.GL.textureTileSet(4, 4, 0.01);
+		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
 		var tiles = [
 			tileSet.tile(0, 0),
 			tileSet.tile(0, 1),
