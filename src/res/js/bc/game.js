@@ -173,7 +173,9 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(matrixLocation, false, matrix);
 			ring.draw(positionLocation, textureCoordLocation);
 
-			gl.uniformMatrix4fv(matrixLocation, false, scaleMatrix);
+			var selectorScale = 1 + Math.abs(Math.sin(4 * now)) / 20;
+			var selectorScaleMatrix = BC.Matrix.makeScale(selectorScale, selectorScale, 1);
+			gl.uniformMatrix4fv(matrixLocation, false, selectorScaleMatrix);
 			selector.draw(positionLocation, textureCoordLocation);
 
 			requestAnimationFrame(drawScene);
