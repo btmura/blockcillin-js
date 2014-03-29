@@ -97,9 +97,6 @@ var BC = (function(parent) {
 		var maxY = 0.15;
 		var minY = -0.15;
 
-		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
-		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
-
 		var metrics = {
 			numSlices: numSlices,
 			innerRadius: innerRadius,
@@ -107,182 +104,6 @@ var BC = (function(parent) {
 			maxY: maxY,
 			minY: minY
 		};
-
-		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
-		var tiles = [
-			tileSet.tile(0, 0),
-			tileSet.tile(0, 1),
-			tileSet.tile(0, 2),
-			tileSet.tile(0, 3),
-			tileSet.tile(1, 0),
-			tileSet.tile(1, 1)
-		];
-
-		var selectorTextureTile = tileSet.tile(1, 2);
-
-		var points = []; // 3D points
-
-		var textureCoords = []; // 2D points
-		var t = 0;
-
-		var setTextureCoords = function(tile, s1, t1, s2, t2, s3, t3) {
-			var tc = tile.textureCoord(s1, t1);
-			textureCoords[t++] = tc[0];
-			textureCoords[t++] = tc[1];
-
-			tc = tile.textureCoord(s2, t2);
-			textureCoords[t++] = tc[0];
-			textureCoords[t++] = tc[1];
-
-			tc = tile.textureCoord(s3, t3);
-			textureCoords[t++] = tc[0];
-			textureCoords[t++] = tc[1];
-		};
-
-		var tileIndex = 0;
-		var prevTileIndex = 0;
-
-		for (var s = 0, i = 0, p = 0; s < numSlices; s++, p += 2) {
-			// Calculate index for next point. Use modulus since we reuse the last point.
-			var np = (p + 2) % outerCirclePoints.length;
-
-			while (prevTileIndex === tileIndex) {
-				tileIndex = Math.floor(Math.random() * tiles.length);
-			}
-			prevTileIndex = tileIndex;
-			var tile = tiles[tileIndex];
-
-			// TOP FACE
-
-			// 1st triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[p + 1];
-
-			points[i++] = outerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[p + 1];
-
-			points[i++] = outerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[np + 1];
-
-			setTextureCoords(tile, 0, 0, 0, 1, 1, 1);
-
-			// 2nd triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[p + 1];
-
-			points[i++] = outerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[np + 1];
-
-			points[i++] = innerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[np + 1];
-
-			setTextureCoords(tile, 0, 0, 1, 1, 1, 0);
-
-			// BOTTOM FACE
-
-			// 1st triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[p + 1];
-
-			points[i++] = outerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[np + 1];
-
-			points[i++] = outerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[p + 1];
-
-			setTextureCoords(tile, 0, 0, 1, 1, 0, 1);
-
-			// 2nd triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[p + 1];
-
-			points[i++] = innerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[np + 1];
-
-			points[i++] = outerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[np + 1];
-
-			setTextureCoords(tile, 0, 0, 1, 0, 1, 1);
-
-			// OUTER FACE
-
-			// 1st triangle of two for quad slice.
-			points[i++] = outerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[p + 1];
-
-			points[i++] = outerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[np + 1];
-
-			points[i++] = outerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[np + 1];
-
-			setTextureCoords(tile, 0, 1, 1, 1, 1, 0);
-
-			// 2nd triangle of two for quad slice.
-			points[i++] = outerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[p + 1];
-
-			points[i++] = outerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[np + 1];
-
-			points[i++] = outerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[p + 1];
-
-			setTextureCoords(tile, 0, 1, 1, 0, 0, 0);
-
-			// INNER FACE
-
-			// 1st triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[p + 1];
-
-			points[i++] = innerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[np + 1];
-
-			points[i++] = innerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[np + 1];
-
-			setTextureCoords(tile, 0, 1, 1, 0, 1, 1);
-
-			// 2nd triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[p + 1];
-
-			points[i++] = innerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[p + 1];
-
-			points[i++] = innerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[np + 1];
-
-			setTextureCoords(tile, 0, 1, 0, 0, 1, 0);
-		}
-
-		var pointData = new Float32Array(points);
-		var textureCoordData = new Float32Array(textureCoords);
 
 		// Sets the canvas's width and height to the size it's being displayed at.
 		function resizeCanvas() {
@@ -315,14 +136,18 @@ var BC = (function(parent) {
 			}
 		});
 
-		var buffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-		gl.bufferData(gl.ARRAY_BUFFER, pointData, gl.STATIC_DRAW);
+		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
+		var ringTextureTiles = [
+			tileSet.tile(0, 0),
+			tileSet.tile(0, 1),
+			tileSet.tile(0, 2),
+			tileSet.tile(0, 3),
+			tileSet.tile(1, 0),
+			tileSet.tile(1, 1)
+		];
+		var selectorTextureTile = tileSet.tile(1, 2);
 
-		var textureBuffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
-		gl.bufferData(gl.ARRAY_BUFFER, textureCoordData, gl.STATIC_DRAW);
-
+		var ring = BC.Ring.makeRing(gl, metrics, ringTextureTiles);
 		var selector = BC.Selector.makeSelector(gl, metrics, selectorTextureTile);
 
 		function drawScene() {
@@ -349,20 +174,7 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-			// Draw ring of blocks
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-			gl.enableVertexAttribArray(positionLocation);
-			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-
-			gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
-			gl.enableVertexAttribArray(texcoordLocation);
-			gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-			gl.drawArrays(gl.TRIANGLES, 0, points.length / 3);
-
-			// Draw the selector
+			ring.draw(positionLocation, texcoordLocation);
 			selector.draw(positionLocation, texcoordLocation);
 
 			requestAnimationFrame(drawScene);
