@@ -54,26 +54,6 @@ var BC = (function(parent) {
 			gl.generateMipmap(gl.TEXTURE_2D);
 		});
 
-		var rotationSpeed = [0, 0, 0];
-		$(document).keydown(function(event) {
-			switch (event.keyCode) {
-				// Space
-				case 32:
-					rotationSpeed[1] = 0;
-					break;
-
-				// Left
-				case 37:
-					rotationSpeed[1] = -1;
-					break;
-
-				// Right
-				case 39:
-					rotationSpeed[1] = 1;
-					break;
-			}
-		});
-
 		var numSlices = 24;
 		var innerRadius = 0.75;
 		var outerRadius = 1;
@@ -133,8 +113,32 @@ var BC = (function(parent) {
 		var ring = BC.Ring.makeRing(gl, metrics, ringTextureTiles);
 		var selector = BC.Selector.makeSelector(gl, metrics, selectorTextureTile);
 
-		var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 		var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
+		var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
+		var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
+
+		var currentRotationDelta = 0;
+		var targetRotationDelta = 2 * Math.PI / numSlices;
+
+		var rotationSpeed = 0;
+		$(document).keydown(function(event) {
+			switch (event.keyCode) {
+				// Left
+				case 37:
+					if (rotationSpeed === 0) {
+						rotationSpeed = -4;
+					}
+					break;
+
+				// Right
+				case 39:
+					if (rotationSpeed === 0) {
+						rotationSpeed = 4;
+					}
+					break;
+			}
+		});
+
 
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -147,8 +151,23 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
 			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
 
-			rotation[1] += rotationSpeed[1] * deltaTime;
-			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
+			if (rotationSpeed != 0) {
+				var rotationDelta = rotationSpeed * deltaTime;
+				if (Math.abs(currentRotationDelta) < targetRotationDelta) {
+					var nextRotationDelta = currentRotationDelta + rotationDelta;
+					if (rotationSpeed > 0 && nextRotationDelta > targetRotationDelta) {
+						rotationDelta -= nextRotationDelta - targetRotationDelta;
+					} else if (rotationSpeed < 0 && -nextRotationDelta > targetRotationDelta) {
+						rotationDelta += -nextRotationDelta - targetRotationDelta
+					}
+					currentRotationDelta += rotationDelta;
+					rotation[1] += rotationDelta;
+				} else {
+					rotationSpeed = 0;
+					currentRotationDelta = 0;
+				}
+			}
+			rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 
 			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
