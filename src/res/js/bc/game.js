@@ -24,6 +24,8 @@ var BC = (function(parent) {
 
 		var positionLocation = gl.getAttribLocation(program, "a_position");
 		var textureCoordLocation = gl.getAttribLocation(program, "a_texcoord");
+		var projectionMatrixLocation = gl.getUniformLocation(program, "u_projectionMatrix");
+		var viewMatrixLocation = gl.getUniformLocation(program, "u_viewMatrix");
 		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
 		var then = BC.Time.getTimeInSeconds();
@@ -154,6 +156,9 @@ var BC = (function(parent) {
 			var deltaTime = now - then;
 			then = now;
 
+			gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
+			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
+
 			rotation[0] += rotationSpeed[0] * deltaTime;
 			rotation[1] += rotationSpeed[1] * deltaTime;
 
@@ -164,16 +169,11 @@ var BC = (function(parent) {
 			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, viewMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, projectionMatrix);
 
 			gl.uniformMatrix4fv(matrixLocation, false, matrix);
 			ring.draw(positionLocation, textureCoordLocation);
 
-			matrix = BC.Matrix.matrixMultiply(scaleMatrix, viewMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, projectionMatrix);
-			gl.uniformMatrix4fv(matrixLocation, false, matrix);
-
+			gl.uniformMatrix4fv(matrixLocation, false, scaleMatrix);
 			selector.draw(positionLocation, textureCoordLocation);
 
 			requestAnimationFrame(drawScene);
