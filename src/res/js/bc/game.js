@@ -121,44 +121,57 @@ var BC = (function(parent) {
 		var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 		var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 
-		var currentRotationDelta = 0;
-		var targetRotationDelta = 2 * Math.PI / numSlices;
+		var ringRotation = 2 * Math.PI / numSlices;
+		var ringTranslation = maxY - minY;
 
-		var ringHeight = maxY - minY;
+		var Direction = {
+			NONE : 0,
+			UP : 1,
+			DOWN: 2,
+			LEFT: 3,
+			RIGHT: 4
+		};
 
+		var selectorMovementPeriod = 0.05;
+		var selectorDirection = Direction.NONE;
+
+		var currentSelectorMovementPeriod = 0;
 		var currentRing = 0;
 
-		var rotationSpeed = 0;
 		var selectorTranslation = [0, 0, 0];
 		$(document).keydown(function(event) {
 			switch (event.keyCode) {
 				// Left
 				case 37:
-					if (rotationSpeed === 0) {
-						rotationSpeed = 4;
+					if (selectorDirection === Direction.NONE) {
+						selectorDirection = Direction.LEFT;
+						currentSelectorMovementPeriod = 0;
 					}
 					break;
 
 				// Right
 				case 39:
-					if (rotationSpeed === 0) {
-						rotationSpeed = -4;
+					if (selectorDirection === Direction.NONE) {
+						selectorDirection = Direction.RIGHT;
+						currentSelectorMovementPeriod = 0;
 					}
 					break;
 
 				// Up
 				case 38:
-					if (currentRing > 0) {
+					if (selectorDirection === Direction.NONE && currentRing > 0) {
+						selectorDirection = Direction.UP;
+						currentSelectorMovementPeriod = 0;
 						currentRing--;
-						selectorTranslation[1] += ringHeight;
 					}
 					break;
 
 				// Down:
 				case 40:
-					if (currentRing + 1 < rings.length) {
+					if (selectorDirection === Direction.NONE && currentRing + 1 < rings.length) {
+						selectorDirection = Direction.DOWN;
+						currentSelectorMovementPeriod = 0;
 						currentRing++;
-						selectorTranslation[1] -= ringHeight;
 					}
 					break;
 			}
@@ -175,26 +188,43 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
 			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
 
-			if (rotationSpeed != 0) {
-				var rotationDelta = rotationSpeed * deltaTime;
-				if (Math.abs(currentRotationDelta) < targetRotationDelta) {
-					var nextRotationDelta = currentRotationDelta + rotationDelta;
-					if (rotationSpeed > 0 && nextRotationDelta > targetRotationDelta) {
-						rotationDelta -= nextRotationDelta - targetRotationDelta;
-					} else if (rotationSpeed < 0 && -nextRotationDelta > targetRotationDelta) {
-						rotationDelta += -nextRotationDelta - targetRotationDelta
-					}
-					currentRotationDelta += rotationDelta;
-					rotation[1] += rotationDelta;
-				} else {
-					rotationSpeed = 0;
-					currentRotationDelta = 0;
+			if (selectorDirection !== Direction.NONE) {
+				if (currentSelectorMovementPeriod + deltaTime > selectorMovementPeriod) {
+					deltaTime = selectorMovementPeriod - currentSelectorMovementPeriod;
+				}
+
+				var verticalTranslation = deltaTime * ringTranslation / selectorMovementPeriod;
+				var horizontalRotation = deltaTime * ringRotation / selectorMovementPeriod;
+
+				switch (selectorDirection) {
+					case Direction.UP:
+						selectorTranslation[1] += verticalTranslation;
+						break;
+
+					case Direction.DOWN:
+						selectorTranslation[1] -= verticalTranslation;
+						break;
+
+					case Direction.LEFT:
+						rotation[1] += horizontalRotation;
+						break;
+
+					case Direction.RIGHT:
+						rotation[1] -= horizontalRotation;
+						break;
+				}
+
+				currentSelectorMovementPeriod += deltaTime;
+				if (currentSelectorMovementPeriod >= selectorMovementPeriod) {
+					selectorDirection = Direction.NONE;
+					currentSelectorMovementPeriod = 0;
 				}
 			}
-			rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
+
+			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 
 			for (var i = 0; i < rings.length; i++) {
-				var translationMatrix = BC.Matrix.makeTranslation(0, -i * ringHeight, 0);
+				var translationMatrix = BC.Matrix.makeTranslation(0, -i * ringTranslation, 0);
 
 				var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
 				matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
