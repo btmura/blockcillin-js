@@ -126,6 +126,8 @@ var BC = (function(parent) {
 
 		var ringHeight = maxY - minY;
 
+		var currentRing = 0;
+
 		var rotationSpeed = 0;
 		var selectorTranslation = [0, 0, 0];
 		$(document).keydown(function(event) {
@@ -133,25 +135,31 @@ var BC = (function(parent) {
 				// Left
 				case 37:
 					if (rotationSpeed === 0) {
-						rotationSpeed = -4;
+						rotationSpeed = 4;
 					}
 					break;
 
 				// Right
 				case 39:
 					if (rotationSpeed === 0) {
-						rotationSpeed = 4;
+						rotationSpeed = -4;
 					}
 					break;
 
 				// Up
 				case 38:
-					selectorTranslation[1] += ringHeight;
+					if (currentRing > 0) {
+						currentRing--;
+						selectorTranslation[1] += ringHeight;
+					}
 					break;
 
 				// Down:
 				case 40:
-					selectorTranslation[1] -= ringHeight;
+					if (currentRing + 1 < rings.length) {
+						currentRing++;
+						selectorTranslation[1] -= ringHeight;
+					}
 					break;
 			}
 		});
