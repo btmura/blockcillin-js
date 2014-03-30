@@ -124,7 +124,10 @@ var BC = (function(parent) {
 		var currentRotationDelta = 0;
 		var targetRotationDelta = 2 * Math.PI / numSlices;
 
+		var ringHeight = maxY - minY;
+
 		var rotationSpeed = 0;
+		var selectorTranslation = [0, 0, 0];
 		$(document).keydown(function(event) {
 			switch (event.keyCode) {
 				// Left
@@ -140,10 +143,18 @@ var BC = (function(parent) {
 						rotationSpeed = 4;
 					}
 					break;
+
+				// Up
+				case 38:
+					selectorTranslation[1] += ringHeight;
+					break;
+
+				// Down:
+				case 40:
+					selectorTranslation[1] -= ringHeight;
+					break;
 			}
 		});
-
-		var ringHeight = maxY - minY;
 
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -188,7 +199,12 @@ var BC = (function(parent) {
 
 			var selectorScale = 1 + Math.abs(Math.sin(4 * now)) / 50;
 			var selectorScaleMatrix = BC.Matrix.makeScale(selectorScale, selectorScale, 1);
-			gl.uniformMatrix4fv(matrixLocation, false, selectorScaleMatrix);
+			var selectorTranslationMatrix = BC.Matrix.makeTranslation(
+					selectorTranslation[0],
+					selectorTranslation[1],
+					selectorTranslation[2]);
+			var selectorMatrix = BC.Matrix.matrixMultiply(selectorScaleMatrix, selectorTranslationMatrix);
+			gl.uniformMatrix4fv(matrixLocation, false, selectorMatrix);
 			selector.draw(positionLocation, textureCoordLocation);
 
 			requestAnimationFrame(drawScene);
