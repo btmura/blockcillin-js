@@ -110,7 +110,11 @@ var BC = (function(parent) {
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
 
-		var ring = BC.Ring.makeRing(gl, metrics, ringTextureTiles);
+		var rings = [
+			BC.Ring.makeRing(gl, metrics, ringTextureTiles),
+			BC.Ring.makeRing(gl, metrics, ringTextureTiles),
+			BC.Ring.makeRing(gl, metrics, ringTextureTiles)
+		];
 		var selector = BC.Selector.makeSelector(gl, metrics, selectorTextureTile);
 
 		var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
@@ -139,6 +143,7 @@ var BC = (function(parent) {
 			}
 		});
 
+		var ringHeight = maxY - minY;
 
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -169,12 +174,17 @@ var BC = (function(parent) {
 			}
 			rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 
-			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
+			for (var i = 0; i < rings.length; i++) {
+				var translationMatrix = BC.Matrix.makeTranslation(0, -i * ringHeight, 0);
 
-			gl.uniformMatrix4fv(matrixLocation, false, matrix);
-			ring.draw(positionLocation, textureCoordLocation);
+				var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
+				matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
+				matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
+				matrix = BC.Matrix.matrixMultiply(matrix, translationMatrix);
+
+				gl.uniformMatrix4fv(matrixLocation, false, matrix);
+				rings[i].draw(positionLocation, textureCoordLocation);
+			}
 
 			var selectorScale = 1 + Math.abs(Math.sin(4 * now)) / 50;
 			var selectorScaleMatrix = BC.Matrix.makeScale(selectorScale, selectorScale, 1);
