@@ -134,45 +134,93 @@ var BC = (function(parent) {
 
 		var selectorMovementPeriod = 0.05;
 		var selectorDirection = Direction.NONE;
+		var selectorTranslation = [0, 0, 0];
 
 		var currentSelectorMovementPeriod = 0;
 		var currentRing = 0;
 
-		var selectorTranslation = [0, 0, 0];
+		function moveSelectorLeft() {
+			if (selectorDirection === Direction.NONE) {
+				selectorDirection = Direction.LEFT;
+				currentSelectorMovementPeriod = 0;
+			}
+		}
+
+		function moveSelectorRight() {
+			if (selectorDirection === Direction.NONE) {
+				selectorDirection = Direction.RIGHT;
+				currentSelectorMovementPeriod = 0;
+			}
+		}
+
+		function moveSelectorUp() {
+			if (selectorDirection === Direction.NONE && currentRing > 0) {
+				selectorDirection = Direction.UP;
+				currentSelectorMovementPeriod = 0;
+				currentRing--;
+			}
+		}
+
+		function moveSelectorDown() {
+			if (selectorDirection === Direction.NONE && currentRing + 1 < rings.length) {
+				selectorDirection = Direction.DOWN;
+				currentSelectorMovementPeriod = 0;
+				currentRing++;
+			}
+		}
+
+		var touchThreshold = 50;
+		var touchStartX = 0;
+		var touchStartY = 0;
+
+		$(document).on("touchstart", function(event) {
+			var touch = event.originalEvent.changedTouches[0];
+			touchStartX = touch.pageX;
+			touchStartY = touch.pageY;
+			event.preventDefault();
+		});
+
+		$(document).on("touchmove", function(event) {
+			event.preventDefault();
+		});
+
+		$(document).on("touchend", function(event) {
+			var touch = event.originalEvent.changedTouches[0];
+			var touchDistX = touch.pageX - touchStartX;
+			var touchDistY = touch.pageY - touchStartY;
+
+			if (touchDistX > touchThreshold) {
+				moveSelectorLeft();
+			} else if (touchDistX < -touchThreshold) {
+				moveSelectorRight();
+			} else if (touchDistY > touchThreshold) {
+				moveSelectorDown();
+			} else if (touchDistY < -touchThreshold) {
+				moveSelectorUp();
+			}
+			event.preventDefault();
+		});
+
 		$(document).keydown(function(event) {
 			switch (event.keyCode) {
 				// Left
 				case 37:
-					if (selectorDirection === Direction.NONE) {
-						selectorDirection = Direction.LEFT;
-						currentSelectorMovementPeriod = 0;
-					}
+					moveSelectorLeft();
 					break;
 
 				// Right
 				case 39:
-					if (selectorDirection === Direction.NONE) {
-						selectorDirection = Direction.RIGHT;
-						currentSelectorMovementPeriod = 0;
-					}
+					moveSelectorRight();
 					break;
 
 				// Up
 				case 38:
-					if (selectorDirection === Direction.NONE && currentRing > 0) {
-						selectorDirection = Direction.UP;
-						currentSelectorMovementPeriod = 0;
-						currentRing--;
-					}
+					moveSelectorUp();
 					break;
 
 				// Down:
 				case 40:
-					if (selectorDirection === Direction.NONE && currentRing + 1 < rings.length) {
-						selectorDirection = Direction.DOWN;
-						currentSelectorMovementPeriod = 0;
-						currentRing++;
-					}
+					moveSelectorDown();
 					break;
 			}
 		});
