@@ -173,18 +173,18 @@ var BC = (function(parent) {
 		var touchStartX = 0;
 		var touchStartY = 0;
 
-		$(document).on("touchstart", function(event) {
+		$(canvas).on("touchstart", function(event) {
 			var touch = event.originalEvent.changedTouches[0];
 			touchStartX = touch.pageX;
 			touchStartY = touch.pageY;
 			event.preventDefault();
 		});
 
-		$(document).on("touchmove", function(event) {
+		$(canvas).on("touchmove", function(event) {
 			event.preventDefault();
 		});
 
-		$(document).on("touchend", function(event) {
+		$(canvas).on("touchend", function(event) {
 			var touch = event.originalEvent.changedTouches[0];
 			var touchDistX = touch.pageX - touchStartX;
 			var touchDistY = touch.pageY - touchStartY;
