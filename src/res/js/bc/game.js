@@ -199,7 +199,7 @@ var BC = (function(parent) {
 					}
 					break;
 			}
-			event.preventDefault();
+			return false;
 		});
 
 		$(document).keydown(function(event) {
@@ -224,6 +224,7 @@ var BC = (function(parent) {
 					moveSelectorDown();
 					break;
 			}
+			return false;
 		});
 
 		function drawScene() {
