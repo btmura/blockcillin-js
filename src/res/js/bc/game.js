@@ -173,30 +173,31 @@ var BC = (function(parent) {
 		var touchStartX = 0;
 		var touchStartY = 0;
 
-		$(canvas).on("touchstart", function(event) {
+		$(canvas).on("touchstart touchmove touchend", function(event) {
 			var touch = event.originalEvent.changedTouches[0];
-			touchStartX = touch.pageX;
-			touchStartY = touch.pageY;
-			event.preventDefault();
-		});
+			switch (event.type) {
+				case "touchstart":
+					touchStartX = touch.pageX;
+					touchStartY = touch.pageY;
+					break;
 
-		$(canvas).on("touchmove", function(event) {
-			event.preventDefault();
-		});
+				case "touchmove":
+					break;
 
-		$(canvas).on("touchend", function(event) {
-			var touch = event.originalEvent.changedTouches[0];
-			var touchDistX = touch.pageX - touchStartX;
-			var touchDistY = touch.pageY - touchStartY;
+				case "touchend":
+					var touchDistX = touch.pageX - touchStartX;
+					var touchDistY = touch.pageY - touchStartY;
 
-			if (touchDistX > touchThreshold) {
-				moveSelectorLeft();
-			} else if (touchDistX < -touchThreshold) {
-				moveSelectorRight();
-			} else if (touchDistY > touchThreshold) {
-				moveSelectorDown();
-			} else if (touchDistY < -touchThreshold) {
-				moveSelectorUp();
+					if (touchDistX > touchThreshold) {
+						moveSelectorLeft();
+					} else if (touchDistX < -touchThreshold) {
+						moveSelectorRight();
+					} else if (touchDistY > touchThreshold) {
+						moveSelectorDown();
+					} else if (touchDistY < -touchThreshold) {
+						moveSelectorUp();
+					}
+					break;
 			}
 			event.preventDefault();
 		});
