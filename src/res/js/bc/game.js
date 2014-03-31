@@ -30,10 +30,6 @@ var BC = (function(parent) {
 
 		var then = BC.Time.getTimeInSeconds();
 
-		var rotation = [0, 0, 0];
-		var scale = [1, 1, 1];
-		var scaleMatrix = BC.Matrix.makeScale(scale[0], scale[1], scale[2]);
-
 		var up = [0, 1, 0];
 		var cameraPosition = [0, 0.75, 2];
 		var targetPosition = [0, 0, 0];
@@ -117,13 +113,6 @@ var BC = (function(parent) {
 		];
 		var selector = BC.Selector.makeSelector(gl, metrics, selectorTextureTile);
 
-		var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
-		var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
-		var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
-
-		var ringRotation = 2 * Math.PI / numSlices;
-		var ringTranslation = maxY - minY;
-
 		var Direction = {
 			NONE : 0,
 			UP : 1,
@@ -132,11 +121,72 @@ var BC = (function(parent) {
 			RIGHT: 4
 		};
 
-		var selectorMovementPeriod = 0.05;
-		var selectorDirection = Direction.NONE;
-		var selectorTranslation = [0, 0, 0];
+		var touchThreshold = 50;
+		var touchStartX = 0;
+		var touchStartY = 0;
 
+		$(canvas).on("touchstart touchmove touchend", function(event) {
+			var touch = event.originalEvent.changedTouches[0];
+			switch (event.type) {
+				case "touchstart":
+					touchStartX = touch.pageX;
+					touchStartY = touch.pageY;
+					break;
+
+				case "touchend":
+					var deltaX = touch.pageX - touchStartX;
+					var deltaY = touch.pageY - touchStartY;
+
+					var direction = Direction.NONE;
+					if (deltaX > touchThreshold) {
+						direction = Direction.LEFT;
+					} else if (deltaX < -touchThreshold) {
+						direction = Direction.RIGHT;
+					} else if (deltaY > touchThreshold) {
+						direction = Direction.DOWN;
+					} else if (deltaY < -touchThreshold) {
+						direction = Direction.UP;
+					}
+					handleDirection(direction);
+					break;
+			}
+			return false;
+		});
+
+		$(document).keydown(function(event) {
+			var keyCodeDirectionMap = {
+				37: Direction.LEFT,
+				39: Direction.RIGHT,
+				38: Direction.UP,
+				40: Direction.DOWN
+			};
+			handleDirection(keyCodeDirectionMap[event.keyCode]);
+			return false;
+		});
+
+		function handleDirection(direction) {
+			switch (direction) {
+				case Direction.LEFT:
+					moveSelectorLeft();
+					break;
+
+				case Direction.RIGHT:
+					moveSelectorRight();
+					break;
+
+				case Direction.UP:
+					moveSelectorUp();
+					break;
+
+				case Direction.DOWN:
+					moveSelectorDown();
+					break;
+			}
+		}
+
+		var selectorDirection = Direction.NONE;
 		var currentSelectorMovementPeriod = 0;
+		var maxSelectorMovementPeriod = 0.05;
 		var currentRing = 0;
 
 		function moveSelectorLeft() {
@@ -169,63 +219,17 @@ var BC = (function(parent) {
 			}
 		}
 
-		var touchThreshold = 50;
-		var touchStartX = 0;
-		var touchStartY = 0;
+		var scaleMatrix = BC.Matrix.makeScale(1, 1, 1);
 
-		$(canvas).on("touchstart touchmove touchend", function(event) {
-			var touch = event.originalEvent.changedTouches[0];
-			switch (event.type) {
-				case "touchstart":
-					touchStartX = touch.pageX;
-					touchStartY = touch.pageY;
-					break;
+		var rotation = [0, 0, 0];
+		var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
+		var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
+		var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 
-				case "touchmove":
-					break;
+		var selectorTranslation = [0, 0, 0];
 
-				case "touchend":
-					var touchDistX = touch.pageX - touchStartX;
-					var touchDistY = touch.pageY - touchStartY;
-
-					if (touchDistX > touchThreshold) {
-						moveSelectorLeft();
-					} else if (touchDistX < -touchThreshold) {
-						moveSelectorRight();
-					} else if (touchDistY > touchThreshold) {
-						moveSelectorDown();
-					} else if (touchDistY < -touchThreshold) {
-						moveSelectorUp();
-					}
-					break;
-			}
-			return false;
-		});
-
-		$(document).keydown(function(event) {
-			switch (event.keyCode) {
-				// Left
-				case 37:
-					moveSelectorLeft();
-					break;
-
-				// Right
-				case 39:
-					moveSelectorRight();
-					break;
-
-				// Up
-				case 38:
-					moveSelectorUp();
-					break;
-
-				// Down:
-				case 40:
-					moveSelectorDown();
-					break;
-			}
-			return false;
-		});
+		var ringRotation = 2 * Math.PI / numSlices;
+		var ringTranslation = maxY - minY;
 
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -239,12 +243,12 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
 
 			if (selectorDirection !== Direction.NONE) {
-				if (currentSelectorMovementPeriod + deltaTime > selectorMovementPeriod) {
-					deltaTime = selectorMovementPeriod - currentSelectorMovementPeriod;
+				if (currentSelectorMovementPeriod + deltaTime > maxSelectorMovementPeriod) {
+					deltaTime = maxSelectorMovementPeriod - currentSelectorMovementPeriod;
 				}
 
-				var verticalTranslation = deltaTime * ringTranslation / selectorMovementPeriod;
-				var horizontalRotation = deltaTime * ringRotation / selectorMovementPeriod;
+				var verticalTranslation = deltaTime * ringTranslation / maxSelectorMovementPeriod;
+				var horizontalRotation = deltaTime * ringRotation / maxSelectorMovementPeriod;
 
 				switch (selectorDirection) {
 					case Direction.UP:
@@ -265,7 +269,7 @@ var BC = (function(parent) {
 				}
 
 				currentSelectorMovementPeriod += deltaTime;
-				if (currentSelectorMovementPeriod >= selectorMovementPeriod) {
+				if (currentSelectorMovementPeriod >= maxSelectorMovementPeriod) {
 					selectorDirection = Direction.NONE;
 					currentSelectorMovementPeriod = 0;
 				}
