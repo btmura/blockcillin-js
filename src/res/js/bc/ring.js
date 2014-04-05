@@ -32,147 +32,141 @@ var BC = (function(parent) {
 			textureCoords[t++] = tc[1];
 		};
 
-		var tileIndex = 0;
-		var prevTileIndex = 0;
+		var i = 0;
 
-		for (var s = 0, i = 0, p = 0; s < metrics.numSlices; s++, p += 2) {
-			// Calculate index for next point. Use modulus since we reuse the last point.
-			var np = (p + 2) % outerCirclePoints.length;
+		var p = 0;
+		var np = p + 2;
 
-			while (prevTileIndex === tileIndex) {
-				tileIndex = Math.floor(Math.random() * tiles.length);
-			}
-			prevTileIndex = tileIndex;
-			var tile = tiles[tileIndex];
+		var tileIndex = Math.floor(Math.random() * tiles.length);
+		var tile = tiles[tileIndex];
 
-			// TOP FACE
+		// TOP FACE
 
-			// 1st triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[p + 1];
+		// 1st triangle of two for quad slice.
+		points[i++] = innerCirclePoints[p];
+		points[i++] = maxY;
+		points[i++] = -innerCirclePoints[p + 1];
 
-			points[i++] = outerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[p + 1];
+		points[i++] = outerCirclePoints[p];
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[p + 1];
 
-			points[i++] = outerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[np + 1];
+		points[i++] = outerCirclePoints[np];
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[np + 1];
 
-			setTextureCoords(tile, 0, 0, 0, 1, 1, 1);
+		setTextureCoords(tile, 0, 0, 0, 1, 1, 1);
 
-			// 2nd triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[p + 1];
+		// 2nd triangle of two for quad slice.
+		points[i++] = innerCirclePoints[p];
+		points[i++] = maxY;
+		points[i++] = -innerCirclePoints[p + 1];
 
-			points[i++] = outerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[np + 1];
+		points[i++] = outerCirclePoints[np];
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[np + 1];
 
-			points[i++] = innerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[np + 1];
+		points[i++] = innerCirclePoints[np];
+		points[i++] = maxY;
+		points[i++] = -innerCirclePoints[np + 1];
 
-			setTextureCoords(tile, 0, 0, 1, 1, 1, 0);
+		setTextureCoords(tile, 0, 0, 1, 1, 1, 0);
 
-			// BOTTOM FACE
+		// BOTTOM FACE
 
-			// 1st triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[p + 1];
+		// 1st triangle of two for quad slice.
+		points[i++] = innerCirclePoints[p];
+		points[i++] = minY;
+		points[i++] = -innerCirclePoints[p + 1];
 
-			points[i++] = outerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[np + 1];
+		points[i++] = outerCirclePoints[np];
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[np + 1];
 
-			points[i++] = outerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[p + 1];
+		points[i++] = outerCirclePoints[p];
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[p + 1];
 
-			setTextureCoords(tile, 0, 0, 1, 1, 0, 1);
+		setTextureCoords(tile, 0, 0, 1, 1, 0, 1);
 
-			// 2nd triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[p + 1];
+		// 2nd triangle of two for quad slice.
+		points[i++] = innerCirclePoints[p];
+		points[i++] = minY;
+		points[i++] = -innerCirclePoints[p + 1];
 
-			points[i++] = innerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[np + 1];
+		points[i++] = innerCirclePoints[np];
+		points[i++] = minY;
+		points[i++] = -innerCirclePoints[np + 1];
 
-			points[i++] = outerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[np + 1];
+		points[i++] = outerCirclePoints[np];
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[np + 1];
 
-			setTextureCoords(tile, 0, 0, 1, 0, 1, 1);
+		setTextureCoords(tile, 0, 0, 1, 0, 1, 1);
 
-			// OUTER FACE
+		// OUTER FACE
 
-			// 1st triangle of two for quad slice.
-			points[i++] = outerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[p + 1];
+		// 1st triangle of two for quad slice.
+		points[i++] = outerCirclePoints[p];
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[p + 1];
 
-			points[i++] = outerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[np + 1];
+		points[i++] = outerCirclePoints[np];
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[np + 1];
 
-			points[i++] = outerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[np + 1];
+		points[i++] = outerCirclePoints[np];
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[np + 1];
 
-			setTextureCoords(tile, 0, 1, 1, 1, 1, 0);
+		setTextureCoords(tile, 0, 1, 1, 1, 1, 0);
 
-			// 2nd triangle of two for quad slice.
-			points[i++] = outerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -outerCirclePoints[p + 1];
+		// 2nd triangle of two for quad slice.
+		points[i++] = outerCirclePoints[p];
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[p + 1];
 
-			points[i++] = outerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[np + 1];
+		points[i++] = outerCirclePoints[np];
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[np + 1];
 
-			points[i++] = outerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -outerCirclePoints[p + 1];
+		points[i++] = outerCirclePoints[p];
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[p + 1];
 
-			setTextureCoords(tile, 0, 1, 1, 0, 0, 0);
+		setTextureCoords(tile, 0, 1, 1, 0, 0, 0);
 
-			// INNER FACE
+		// INNER FACE
 
-			// 1st triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[p + 1];
+		// 1st triangle of two for quad slice.
+		points[i++] = innerCirclePoints[p];
+		points[i++] = minY;
+		points[i++] = -innerCirclePoints[p + 1];
 
-			points[i++] = innerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[np + 1];
+		points[i++] = innerCirclePoints[np];
+		points[i++] = maxY;
+		points[i++] = -innerCirclePoints[np + 1];
 
-			points[i++] = innerCirclePoints[np];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[np + 1];
+		points[i++] = innerCirclePoints[np];
+		points[i++] = minY;
+		points[i++] = -innerCirclePoints[np + 1];
 
-			setTextureCoords(tile, 0, 1, 1, 0, 1, 1);
+		setTextureCoords(tile, 0, 1, 1, 0, 1, 1);
 
-			// 2nd triangle of two for quad slice.
-			points[i++] = innerCirclePoints[p];
-			points[i++] = minY;
-			points[i++] = -innerCirclePoints[p + 1];
+		// 2nd triangle of two for quad slice.
+		points[i++] = innerCirclePoints[p];
+		points[i++] = minY;
+		points[i++] = -innerCirclePoints[p + 1];
 
-			points[i++] = innerCirclePoints[p];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[p + 1];
+		points[i++] = innerCirclePoints[p];
+		points[i++] = maxY;
+		points[i++] = -innerCirclePoints[p + 1];
 
-			points[i++] = innerCirclePoints[np];
-			points[i++] = maxY;
-			points[i++] = -innerCirclePoints[np + 1];
+		points[i++] = innerCirclePoints[np];
+		points[i++] = maxY;
+		points[i++] = -innerCirclePoints[np + 1];
 
-			setTextureCoords(tile, 0, 1, 0, 0, 1, 0);
-		}
+		setTextureCoords(tile, 0, 1, 0, 0, 1, 0);
 
 		var pointBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
