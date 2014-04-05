@@ -28,8 +28,6 @@ var BC = (function(parent) {
 		var viewMatrixLocation = gl.getUniformLocation(program, "u_viewMatrix");
 		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
-		var then = BC.Time.getTimeInSeconds();
-
 		var up = [0, 1, 0];
 		var cameraPosition = [0, 0.75, 2];
 		var targetPosition = [0, 0, 0];
@@ -120,81 +118,26 @@ var BC = (function(parent) {
 					} else if (deltaY < -touchThreshold) {
 						direction = Direction.UP;
 					}
-					handleDirection(direction);
+					boardModel.move(direction);
 					break;
 			}
 			return false;
 		});
+
+		var keyCodeDirectionMap = {
+			37: Direction.LEFT,
+			39: Direction.RIGHT,
+			38: Direction.UP,
+			40: Direction.DOWN
+		};
 
 		$(document).keydown(function(event) {
-			var keyCodeDirectionMap = {
-				"BC.Common.KeyCode.LEFT": Direction.LEFT,
-				39: Direction.RIGHT,
-				38: Direction.UP,
-				40: Direction.DOWN
-			};
-			handleDirection(keyCodeDirectionMap[event.keyCode]);
+			var direction = keyCodeDirectionMap[event.keyCode];
+			boardModel.move(direction);
 			return false;
 		});
 
-		function handleDirection(direction) {
-			switch (direction) {
-				case Direction.LEFT:
-					moveSelectorLeft();
-					break;
-
-				case Direction.RIGHT:
-					moveSelectorRight();
-					break;
-
-				case Direction.UP:
-					moveSelectorUp();
-					break;
-
-				case Direction.DOWN:
-					moveSelectorDown();
-					break;
-			}
-		}
-
-		var selectorDirection = Direction.NONE;
-		var currentSelectorMovementPeriod = 0;
-		var maxSelectorMovementPeriod = 0.05;
-		var currentRing = 0;
-
-		function moveSelectorLeft() {
-			if (selectorDirection === Direction.NONE) {
-				selectorDirection = Direction.LEFT;
-				currentSelectorMovementPeriod = 0;
-			}
-		}
-
-		function moveSelectorRight() {
-			if (selectorDirection === Direction.NONE) {
-				selectorDirection = Direction.RIGHT;
-				currentSelectorMovementPeriod = 0;
-			}
-		}
-
-		function moveSelectorUp() {
-			if (selectorDirection === Direction.NONE && currentRing > 0) {
-				selectorDirection = Direction.UP;
-				currentSelectorMovementPeriod = 0;
-				currentRing--;
-			}
-		}
-
-		function moveSelectorDown() {
-			if (selectorDirection === Direction.NONE && currentRing + 1 < rings.length) {
-				selectorDirection = Direction.DOWN;
-				currentSelectorMovementPeriod = 0;
-				currentRing++;
-			}
-		}
-
-
-
-		// var ringRotation = 2 * Math.PI / numSlices;
+		var then = BC.Time.getTimeInSeconds();
 
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -207,41 +150,7 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
 			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
 
-			/*
-			if (selectorDirection !== Direction.NONE) {
-				if (currentSelectorMovementPeriod + deltaTime > maxSelectorMovementPeriod) {
-					deltaTime = maxSelectorMovementPeriod - currentSelectorMovementPeriod;
-				}
-
-				var verticalTranslation = deltaTime * ringTranslation / maxSelectorMovementPeriod;
-				var horizontalRotation = deltaTime * ringRotation / maxSelectorMovementPeriod;
-
-				switch (selectorDirection) {
-					case Direction.UP:
-						selectorTranslation[1] += verticalTranslation;
-						break;
-
-					case Direction.DOWN:
-						selectorTranslation[1] -= verticalTranslation;
-						break;
-
-					case Direction.LEFT:
-						rotation[1] += horizontalRotation;
-						break;
-
-					case Direction.RIGHT:
-						rotation[1] -= horizontalRotation;
-						break;
-				}
-
-				currentSelectorMovementPeriod += deltaTime;
-				if (currentSelectorMovementPeriod >= maxSelectorMovementPeriod) {
-					selectorDirection = Direction.NONE;
-					currentSelectorMovementPeriod = 0;
-				}
-			}
-			*/
-
+			boardModel.update(deltaTime);
 			boardView.draw();
 
 			requestAnimationFrame(drawScene);
