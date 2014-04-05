@@ -10,7 +10,22 @@ var BC = (function(parent) {
 	 * @returns {Object} board that tracks the state of all the blocks
 	 */
 	my.makeModel = function(specs) {
-		var cells = [];
+		var rings = [];
+
+		var numRings = 1;
+		for (var i = 0; i < numRings; i++) {
+			rings[i] = makeRing();
+		}
+
+		function makeRing() {
+			var cells = [];
+			for (var i = 0; i < specs.numRingCells; i++) {
+				cells[i] = makeCell();
+			}
+			return {
+				cells: cells
+			};
+		}
 
 		function makeCell() {
 			var blockStyle = BC.Math.randomInt(0, specs.numBlockStyles);
@@ -19,11 +34,8 @@ var BC = (function(parent) {
 			};
 		}
 
-		for (var i = 0; i < specs.numRingCells; i++) {
-			cells[i] = makeCell();
-		}
-
 		return {
+			rings: rings,
 			numRingCells: specs.numRingCells,
 			innerRingRadius: specs.innerRingRadius,
 			outerRingRadius: specs.outerRingRadius,
