@@ -92,13 +92,7 @@ var BC = (function(parent) {
 
 		var boardView = BC.Board.makeView(boardModel, gl, positionLocation, matrixLocation, textureCoordLocation);
 
-		var Direction = {
-			NONE : 0,
-			UP : 1,
-			DOWN: 2,
-			LEFT: 3,
-			RIGHT: 4
-		};
+		var Direction = BC.Common.Direction;
 
 		var touchThreshold = 50;
 		var touchStartX = 0;
@@ -134,7 +128,7 @@ var BC = (function(parent) {
 
 		$(document).keydown(function(event) {
 			var keyCodeDirectionMap = {
-				37: Direction.LEFT,
+				"BC.Common.KeyCode.LEFT": Direction.LEFT,
 				39: Direction.RIGHT,
 				38: Direction.UP,
 				40: Direction.DOWN
