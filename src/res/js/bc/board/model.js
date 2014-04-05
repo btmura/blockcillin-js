@@ -9,7 +9,7 @@ var BC = (function(parent) {
 	 * @param specs.numBlockStyles - number of block styles
 	 * @returns {Object} board that tracks the state of all the blocks
 	 */
-	my.makeBoard = function(specs) {
+	my.makeModel = function(specs) {
 		var cells = [];
 
 		function makeCell() {

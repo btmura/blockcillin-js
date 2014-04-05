@@ -81,10 +81,12 @@ var BC = (function(parent) {
 			}
 		});
 
-		var board = BC.Board.makeBoard({
+		var boardModel = BC.Board.makeModel({
 			numRingCells: 24,
 			numBlockStyles: 6,
 		});
+
+		var boardView = BC.Board.makeView(boardModel);
 
 		var numSlices = 24;
 		var innerRadius = 0.75;
@@ -303,6 +305,8 @@ var BC = (function(parent) {
 			var selectorMatrix = BC.Matrix.matrixMultiply(selectorScaleMatrix, selectorTranslationMatrix);
 			gl.uniformMatrix4fv(matrixLocation, false, selectorMatrix);
 			selector.draw(positionLocation, textureCoordLocation);
+
+			boardView.draw();
 
 			requestAnimationFrame(drawScene);
 		}
