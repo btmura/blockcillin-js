@@ -9,8 +9,9 @@ var BC = (function(parent) {
 		var maxY = metrics.ringMaxY;
 		var minY = metrics.ringMinY;
 
-		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
-		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);
+		var offset = -Math.PI / 2;
+		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices, offset);
+		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices, offset);
 
 		var points = []; // 3D points
 
