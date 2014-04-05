@@ -86,7 +86,7 @@ var BC = (function(parent) {
 		}
 
 		return {
-			draw: draw,
+			draw: draw
 		};
 	};
 

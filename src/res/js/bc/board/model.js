@@ -42,7 +42,7 @@ var BC = (function(parent) {
 		function makeCell() {
 			var blockStyle = BC.Math.randomInt(specs.numBlockStyles);
 			return {
-				blockStyle: blockStyle,
+				blockStyle: blockStyle
 			};
 		}
 
