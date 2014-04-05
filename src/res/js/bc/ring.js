@@ -3,12 +3,11 @@ var BC = (function(parent) {
 	var my = parent.Ring = parent.Ring || {};
 
 	my.makeRing = function(gl, metrics, tiles) {
-		var numSlices = metrics.numSlices;
-		var innerRadius = metrics.innerRadius;
-		var outerRadius = metrics.outerRadius;
-		var maxY = metrics.maxY;
-		var minY = metrics.minY;
-
+		var numSlices = metrics.numRingCells;
+		var innerRadius = metrics.innerRingRadius;
+		var outerRadius = metrics.outerRingRadius;
+		var maxY = metrics.ringMaxY;
+		var minY = metrics.ringMinY;
 
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices);

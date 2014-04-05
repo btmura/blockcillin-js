@@ -198,15 +198,9 @@ var BC = (function(parent) {
 			}
 		}
 
-		var scaleMatrix = BC.Matrix.makeScale(1, 1, 1);
 
-		var rotation = [0, 0, 0];
-		var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
-		var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
-		var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 
 		// var ringRotation = 2 * Math.PI / numSlices;
-		// var ringTranslation = maxY - minY;
 
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -251,21 +245,6 @@ var BC = (function(parent) {
 					selectorDirection = Direction.NONE;
 					currentSelectorMovementPeriod = 0;
 				}
-			}
-
-
-			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
-
-			for (var i = 0; i < rings.length; i++) {
-				var translationMatrix = BC.Matrix.makeTranslation(0, -i * ringTranslation, 0);
-
-				var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
-				matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
-				matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
-				matrix = BC.Matrix.matrixMultiply(matrix, translationMatrix);
-
-				gl.uniformMatrix4fv(matrixLocation, false, matrix);
-				rings[i].draw(positionLocation, textureCoordLocation);
 			}
 			*/
 
