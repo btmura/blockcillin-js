@@ -96,6 +96,10 @@ var BC = (function(parent) {
 			}
 		}
 
+		function swap() {
+
+		}
+
 		function update(deltaTime) {
 			if (selectorDirection !== Direction.NONE) {
 				if (currentSelectorMovementPeriod + deltaTime > maxSelectorMovementPeriod) {
@@ -138,10 +142,12 @@ var BC = (function(parent) {
 			outerRingRadius: specs.outerRingRadius,
 			ringMaxY: specs.ringMaxY,
 			ringMinY: specs.ringMinY,
-			move: move,
-			update: update,
 			selectorTranslation: selectorTranslation,
-			rotation: rotation
+			rotation: rotation,
+
+			move: move,
+			swap: swap,
+			update: update,
 		};
 	};
 

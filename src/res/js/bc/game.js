@@ -124,16 +124,28 @@ var BC = (function(parent) {
 			return false;
 		});
 
-		var keyCodeDirectionMap = {
-			37: Direction.LEFT,
-			39: Direction.RIGHT,
-			38: Direction.UP,
-			40: Direction.DOWN
-		};
-
 		$(document).keydown(function(event) {
-			var direction = keyCodeDirectionMap[event.keyCode];
-			boardModel.move(direction);
+			switch (event.keyCode) {
+				case 32: // space
+					boardModel.swap();
+					break;
+
+				case 37: // left
+					boardModel.move(Direction.LEFT);
+					break;
+
+				case 39: // right
+					boardModel.move(Direction.RIGHT);
+					break;
+
+				case 38: // up
+					boardModel.move(Direction.UP);
+					break;
+
+				case 40: // down
+					boardModel.move(Direction.DOWN);
+					break;
+			}
 			return false;
 		});
 
