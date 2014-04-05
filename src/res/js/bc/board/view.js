@@ -24,20 +24,13 @@ var BC = (function(parent) {
 		var selector = BC.Selector.make(gl, model, selectorTextureTile);
 
 		function drawSelector() {
-			var scale = 1; // + Math.abs(Math.sin(4 * now)) / 50;
-			var scaleMatrix = BC.Matrix.makeScale(scale, scale, 1);
-			var translationMatrix = BC.Matrix.makeTranslation(
-					model.selectorTranslation[0],
-					model.selectorTranslation[1],
-					model.selectorTranslation[2]);
-			var selectorMatrix = BC.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+			var selectorMatrix = model.selectorMatrix;
 			gl.uniformMatrix4fv(matrixLocation, false, selectorMatrix);
-
 			selector.draw(positionLocation, textureCoordLocation);
 		}
 
 		function drawRings() {
-			var boardMatrix = model.matrix;
+			var boardMatrix = model.boardMatrix;
 			var rings = model.rings;
 			for (var i = 0; i < rings.length; i++) {
 				var ringMatrix = BC.Matrix.matrixMultiply(boardMatrix, rings[i].matrix);

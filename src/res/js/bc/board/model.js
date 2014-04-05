@@ -28,7 +28,8 @@ var BC = (function(parent) {
 
 		var model = {
 			rings: rings,
-			matrix: scaleMatrix,
+			boardMatrix: scaleMatrix,
+			selectorMatrix: scaleMatrix,
 
 			numRingCells: specs.numRingCells,
 			innerRingRadius: specs.innerRingRadius,
@@ -131,6 +132,7 @@ var BC = (function(parent) {
 
 		function update(deltaTime) {
 			updateBoardMatrix();
+			updateSelectorMatrix();
 
 			if (selectorDirection !== Direction.NONE) {
 				if (currentSelectorMovementPeriod + deltaTime > maxSelectorMovementPeriod) {
@@ -174,8 +176,18 @@ var BC = (function(parent) {
 			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
+			model.boardMatrix = matrix;
+		}
 
-			model.matrix = matrix;
+		function updateSelectorMatrix() {
+			// var scale = 1; // + Math.abs(Math.sin(4 * now)) / 50;
+			// var scaleMatrix = BC.Matrix.makeScale(scale, scale, 1);
+			var translationMatrix = BC.Matrix.makeTranslation(
+					selectorTranslation[0],
+					selectorTranslation[1],
+					selectorTranslation[2]);
+			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+			model.selectorMatrix = matrix;
 		}
 
 		return model;
