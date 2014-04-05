@@ -41,7 +41,7 @@ var BC = (function(parent) {
 
 			move: move,
 			swap: swap,
-			update: update,
+			update: update
 		};
 
 		var numRings = 3;
