@@ -2,7 +2,7 @@ var BC = (function(parent) {
 
 	var my = parent.Selector = parent.Selector || {};
 
-	my.makeSelector = function(gl, metrics, textureTile) {
+	my.make = function(gl, metrics, textureTile) {
 		var minY = metrics.ringMinY;
 		var maxY = metrics.ringMaxY;
 		var outerRadius = metrics.outerRingRadius + 0.01;

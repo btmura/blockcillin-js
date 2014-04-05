@@ -1,8 +1,8 @@
 var BC = (function(parent) {
 
-	var my = parent.Ring = parent.Ring || {};
+	var my = parent.Block = parent.Block || {};
 
-	my.makeRing = function(gl, metrics, tiles) {
+	my.make = function(gl, metrics, tiles) {
 		var numSlices = metrics.numRingCells;
 		var innerRadius = metrics.innerRingRadius;
 		var outerRadius = metrics.outerRingRadius;

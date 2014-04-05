@@ -20,8 +20,8 @@ var BC = (function(parent) {
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
 
-		var ring = BC.Ring.makeRing(gl, model, blockTextureTiles);
-		var selector = BC.Selector.makeSelector(gl, model, selectorTextureTile);
+		var block = BC.Block.make(gl, model, blockTextureTiles);
+		var selector = BC.Selector.make(gl, model, selectorTextureTile);
 
 		var selectorTranslation = [0, 0, 0];
 
@@ -61,7 +61,7 @@ var BC = (function(parent) {
 					var cellRotationYMatrix = BC.Matrix.makeYRotation(cellRotation[1])
 					var cellMatrix = BC.Matrix.matrixMultiply(matrix, cellRotationYMatrix);
 					gl.uniformMatrix4fv(matrixLocation, false, cellMatrix);
-					ring.draw(positionLocation, textureCoordLocation);
+					block.draw(positionLocation, textureCoordLocation);
 					cellRotation[1] += 2 * Math.PI / model.numRingCells;
 				}
 			}
