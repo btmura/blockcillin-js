@@ -38,11 +38,6 @@ var BC = (function(parent) {
 
 		var scaleMatrix = BC.Matrix.makeScale(1, 1, 1);
 
-		var translationMatrix = BC.Matrix.makeTranslation(0, 0, 0);
-
-		var ringTranslation = [0, 0, 0];
-		var ringTranslationAmount = model.ringMaxY - model.ringMinY;
-
 		function drawRings() {
 			var rotationXMatrix = BC.Matrix.makeXRotation(model.rotation[0]);
 			var rotationYMatrix = BC.Matrix.makeYRotation(model.rotation[1]);
@@ -51,7 +46,6 @@ var BC = (function(parent) {
 			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, translationMatrix);
 
 			var rings = model.rings;
 			for (var i = 0; i < rings.length; i++) {
