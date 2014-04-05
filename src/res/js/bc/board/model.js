@@ -14,16 +14,18 @@ var BC = (function(parent) {
 
 		var rings = [];
 
+		var currentRing = 0;
+		var currentCell = 0;
+
 		var selectorDirection = Direction.NONE;
 		var currentSelectorMovementPeriod = 0;
 		var maxSelectorMovementPeriod = 0.05;
-		var currentRing = 0;
 
 		var selectorTranslation = [0, 0, 0];
 		var rotation = [0, 0, 0];
+
 		var ringRotation = 2 * Math.PI / specs.numRingCells;
 		var ringTranslation = specs.ringMaxY - specs.ringMinY;
-
 		var scaleMatrix = BC.Matrix.makeScale(1, 1, 1);
 
 		var model = {
@@ -100,6 +102,10 @@ var BC = (function(parent) {
 			if (selectorDirection === Direction.NONE) {
 				selectorDirection = Direction.LEFT;
 				currentSelectorMovementPeriod = 0;
+				currentCell--;
+				if (currentCell < 0) {
+					currentCell = specs.numRingCells - 1;
+				}
 			}
 		}
 
@@ -107,6 +113,10 @@ var BC = (function(parent) {
 			if (selectorDirection === Direction.NONE) {
 				selectorDirection = Direction.RIGHT;
 				currentSelectorMovementPeriod = 0;
+				currentCell++;
+				if (currentCell >= specs.numRingCells) {
+					currentCell = 0;
+				}
 			}
 		}
 
@@ -127,13 +137,10 @@ var BC = (function(parent) {
 		}
 
 		function swap() {
-
+			console.log("ring: " + currentRing + " cell: " + currentCell);
 		}
 
 		function update(deltaTime) {
-			updateBoardMatrix();
-			updateSelectorMatrix();
-
 			if (selectorDirection !== Direction.NONE) {
 				if (currentSelectorMovementPeriod + deltaTime > maxSelectorMovementPeriod) {
 					deltaTime = maxSelectorMovementPeriod - currentSelectorMovementPeriod;
@@ -166,6 +173,9 @@ var BC = (function(parent) {
 					currentSelectorMovementPeriod = 0;
 				}
 			}
+
+			updateBoardMatrix();
+			updateSelectorMatrix();
 		}
 
 		function updateBoardMatrix() {
