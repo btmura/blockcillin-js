@@ -12,7 +12,7 @@ var BC = (function(parent) {
 	my.makeModel = function(specs) {
 		var rings = [];
 
-		var numRings = 1;
+		var numRings = 3;
 		for (var i = 0; i < numRings; i++) {
 			rings[i] = makeRing();
 		}

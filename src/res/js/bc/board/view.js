@@ -48,6 +48,9 @@ var BC = (function(parent) {
 		var translationMatrix = BC.Matrix.makeTranslation(0, 0, 0);
 
 		var cellRotation = [0, 0, 0];
+		var ringTranslation = [0, 0, 0];
+
+		var ringTranslationAmount = model.ringMaxY - model.ringMinY;
 
 		function drawRings() {
 			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
@@ -57,12 +60,24 @@ var BC = (function(parent) {
 
 			var rings = model.rings;
 			for (var i = 0; i < rings.length; i++) {
+				ringTranslation[1] = -i * ringTranslationAmount;
+				cellRotation[1] = 0;
+
+				var relativeRingMatrix = BC.Matrix.makeTranslation(
+						ringTranslation[0],
+						ringTranslation[1],
+						ringTranslation[2]);
+
 				var cells = rings[i].cells;
 				for (var j = 0; j < cells.length; j++) {
-					var cellRotationYMatrix = BC.Matrix.makeYRotation(cellRotation[1])
-					var cellMatrix = BC.Matrix.matrixMultiply(matrix, cellRotationYMatrix);
+					var relativeCellMatrix = BC.Matrix.makeYRotation(cellRotation[1])
+
+					var cellMatrix = BC.Matrix.matrixMultiply(matrix, relativeRingMatrix);
+					cellMatrix = BC.Matrix.matrixMultiply(cellMatrix, relativeCellMatrix);
+
 					gl.uniformMatrix4fv(matrixLocation, false, cellMatrix);
 					cell.draw(cells[j], positionLocation, textureCoordLocation);
+
 					cellRotation[1] += 2 * Math.PI / model.numRingCells;
 				}
 			}
