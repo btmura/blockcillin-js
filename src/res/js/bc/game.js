@@ -84,41 +84,13 @@ var BC = (function(parent) {
 		var boardModel = BC.Board.makeModel({
 			numRingCells: 24,
 			numBlockStyles: 6,
+			innerRingRadius: 0.75,
+			outerRingRadius: 1,
+			ringMaxY: 0.15,
+			ringMinY: -0.15
 		});
 
-		var boardView = BC.Board.makeView(boardModel);
-
-		var numSlices = 24;
-		var innerRadius = 0.75;
-		var outerRadius = 1;
-		var maxY = 0.15;
-		var minY = -0.15;
-
-		var metrics = {
-			numSlices: numSlices,
-			innerRadius: innerRadius,
-			outerRadius: outerRadius,
-			maxY: maxY,
-			minY: minY
-		};
-
-		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
-		var ringTextureTiles = [
-			tileSet.tile(0, 0),
-			tileSet.tile(0, 1),
-			tileSet.tile(0, 2),
-			tileSet.tile(0, 3),
-			tileSet.tile(1, 0),
-			tileSet.tile(1, 1)
-		];
-		var selectorTextureTile = tileSet.tile(1, 2);
-
-		var rings = [
-			BC.Ring.makeRing(gl, metrics, ringTextureTiles),
-			BC.Ring.makeRing(gl, metrics, ringTextureTiles),
-			BC.Ring.makeRing(gl, metrics, ringTextureTiles)
-		];
-		var selector = BC.Selector.makeSelector(gl, metrics, selectorTextureTile);
+		var boardView = BC.Board.makeView(boardModel, gl, positionLocation, matrixLocation, textureCoordLocation);
 
 		var Direction = {
 			NONE : 0,
@@ -233,10 +205,8 @@ var BC = (function(parent) {
 		var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 		var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 
-		var selectorTranslation = [0, 0, 0];
-
-		var ringRotation = 2 * Math.PI / numSlices;
-		var ringTranslation = maxY - minY;
+		// var ringRotation = 2 * Math.PI / numSlices;
+		// var ringTranslation = maxY - minY;
 
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -249,6 +219,7 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
 			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
 
+			/*
 			if (selectorDirection !== Direction.NONE) {
 				if (currentSelectorMovementPeriod + deltaTime > maxSelectorMovementPeriod) {
 					deltaTime = maxSelectorMovementPeriod - currentSelectorMovementPeriod;
@@ -282,6 +253,7 @@ var BC = (function(parent) {
 				}
 			}
 
+
 			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 
 			for (var i = 0; i < rings.length; i++) {
@@ -295,16 +267,7 @@ var BC = (function(parent) {
 				gl.uniformMatrix4fv(matrixLocation, false, matrix);
 				rings[i].draw(positionLocation, textureCoordLocation);
 			}
-
-			var selectorScale = 1 + Math.abs(Math.sin(4 * now)) / 50;
-			var selectorScaleMatrix = BC.Matrix.makeScale(selectorScale, selectorScale, 1);
-			var selectorTranslationMatrix = BC.Matrix.makeTranslation(
-					selectorTranslation[0],
-					selectorTranslation[1],
-					selectorTranslation[2]);
-			var selectorMatrix = BC.Matrix.matrixMultiply(selectorScaleMatrix, selectorTranslationMatrix);
-			gl.uniformMatrix4fv(matrixLocation, false, selectorMatrix);
-			selector.draw(positionLocation, textureCoordLocation);
+			*/
 
 			boardView.draw();
 

@@ -3,10 +3,10 @@ var BC = (function(parent) {
 	var my = parent.Selector = parent.Selector || {};
 
 	my.makeSelector = function(gl, metrics, textureTile) {
-		var minY = metrics.minY;
-		var maxY = metrics.maxY;
-		var outerRadius = metrics.outerRadius + 0.01;
-		var outerCirclePoints = BC.Math.circlePoints(outerRadius, metrics.numSlices, -Math.PI / 2);
+		var minY = metrics.ringMinY;
+		var maxY = metrics.ringMaxY;
+		var outerRadius = metrics.outerRingRadius + 0.01;
+		var outerCirclePoints = BC.Math.circlePoints(outerRadius, metrics.numRingCells, -Math.PI / 2);
 
 		var lp = outerCirclePoints.length - 2;
 		var mp = 0;

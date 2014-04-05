@@ -23,7 +23,13 @@ var BC = (function(parent) {
 			cells[i] = makeCell();
 		}
 
-		return {};
+		return {
+			numRingCells: specs.numRingCells,
+			innerRingRadius: specs.innerRingRadius,
+			outerRingRadius: specs.outerRingRadius,
+			ringMaxY: specs.ringMaxY,
+			ringMinY: specs.ringMinY
+		};
 	};
 
 	return parent;
