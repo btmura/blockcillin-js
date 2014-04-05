@@ -13,6 +13,15 @@ var BC = (function(parent) {
 	}
 
 	/**
+	 * Returns a random integer between 0 and max exclusive.
+	 *
+	 * @param {Number} max - the max exclusive upper bound
+	 */
+	my.randomInt = function(max) {
+		return Math.floor(Math.random() * max);
+	}
+
+	/**
 	 * Return array of points on a circle.
 	 *
 	 * @param {Number} radius - radius of the circle

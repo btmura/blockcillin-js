@@ -50,20 +50,6 @@ var BC = (function(parent) {
 			gl.generateMipmap(gl.TEXTURE_2D);
 		});
 
-		var numSlices = 24;
-		var innerRadius = 0.75;
-		var outerRadius = 1;
-		var maxY = 0.15;
-		var minY = -0.15;
-
-		var metrics = {
-			numSlices: numSlices,
-			innerRadius: innerRadius,
-			outerRadius: outerRadius,
-			maxY: maxY,
-			minY: minY
-		};
-
 		// Sets the canvas's width and height to the size it's being displayed at.
 		function resizeCanvas() {
 			// Compare current dimensions to displayed dimensions and set them if different.
@@ -94,6 +80,25 @@ var BC = (function(parent) {
 				projectionMatrix = makeProjectionMatrix();
 			}
 		});
+
+		var board = BC.Board.makeBoard({
+			numRingCells: 24,
+			numBlockStyles: 6,
+		});
+
+		var numSlices = 24;
+		var innerRadius = 0.75;
+		var outerRadius = 1;
+		var maxY = 0.15;
+		var minY = -0.15;
+
+		var metrics = {
+			numSlices: numSlices,
+			innerRadius: innerRadius,
+			outerRadius: outerRadius,
+			maxY: maxY,
+			minY: minY
+		};
 
 		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
 		var ringTextureTiles = [
