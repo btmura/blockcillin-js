@@ -24,6 +24,25 @@ var BC = (function(parent) {
 		var ringRotation = 2 * Math.PI / specs.numRingCells;
 		var ringTranslation = specs.ringMaxY - specs.ringMinY;
 
+		var scaleMatrix = BC.Matrix.makeScale(1, 1, 1);
+
+		var model = {
+			rings: rings,
+			matrix: scaleMatrix,
+
+			numRingCells: specs.numRingCells,
+			innerRingRadius: specs.innerRingRadius,
+			outerRingRadius: specs.outerRingRadius,
+			ringMaxY: specs.ringMaxY,
+			ringMinY: specs.ringMinY,
+			selectorTranslation: selectorTranslation,
+			rotation: rotation,
+
+			move: move,
+			swap: swap,
+			update: update,
+		};
+
 		var numRings = 3;
 		for (var i = 0; i < numRings; i++) {
 			rings[i] = makeRing(i);
@@ -111,6 +130,8 @@ var BC = (function(parent) {
 		}
 
 		function update(deltaTime) {
+			updateBoardMatrix();
+
 			if (selectorDirection !== Direction.NONE) {
 				if (currentSelectorMovementPeriod + deltaTime > maxSelectorMovementPeriod) {
 					deltaTime = maxSelectorMovementPeriod - currentSelectorMovementPeriod;
@@ -145,20 +166,19 @@ var BC = (function(parent) {
 			}
 		}
 
-		return {
-			rings: rings,
-			numRingCells: specs.numRingCells,
-			innerRingRadius: specs.innerRingRadius,
-			outerRingRadius: specs.outerRingRadius,
-			ringMaxY: specs.ringMaxY,
-			ringMinY: specs.ringMinY,
-			selectorTranslation: selectorTranslation,
-			rotation: rotation,
+		function updateBoardMatrix() {
+			var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
+			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
+			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 
-			move: move,
-			swap: swap,
-			update: update,
-		};
+			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
+
+			model.matrix = matrix;
+		}
+
+		return model;
 	};
 
 	return parent;

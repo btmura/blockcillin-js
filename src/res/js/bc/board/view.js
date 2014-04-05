@@ -36,21 +36,12 @@ var BC = (function(parent) {
 			selector.draw(positionLocation, textureCoordLocation);
 		}
 
-		var scaleMatrix = BC.Matrix.makeScale(1, 1, 1);
-
 		function drawRings() {
-			var rotationXMatrix = BC.Matrix.makeXRotation(model.rotation[0]);
-			var rotationYMatrix = BC.Matrix.makeYRotation(model.rotation[1]);
-			var rotationZMatrix = BC.Matrix.makeZRotation(model.rotation[2]);
-
-			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
-
+			var boardMatrix = model.matrix;
 			var rings = model.rings;
 			for (var i = 0; i < rings.length; i++) {
+				var ringMatrix = BC.Matrix.matrixMultiply(boardMatrix, rings[i].matrix);
 				var cells = rings[i].cells;
-				var ringMatrix = BC.Matrix.matrixMultiply(matrix, rings[i].matrix);
 				for (var j = 0; j < cells.length; j++) {
 					var cellMatrix = BC.Matrix.matrixMultiply(ringMatrix, cells[j].matrix);
 					gl.uniformMatrix4fv(matrixLocation, false, cellMatrix);
