@@ -32,17 +32,20 @@ var BC = (function(parent) {
 		function makeRing() {
 			var cells = [];
 			for (var i = 0; i < specs.numRingCells; i++) {
-				cells[i] = makeCell();
+				cells[i] = makeCell(i);
 			}
 			return {
 				cells: cells
 			};
 		}
 
-		function makeCell() {
+		function makeCell(cellIndex) {
 			var blockStyle = BC.Math.randomInt(specs.numBlockStyles);
+			var cellYRotation = cellIndex * ringRotation;
+			var matrix = BC.Matrix.makeYRotation(cellYRotation);
 			return {
-				blockStyle: blockStyle
+				blockStyle: blockStyle,
+				matrix: matrix
 			};
 		}
 
