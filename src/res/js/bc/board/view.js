@@ -62,7 +62,7 @@ var BC = (function(parent) {
 					var cellRotationYMatrix = BC.Matrix.makeYRotation(cellRotation[1])
 					var cellMatrix = BC.Matrix.matrixMultiply(matrix, cellRotationYMatrix);
 					gl.uniformMatrix4fv(matrixLocation, false, cellMatrix);
-					cell.draw(positionLocation, textureCoordLocation);
+					cell.draw(cells[j], positionLocation, textureCoordLocation);
 					cellRotation[1] += 2 * Math.PI / model.numRingCells;
 				}
 			}

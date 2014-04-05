@@ -15,30 +15,35 @@ var BC = (function(parent) {
 
 		var points = []; // 3D points
 
-		var textureCoords = []; // 2D points
-		var t = 0;
+		var textureCoords = [];
+		for (var i = 0; i < tiles.length; i++) {
+			textureCoords[i] = [];
+		}
 
-		var setTextureCoords = function(tile, s1, t1, s2, t2, s3, t3) {
-			var tc = tile.textureCoord(s1, t1);
-			textureCoords[t++] = tc[0];
-			textureCoords[t++] = tc[1];
+		var setTextureCoords = function(tp, s1, t1, s2, t2, s3, t3) {
+			for (var t = 0; t < tiles.length; t++) {
+				var tile = tiles[t];
 
-			tc = tile.textureCoord(s2, t2);
-			textureCoords[t++] = tc[0];
-			textureCoords[t++] = tc[1];
+				var tc = tile.textureCoord(s1, t1);
+				textureCoords[t][tp] = tc[0];
+				textureCoords[t][tp + 1] = tc[1];
 
-			tc = tile.textureCoord(s3, t3);
-			textureCoords[t++] = tc[0];
-			textureCoords[t++] = tc[1];
+				tc = tile.textureCoord(s2, t2);
+				textureCoords[t][tp + 2] = tc[0];
+				textureCoords[t][tp + 3] = tc[1];
+
+				tc = tile.textureCoord(s3, t3);
+				textureCoords[t][tp + 4] = tc[0];
+				textureCoords[t][tp + 5] = tc[1];
+			}
+			return tp + 6;
 		};
 
 		var i = 0;
+		var j = 0;
 
 		var p = 0;
 		var np = p + 2;
-
-		var tileIndex = Math.floor(Math.random() * tiles.length);
-		var tile = tiles[tileIndex];
 
 		// TOP FACE
 
@@ -55,7 +60,7 @@ var BC = (function(parent) {
 		points[i++] = maxY;
 		points[i++] = -outerCirclePoints[np + 1];
 
-		setTextureCoords(tile, 0, 0, 0, 1, 1, 1);
+		j = setTextureCoords(j, 0, 0, 0, 1, 1, 1);
 
 		// 2nd triangle of two for quad slice.
 		points[i++] = innerCirclePoints[p];
@@ -70,7 +75,7 @@ var BC = (function(parent) {
 		points[i++] = maxY;
 		points[i++] = -innerCirclePoints[np + 1];
 
-		setTextureCoords(tile, 0, 0, 1, 1, 1, 0);
+		j = setTextureCoords(j, 0, 0, 1, 1, 1, 0);
 
 		// BOTTOM FACE
 
@@ -87,7 +92,7 @@ var BC = (function(parent) {
 		points[i++] = minY;
 		points[i++] = -outerCirclePoints[p + 1];
 
-		setTextureCoords(tile, 0, 0, 1, 1, 0, 1);
+		j = setTextureCoords(j, 0, 0, 1, 1, 0, 1);
 
 		// 2nd triangle of two for quad slice.
 		points[i++] = innerCirclePoints[p];
@@ -102,7 +107,7 @@ var BC = (function(parent) {
 		points[i++] = minY;
 		points[i++] = -outerCirclePoints[np + 1];
 
-		setTextureCoords(tile, 0, 0, 1, 0, 1, 1);
+		j = setTextureCoords(j, 0, 0, 1, 0, 1, 1);
 
 		// OUTER FACE
 
@@ -119,7 +124,7 @@ var BC = (function(parent) {
 		points[i++] = maxY;
 		points[i++] = -outerCirclePoints[np + 1];
 
-		setTextureCoords(tile, 0, 1, 1, 1, 1, 0);
+		j = setTextureCoords(j, 0, 1, 1, 1, 1, 0);
 
 		// 2nd triangle of two for quad slice.
 		points[i++] = outerCirclePoints[p];
@@ -134,7 +139,7 @@ var BC = (function(parent) {
 		points[i++] = maxY;
 		points[i++] = -outerCirclePoints[p + 1];
 
-		setTextureCoords(tile, 0, 1, 1, 0, 0, 0);
+		j = setTextureCoords(j, 0, 1, 1, 0, 0, 0);
 
 		// INNER FACE
 
@@ -151,7 +156,7 @@ var BC = (function(parent) {
 		points[i++] = minY;
 		points[i++] = -innerCirclePoints[np + 1];
 
-		setTextureCoords(tile, 0, 1, 1, 0, 1, 1);
+		j = setTextureCoords(j, 0, 1, 1, 0, 1, 1);
 
 		// 2nd triangle of two for quad slice.
 		points[i++] = innerCirclePoints[p];
@@ -166,7 +171,7 @@ var BC = (function(parent) {
 		points[i++] = maxY;
 		points[i++] = -innerCirclePoints[np + 1];
 
-		setTextureCoords(tile, 0, 1, 0, 0, 1, 0);
+		j = setTextureCoords(j, 0, 1, 0, 0, 1, 0);
 
 		var pointBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
@@ -174,15 +179,19 @@ var BC = (function(parent) {
 
 		var triangleCount = points.length / 3;
 
-		var textureCoordBuffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+		var textureCoordBuffers = [];
+		for (var i = 0; i < tiles.length; i++) {
+			textureCoordBuffers[i] = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffers[i]);
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords[i]), gl.STATIC_DRAW);
+		}
 
-
-		function draw(positionLocation, textureCoordLocation) {
+		function draw(cell, positionLocation, textureCoordLocation) {
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+
+			var textureCoordBuffer = textureCoordBuffers[cell.blockStyle];
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
 			gl.enableVertexAttribArray(textureCoordLocation);

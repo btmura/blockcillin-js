@@ -28,7 +28,7 @@ var BC = (function(parent) {
 		}
 
 		function makeCell() {
-			var blockStyle = BC.Math.randomInt(0, specs.numBlockStyles);
+			var blockStyle = BC.Math.randomInt(specs.numBlockStyles);
 			return {
 				blockStyle: blockStyle,
 			};
