@@ -26,23 +26,30 @@ var BC = (function(parent) {
 
 		var numRings = 3;
 		for (var i = 0; i < numRings; i++) {
-			rings[i] = makeRing();
+			rings[i] = makeRing(i);
 		}
 
-		function makeRing() {
+		function makeRing(ringIndex) {
 			var cells = [];
 			for (var i = 0; i < specs.numRingCells; i++) {
 				cells[i] = makeCell(i);
 			}
+
+			var translationY = -ringIndex * ringTranslation;
+			var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
+
 			return {
-				cells: cells
+				cells: cells,
+				matrix: matrix
 			};
 		}
 
 		function makeCell(cellIndex) {
 			var blockStyle = BC.Math.randomInt(specs.numBlockStyles);
-			var cellYRotation = cellIndex * ringRotation;
-			var matrix = BC.Matrix.makeYRotation(cellYRotation);
+
+			var rotationY = cellIndex * ringRotation;
+			var matrix = BC.Matrix.makeYRotation(rotationY);
+
 			return {
 				blockStyle: blockStyle,
 				matrix: matrix

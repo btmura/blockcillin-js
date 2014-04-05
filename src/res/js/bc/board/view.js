@@ -55,17 +55,10 @@ var BC = (function(parent) {
 
 			var rings = model.rings;
 			for (var i = 0; i < rings.length; i++) {
-				ringTranslation[1] = -i * ringTranslationAmount;
-				var relativeRingMatrix = BC.Matrix.makeTranslation(
-						ringTranslation[0],
-						ringTranslation[1],
-						ringTranslation[2]);
-
 				var cells = rings[i].cells;
+				var ringMatrix = BC.Matrix.matrixMultiply(matrix, rings[i].matrix);
 				for (var j = 0; j < cells.length; j++) {
-					var cellMatrix = BC.Matrix.matrixMultiply(matrix, relativeRingMatrix);
-					cellMatrix = BC.Matrix.matrixMultiply(cellMatrix, cells[j].matrix);
-
+					var cellMatrix = BC.Matrix.matrixMultiply(ringMatrix, cells[j].matrix);
 					gl.uniformMatrix4fv(matrixLocation, false, cellMatrix);
 					cell.draw(cells[j], positionLocation, textureCoordLocation);
 				}
