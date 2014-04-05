@@ -34,6 +34,7 @@ var BC = (function(parent) {
 					selectorTranslation[2]);
 			var selectorMatrix = BC.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
 			gl.uniformMatrix4fv(matrixLocation, false, selectorMatrix);
+
 			selector.draw(positionLocation, textureCoordLocation);
 		}
 
@@ -68,8 +69,8 @@ var BC = (function(parent) {
 		}
 
 		function draw() {
-			drawSelector();
 			drawRings();
+			drawSelector();
 		}
 
 		return {
