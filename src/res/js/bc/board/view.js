@@ -27,12 +27,10 @@ var BC = (function(parent) {
 		var cell = BC.Cell.make(gl, model, blockTextureTiles);
 		var selector = BC.Selector.make(gl, model, selectorTextureTile);
 
-		var scaleMatrix = BC.Matrix.makeScale(1, 1, 1);
-
 		function drawSelector() {
 			gl.uniformMatrix4fv(boardMatrixLocation, false, model.selectorMatrix);
-			gl.uniformMatrix4fv(ringMatrixLocation, false, scaleMatrix);
-			gl.uniformMatrix4fv(cellMatrixLocation, false, scaleMatrix);
+			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Matrix.identity);
 			selector.draw(programLocations);
 		}
 

@@ -76,6 +76,8 @@ var BC = (function(parent) {
 		];
 	}
 
+	my.identity = my.makeScale(1, 1, 1);
+
 	my.makeInverse = function(m) {
 		var m00 = m[0 * 4 + 0];
 		var m01 = m[0 * 4 + 1];

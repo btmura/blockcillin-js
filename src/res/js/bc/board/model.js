@@ -34,12 +34,11 @@ var BC = (function(parent) {
 
 		var ringRotation = 2 * Math.PI / specs.numRingCells;
 		var ringTranslation = specs.ringMaxY - specs.ringMinY;
-		var scaleMatrix = BC.Matrix.makeScale(1, 1, 1);
 
 		var model = {
 			rings: rings,
-			boardMatrix: scaleMatrix,
-			selectorMatrix: scaleMatrix,
+			boardMatrix: BC.Matrix.identity,
+			selectorMatrix: BC.Matrix.identity,
 
 			numRingCells: specs.numRingCells,
 			innerRingRadius: specs.innerRingRadius,
@@ -237,8 +236,7 @@ var BC = (function(parent) {
 			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 
-			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, rotationZMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, rotationYMatrix);
+			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
 			model.boardMatrix = matrix;
 		}
