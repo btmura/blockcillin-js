@@ -12,6 +12,11 @@ var BC = (function(parent) {
 	my.makeModel = function(specs) {
 		var Direction = BC.Common.Direction;
 
+		var CellState = {
+			NONE: 0,
+			SWAP_RIGHT: 1
+		};
+
 		var rings = [];
 
 		var currentRing = 0;
@@ -20,6 +25,8 @@ var BC = (function(parent) {
 		var selectorDirection = Direction.NONE;
 		var currentSelectorMovementPeriod = 0;
 		var maxSelectorMovementPeriod = 0.05;
+
+		var swapMovementDuration = 1.0;
 
 		var selectorTranslation = [0, 0, 0];
 		var rotation = [0, 0, 0];
@@ -69,12 +76,15 @@ var BC = (function(parent) {
 		function makeCell(cellIndex) {
 			var blockStyle = BC.Math.randomInt(specs.numBlockStyles);
 
-			var rotationY = cellIndex * ringRotation;
-			var matrix = BC.Matrix.makeYRotation(rotationY);
+			var rotation = [0, cellIndex * ringRotation, 0];
+			var matrix = BC.Matrix.makeYRotation(rotation[1]);
 
 			return {
 				blockStyle: blockStyle,
-				matrix: matrix
+				matrix: matrix,
+				state: CellState.NONE,
+				rotation: rotation,
+				currentSwapTime: 0
 			};
 		}
 
@@ -138,9 +148,36 @@ var BC = (function(parent) {
 
 		function swap() {
 			console.log("ring: " + currentRing + " cell: " + currentCell);
+
+			var ring = rings[currentRing];
+			var cell = ring.cells[currentCell];
+			cell.state = CellState.SWAP_RIGHT;
+			cell.currentSwapTime = 0;
 		}
 
 		function update(deltaTime) {
+			for (var i = 0; i < rings.length; i++) {
+				var cells = rings[i].cells;
+				for (var j = 0; j < cells.length; j++) {
+					var cell = cells[j];
+					if (cell.state == CellState.SWAP_RIGHT) {
+						var time = deltaTime;
+						if (cell.currentSwapTime + deltaTime > swapMovementDuration) {
+							time = swapMovementDuration - cell.currentSwapTime;
+						}
+
+						cell.rotation[1] += ringRotation * time / swapMovementDuration;
+						cell.matrix = BC.Matrix.makeYRotation(cell.rotation[1]);
+
+						cell.currentSwapTime += time;
+						if (cell.currentSwapTime >= swapMovementDuration) {
+							cell.state = CellState.NONE;
+							cell.currentSwapTime = 0;
+						}
+					}
+				}
+			}
+
 			if (selectorDirection !== Direction.NONE) {
 				if (currentSelectorMovementPeriod + deltaTime > maxSelectorMovementPeriod) {
 					deltaTime = maxSelectorMovementPeriod - currentSelectorMovementPeriod;
