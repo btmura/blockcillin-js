@@ -14,7 +14,8 @@ var BC = (function(parent) {
 
 		var CellState = {
 			NONE: 0,
-			SWAP_RIGHT: 1
+			SWAP_LEFT: 1,
+			SWAP_RIGHT: 2
 		};
 
 		var rings = [];
@@ -26,7 +27,7 @@ var BC = (function(parent) {
 		var currentSelectorMovementPeriod = 0;
 		var maxSelectorMovementPeriod = 0.05;
 
-		var swapMovementDuration = 1.0;
+		var swapMovementDuration = 0.1;
 
 		var selectorTranslation = [0, 0, 0];
 		var rotation = [0, 0, 0];
@@ -153,6 +154,10 @@ var BC = (function(parent) {
 			var cell = ring.cells[currentCell];
 			cell.state = CellState.SWAP_RIGHT;
 			cell.currentSwapTime = 0;
+
+			var nextCell = ring.cells[(currentCell + 1) % ring.cells.length];
+			nextCell.state = CellState.SWAP_LEFT;
+			nextCell.currentSwapTime = 0;
 		}
 
 		function update(deltaTime) {
@@ -160,13 +165,18 @@ var BC = (function(parent) {
 				var cells = rings[i].cells;
 				for (var j = 0; j < cells.length; j++) {
 					var cell = cells[j];
-					if (cell.state == CellState.SWAP_RIGHT) {
+					if (cell.state == CellState.SWAP_LEFT || cell.state == CellState.SWAP_RIGHT) {
 						var time = deltaTime;
 						if (cell.currentSwapTime + deltaTime > swapMovementDuration) {
 							time = swapMovementDuration - cell.currentSwapTime;
 						}
 
-						cell.rotation[1] += ringRotation * time / swapMovementDuration;
+						var rotationDelta = ringRotation * time / swapMovementDuration;
+						if (cell.state == CellState.SWAP_LEFT) {
+							cell.rotation[1] -= rotationDelta;
+						} else {
+							cell.rotation[1] += rotationDelta;
+						}
 						cell.matrix = BC.Matrix.makeYRotation(cell.rotation[1]);
 
 						cell.currentSwapTime += time;
