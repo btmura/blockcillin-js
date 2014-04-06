@@ -9,7 +9,7 @@ var BC = (function(parent) {
 	 * @param specs.numBlockStyles - number of block styles
 	 * @returns {Object} board that tracks the state of all the blocks
 	 */
-	my.makeModel = function(specs) {
+	my.make = function(specs) {
 		var Direction = BC.Common.Direction;
 
 		var CellState = {

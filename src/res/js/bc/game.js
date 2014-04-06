@@ -93,7 +93,7 @@ var BC = (function(parent) {
 			}
 		});
 
-		var boardModel = BC.Board.makeModel({
+		var board = BC.Board.make({
 			numRingCells: 24,
 			numBlockStyles: 6,
 			innerRingRadius: 0.75,
@@ -102,7 +102,7 @@ var BC = (function(parent) {
 			ringMinY: -0.15
 		});
 
-		var boardView = BC.Board.makeView(boardModel, gl, programLocations);
+		var boardView = BC.Board.makeView(board, gl, programLocations);
 
 		var Direction = BC.Common.Direction;
 
@@ -124,15 +124,15 @@ var BC = (function(parent) {
 
 					var direction = Direction.NONE;
 					if (deltaX > touchThreshold) {
-						boardModel.move(Direction.LEFT);
+						board.move(Direction.LEFT);
 					} else if (deltaX < -touchThreshold) {
-						boardModel.move(Direction.RIGHT);
+						board.move(Direction.RIGHT);
 					} else if (deltaY > touchThreshold) {
-						boardModel.move(Direction.DOWN);
+						board.move(Direction.DOWN);
 					} else if (deltaY < -touchThreshold) {
-						boardModel.move(Direction.UP);
+						board.move(Direction.UP);
 					} else {
-						boardModel.swap();
+						board.swap();
 					}
 					break;
 			}
@@ -142,23 +142,23 @@ var BC = (function(parent) {
 		$(document).keydown(function(event) {
 			switch (event.keyCode) {
 				case 32: // space
-					boardModel.swap();
+					board.swap();
 					break;
 
 				case 37: // left
-					boardModel.move(Direction.LEFT);
+					board.move(Direction.LEFT);
 					break;
 
 				case 39: // right
-					boardModel.move(Direction.RIGHT);
+					board.move(Direction.RIGHT);
 					break;
 
 				case 38: // up
-					boardModel.move(Direction.UP);
+					board.move(Direction.UP);
 					break;
 
 				case 40: // down
-					boardModel.move(Direction.DOWN);
+					board.move(Direction.DOWN);
 					break;
 			}
 			return false;
@@ -180,7 +180,7 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
 			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
 
-			boardModel.update(deltaTime, now);
+			board.update(deltaTime, now);
 			boardView.draw();
 
 			requestAnimationFrame(drawScene);
