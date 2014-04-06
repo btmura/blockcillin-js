@@ -110,15 +110,16 @@ var BC = (function(parent) {
 
 					var direction = Direction.NONE;
 					if (deltaX > touchThreshold) {
-						direction = Direction.LEFT;
+						boardModel.move(Direction.LEFT);
 					} else if (deltaX < -touchThreshold) {
-						direction = Direction.RIGHT;
+						boardModel.move(Direction.RIGHT);
 					} else if (deltaY > touchThreshold) {
-						direction = Direction.DOWN;
+						boardModel.move(Direction.DOWN);
 					} else if (deltaY < -touchThreshold) {
-						direction = Direction.UP;
+						boardModel.move(Direction.UP);
+					} else {
+						boardModel.swap();
 					}
-					boardModel.move(direction);
 					break;
 			}
 			return false;
