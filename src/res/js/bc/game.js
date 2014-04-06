@@ -164,10 +164,13 @@ var BC = (function(parent) {
 			return false;
 		});
 
-		var then = BC.Time.getTimeInSeconds();
-
 		var projectionMatrixLocation = programLocations.projectionMatrixLocation;
 		var viewMatrixLocation = programLocations.viewMatrixLocation;
+
+		gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
+		gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
+
+		var then = BC.Time.getTimeInSeconds();
 
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -176,9 +179,6 @@ var BC = (function(parent) {
 			var now = BC.Time.getTimeInSeconds();
 			var deltaTime = now - then;
 			then = now;
-
-			gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
-			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
 
 			board.update(deltaTime, now);
 			boardView.draw();
