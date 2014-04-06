@@ -13,41 +13,16 @@ var BC = (function(parent) {
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices, offset);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices, offset);
 
-		var points = []; // 3D points
-
-		var textureCoords = [];
-		for (var i = 0; i < tiles.length; i++) {
-			textureCoords[i] = [];
-		}
-
-		var setTextureCoords = function(tp, s1, t1, s2, t2, s3, t3) {
-			for (var t = 0; t < tiles.length; t++) {
-				var tile = tiles[t];
-
-				var tc = tile.textureCoord(s1, t1);
-				textureCoords[t][tp] = tc[0];
-				textureCoords[t][tp + 1] = tc[1];
-
-				tc = tile.textureCoord(s2, t2);
-				textureCoords[t][tp + 2] = tc[0];
-				textureCoords[t][tp + 3] = tc[1];
-
-				tc = tile.textureCoord(s3, t3);
-				textureCoords[t][tp + 4] = tc[0];
-				textureCoords[t][tp + 5] = tc[1];
-			}
-			return tp + 6;
-		};
+		// Number of cube faces that will be drawn. No bottom cause nobody sees it.
+		var numFaces = 5;
 
 		var i = 0;
-		var j = 0;
-
 		var p = 0;
 		var np = p + 2;
+		var points = []; // 3D points
 
 		// TOP FACE
 
-		// 1st triangle of two for quad slice.
 		points[i++] = innerCirclePoints[p];
 		points[i++] = maxY;
 		points[i++] = -innerCirclePoints[p + 1];
@@ -60,58 +35,52 @@ var BC = (function(parent) {
 		points[i++] = maxY;
 		points[i++] = -outerCirclePoints[np + 1];
 
-		j = setTextureCoords(j, 0, 0, 0, 1, 1, 1);
-
-		// 2nd triangle of two for quad slice.
-		points[i++] = innerCirclePoints[p];
-		points[i++] = maxY;
-		points[i++] = -innerCirclePoints[p + 1];
-
-		points[i++] = outerCirclePoints[np];
-		points[i++] = maxY;
-		points[i++] = -outerCirclePoints[np + 1];
-
 		points[i++] = innerCirclePoints[np];
 		points[i++] = maxY;
 		points[i++] = -innerCirclePoints[np + 1];
 
-		j = setTextureCoords(j, 0, 0, 1, 1, 1, 0);
+		// LEFT FACE
 
-		// BOTTOM FACE
+		points[i++] = innerCirclePoints[p];
+		points[i++] = maxY;
+		points[i++] = -innerCirclePoints[p + 1];
 
-		// 1st triangle of two for quad slice.
 		points[i++] = innerCirclePoints[p];
 		points[i++] = minY;
 		points[i++] = -innerCirclePoints[p + 1];
-
-		points[i++] = outerCirclePoints[np];
-		points[i++] = minY;
-		points[i++] = -outerCirclePoints[np + 1];
 
 		points[i++] = outerCirclePoints[p];
 		points[i++] = minY;
 		points[i++] = -outerCirclePoints[p + 1];
 
-		j = setTextureCoords(j, 0, 0, 1, 1, 0, 1);
+		points[i++] = outerCirclePoints[p];
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[p + 1];
 
-		// 2nd triangle of two for quad slice.
-		points[i++] = innerCirclePoints[p];
-		points[i++] = minY;
-		points[i++] = -innerCirclePoints[p + 1];
+		// RIGHT FACE
 
-		points[i++] = innerCirclePoints[np];
-		points[i++] = minY;
-		points[i++] = -innerCirclePoints[np + 1];
+		points[i++] = outerCirclePoints[np];
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[np + 1];
 
 		points[i++] = outerCirclePoints[np];
 		points[i++] = minY;
 		points[i++] = -outerCirclePoints[np + 1];
 
-		j = setTextureCoords(j, 0, 0, 1, 0, 1, 1);
+		points[i++] = innerCirclePoints[np];
+		points[i++] = minY;
+		points[i++] = -innerCirclePoints[np + 1];
+
+		points[i++] = innerCirclePoints[np];
+		points[i++] = maxY;
+		points[i++] = -innerCirclePoints[np + 1];
 
 		// OUTER FACE
 
-		// 1st triangle of two for quad slice.
+		points[i++] = outerCirclePoints[p];
+		points[i++] = maxY;
+		points[i++] = -outerCirclePoints[p + 1];
+
 		points[i++] = outerCirclePoints[p];
 		points[i++] = minY;
 		points[i++] = -outerCirclePoints[p + 1];
@@ -123,31 +92,9 @@ var BC = (function(parent) {
 		points[i++] = outerCirclePoints[np];
 		points[i++] = maxY;
 		points[i++] = -outerCirclePoints[np + 1];
-
-		j = setTextureCoords(j, 0, 1, 1, 1, 1, 0);
-
-		// 2nd triangle of two for quad slice.
-		points[i++] = outerCirclePoints[p];
-		points[i++] = minY;
-		points[i++] = -outerCirclePoints[p + 1];
-
-		points[i++] = outerCirclePoints[np];
-		points[i++] = maxY;
-		points[i++] = -outerCirclePoints[np + 1];
-
-		points[i++] = outerCirclePoints[p];
-		points[i++] = maxY;
-		points[i++] = -outerCirclePoints[p + 1];
-
-		j = setTextureCoords(j, 0, 1, 1, 0, 0, 0);
 
 		// INNER FACE
 
-		// 1st triangle of two for quad slice.
-		points[i++] = innerCirclePoints[p];
-		points[i++] = minY;
-		points[i++] = -innerCirclePoints[p + 1];
-
 		points[i++] = innerCirclePoints[np];
 		points[i++] = maxY;
 		points[i++] = -innerCirclePoints[np + 1];
@@ -156,9 +103,6 @@ var BC = (function(parent) {
 		points[i++] = minY;
 		points[i++] = -innerCirclePoints[np + 1];
 
-		j = setTextureCoords(j, 0, 1, 1, 0, 1, 1);
-
-		// 2nd triangle of two for quad slice.
 		points[i++] = innerCirclePoints[p];
 		points[i++] = minY;
 		points[i++] = -innerCirclePoints[p + 1];
@@ -166,18 +110,34 @@ var BC = (function(parent) {
 		points[i++] = innerCirclePoints[p];
 		points[i++] = maxY;
 		points[i++] = -innerCirclePoints[p + 1];
-
-		points[i++] = innerCirclePoints[np];
-		points[i++] = maxY;
-		points[i++] = -innerCirclePoints[np + 1];
-
-		j = setTextureCoords(j, 0, 1, 0, 0, 1, 0);
 
 		var pointBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW);
 
-		var triangleCount = points.length / 3;
+		// Two dimensional array for tile x coordinates. Each face has the same texture coords.
+		var textureCoords = [];
+		for (var i = 0; i < tiles.length; i++) {
+			var tile = tiles[i];
+			textureCoords[i] = [];
+			for (var j = 0, k = 0; j < numFaces; j++) {
+				var tc = tile.textureCoord(0, 0);
+				textureCoords[i][k++] = tc[0];
+				textureCoords[i][k++] = tc[1];
+
+				tc = tile.textureCoord(0, 1);
+				textureCoords[i][k++] = tc[0];
+				textureCoords[i][k++] = tc[1];
+
+				tc = tile.textureCoord(1, 1);
+				textureCoords[i][k++] = tc[0];
+				textureCoords[i][k++] = tc[1];
+
+				tc = tile.textureCoord(1, 0);
+				textureCoords[i][k++] = tc[0];
+				textureCoords[i][k++] = tc[1];
+			}
+		}
 
 		var textureCoordBuffers = [];
 		for (var i = 0; i < tiles.length; i++) {
@@ -186,18 +146,47 @@ var BC = (function(parent) {
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords[i]), gl.STATIC_DRAW);
 		}
 
+		var indexArray = new Uint16Array([
+			// TOP FACE
+			0, 1, 2,
+			0, 2, 3,
+
+			// LEFT FACE
+			4, 5, 6,
+			4, 6, 7,
+
+			// RIGHT FACE
+			8, 9, 10,
+			8, 10, 11,
+
+			// OUTER RADIUS FACE
+			12, 13, 14,
+			12, 14, 15,
+
+			// INNER RADIUS FACE
+			16, 17, 18,
+			16, 18, 19
+
+		]);
+
+		var indexBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+
+		var count = indexArray.length;
+
 		function draw(cell, positionLocation, textureCoordLocation) {
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 
 			var textureCoordBuffer = textureCoordBuffers[cell.blockStyle];
-
 			gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
 			gl.enableVertexAttribArray(textureCoordLocation);
 			gl.vertexAttribPointer(textureCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
-			gl.drawArrays(gl.TRIANGLES, 0, triangleCount);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+			gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);
 		}
 
 		return {
