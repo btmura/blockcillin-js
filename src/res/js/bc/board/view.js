@@ -8,7 +8,11 @@ var BC = (function(parent) {
 	 * @param model - board model
 	 * @returns {Object} board view
 	 */
-	my.makeView = function(model, gl, positionLocation, matrixLocation, textureCoordLocation) {
+	my.makeView = function(model, gl, programLocations) {
+		var positionLocation = programLocations.positionLocation;
+		var matrixLocation = programLocations.matrixLocation;
+		var textureCoordLocation = programLocations.textureCoordLocation;
+
 		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
 		var blockTextureTiles = [
 			tileSet.tile(0, 0),
@@ -26,7 +30,7 @@ var BC = (function(parent) {
 		function drawSelector() {
 			var selectorMatrix = model.selectorMatrix;
 			gl.uniformMatrix4fv(matrixLocation, false, selectorMatrix);
-			selector.draw(positionLocation, textureCoordLocation);
+			selector.draw(programLocations);
 		}
 
 		function drawRings() {
@@ -38,7 +42,7 @@ var BC = (function(parent) {
 				for (var j = 0; j < cells.length; j++) {
 					var cellMatrix = BC.Matrix.matrixMultiply(ringMatrix, cells[j].matrix);
 					gl.uniformMatrix4fv(matrixLocation, false, cellMatrix);
-					cell.draw(cells[j], positionLocation, textureCoordLocation);
+					cell.draw(cells[j], programLocations);
 				}
 			}
 		}

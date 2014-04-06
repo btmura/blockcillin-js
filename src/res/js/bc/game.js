@@ -22,11 +22,13 @@ var BC = (function(parent) {
 		var program = BC.GL.createProgram(gl, [vertexShader, fragmentShader]);
 		gl.useProgram(program);
 
-		var positionLocation = gl.getAttribLocation(program, "a_position");
-		var textureCoordLocation = gl.getAttribLocation(program, "a_texcoord");
-		var projectionMatrixLocation = gl.getUniformLocation(program, "u_projectionMatrix");
-		var viewMatrixLocation = gl.getUniformLocation(program, "u_viewMatrix");
-		var matrixLocation = gl.getUniformLocation(program, "u_matrix");
+		var programLocations = {
+			positionLocation: gl.getAttribLocation(program, "a_position"),
+			textureCoordLocation: gl.getAttribLocation(program, "a_texcoord"),
+			projectionMatrixLocation: gl.getUniformLocation(program, "u_projectionMatrix"),
+			viewMatrixLocation: gl.getUniformLocation(program, "u_viewMatrix"),
+			matrixLocation: gl.getUniformLocation(program, "u_matrix")
+		};
 
 		var up = [0, 1, 0];
 		var cameraPosition = [0, 0.75, 2];
@@ -88,7 +90,7 @@ var BC = (function(parent) {
 			ringMinY: -0.15
 		});
 
-		var boardView = BC.Board.makeView(boardModel, gl, positionLocation, matrixLocation, textureCoordLocation);
+		var boardView = BC.Board.makeView(boardModel, gl, programLocations);
 
 		var Direction = BC.Common.Direction;
 
@@ -151,6 +153,9 @@ var BC = (function(parent) {
 		});
 
 		var then = BC.Time.getTimeInSeconds();
+
+		var projectionMatrixLocation = programLocations.projectionMatrixLocation;
+		var viewMatrixLocation = programLocations.viewMatrixLocation;
 
 		function drawScene() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);

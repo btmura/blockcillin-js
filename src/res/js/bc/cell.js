@@ -175,7 +175,10 @@ var BC = (function(parent) {
 
 		var count = indexArray.length;
 
-		function draw(cell, positionLocation, textureCoordLocation) {
+		function draw(cell, programLocations) {
+			var positionLocation = programLocations.positionLocation;
+			var textureCoordLocation = programLocations.textureCoordLocation;
+
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);

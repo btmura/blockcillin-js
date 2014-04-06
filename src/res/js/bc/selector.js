@@ -82,7 +82,10 @@ var BC = (function(parent) {
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
-		function draw(positionLocation, textureCoordLocation) {
+		function draw(programLocations) {
+			var positionLocation = programLocations.positionLocation;
+			var textureCoordLocation = programLocations.textureCoordLocation;
+
 			gl.enable(gl.BLEND);
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
