@@ -9,9 +9,7 @@ var BC = (function(parent) {
 	 * @returns {Object} board view
 	 */
 	my.makeView = function(model, gl, programLocations) {
-		var positionLocation = programLocations.positionLocation;
 		var matrixLocation = programLocations.matrixLocation;
-		var textureCoordLocation = programLocations.textureCoordLocation;
 
 		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
 		var blockTextureTiles = [
