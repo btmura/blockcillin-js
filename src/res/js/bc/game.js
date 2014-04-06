@@ -163,7 +163,7 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
 			gl.uniformMatrix4fv(viewMatrixLocation, false, viewMatrix);
 
-			boardModel.update(deltaTime);
+			boardModel.update(deltaTime, now);
 			boardView.draw();
 
 			requestAnimationFrame(drawScene);

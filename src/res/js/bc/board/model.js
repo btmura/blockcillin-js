@@ -167,7 +167,7 @@ var BC = (function(parent) {
 			nextCell.currentSwapTime = 0;
 		}
 
-		function update(deltaTime) {
+		function update(deltaTime, now) {
 			for (var i = 0; i < rings.length; i++) {
 				var cells = rings[i].cells;
 				for (var j = 0; j < cells.length; j++) {
@@ -229,7 +229,7 @@ var BC = (function(parent) {
 			}
 
 			updateBoardMatrix();
-			updateSelectorMatrix();
+			updateSelectorMatrix(now);
 		}
 
 		function updateBoardMatrix() {
@@ -243,9 +243,9 @@ var BC = (function(parent) {
 			model.boardMatrix = matrix;
 		}
 
-		function updateSelectorMatrix() {
-			// var scale = 1; // + Math.abs(Math.sin(4 * now)) / 50;
-			// var scaleMatrix = BC.Matrix.makeScale(scale, scale, 1);
+		function updateSelectorMatrix(now) {
+			var scale = 1 + Math.abs(Math.sin(4 * now)) / 25;
+			var scaleMatrix = BC.Matrix.makeScale(scale, scale, 1);
 			var translationMatrix = BC.Matrix.makeTranslation(
 					selectorTranslation[0],
 					selectorTranslation[1],
