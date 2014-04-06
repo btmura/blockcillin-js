@@ -27,7 +27,7 @@ var BC = (function(parent) {
 		var currentSelectorMovementPeriod = 0;
 		var maxSelectorMovementPeriod = 0.05;
 
-		var swapMovementDuration = 0.1;
+		var swapMovementDuration = 0.125;
 
 		var selectorTranslation = [0, 0, 0];
 		var rotation = [0, 0, 0];
