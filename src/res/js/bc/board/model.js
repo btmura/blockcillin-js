@@ -21,7 +21,7 @@ var BC = (function(parent) {
 		var rings = [];
 
 		var currentRing = 0;
-		var currentCell = 0;
+		var currentCell = specs.numRingCells - 1;
 
 		var selectorDirection = Direction.NONE;
 		var currentSelectorMovementPeriod = 0;
@@ -152,11 +152,18 @@ var BC = (function(parent) {
 
 			var ring = rings[currentRing];
 			var cell = ring.cells[currentCell];
+			var nextCell = ring.cells[(currentCell + 1) % ring.cells.length];
+
+			var prevBlockStyle = cell.blockStyle;
+
+			cell.blockStyle = nextCell.blockStyle;
 			cell.state = CellState.SWAP_RIGHT;
+			cell.rotation[1] += ringRotation;
 			cell.currentSwapTime = 0;
 
-			var nextCell = ring.cells[(currentCell + 1) % ring.cells.length];
+			nextCell.blockStyle = prevBlockStyle;
 			nextCell.state = CellState.SWAP_LEFT;
+			nextCell.rotation[1] -= ringRotation;
 			nextCell.currentSwapTime = 0;
 		}
 
@@ -173,9 +180,9 @@ var BC = (function(parent) {
 
 						var rotationDelta = ringRotation * time / swapMovementDuration;
 						if (cell.state == CellState.SWAP_LEFT) {
-							cell.rotation[1] -= rotationDelta;
-						} else {
 							cell.rotation[1] += rotationDelta;
+						} else {
+							cell.rotation[1] -= rotationDelta;
 						}
 						cell.matrix = BC.Matrix.makeYRotation(cell.rotation[1]);
 
