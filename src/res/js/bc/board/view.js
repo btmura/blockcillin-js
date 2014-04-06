@@ -9,7 +9,9 @@ var BC = (function(parent) {
 	 * @returns {Object} board view
 	 */
 	my.makeView = function(model, gl, programLocations) {
-		var matrixLocation = programLocations.matrixLocation;
+		var boardMatrixLocation = programLocations.boardMatrixLocation;
+		var ringMatrixLocation = programLocations.ringMatrixLocation;
+		var cellMatrixLocation = programLocations.cellMatrixLocation;
 
 		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
 		var blockTextureTiles = [
@@ -25,21 +27,23 @@ var BC = (function(parent) {
 		var cell = BC.Cell.make(gl, model, blockTextureTiles);
 		var selector = BC.Selector.make(gl, model, selectorTextureTile);
 
+		var scaleMatrix = BC.Matrix.makeScale(1, 1, 1);
+
 		function drawSelector() {
-			var selectorMatrix = model.selectorMatrix;
-			gl.uniformMatrix4fv(matrixLocation, false, selectorMatrix);
+			gl.uniformMatrix4fv(boardMatrixLocation, false, model.selectorMatrix);
+			gl.uniformMatrix4fv(ringMatrixLocation, false, scaleMatrix);
+			gl.uniformMatrix4fv(cellMatrixLocation, false, scaleMatrix);
 			selector.draw(programLocations);
 		}
 
 		function drawRings() {
-			var boardMatrix = model.boardMatrix;
+			gl.uniformMatrix4fv(boardMatrixLocation, false, model.boardMatrix);
 			var rings = model.rings;
 			for (var i = 0; i < rings.length; i++) {
-				var ringMatrix = BC.Matrix.matrixMultiply(boardMatrix, rings[i].matrix);
+				gl.uniformMatrix4fv(ringMatrixLocation, false, rings[i].matrix);
 				var cells = rings[i].cells;
 				for (var j = 0; j < cells.length; j++) {
-					var cellMatrix = BC.Matrix.matrixMultiply(ringMatrix, cells[j].matrix);
-					gl.uniformMatrix4fv(matrixLocation, false, cellMatrix);
+					gl.uniformMatrix4fv(cellMatrixLocation, false, cells[j].matrix);
 					cell.draw(cells[j], programLocations);
 				}
 			}

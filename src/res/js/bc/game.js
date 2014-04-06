@@ -22,12 +22,24 @@ var BC = (function(parent) {
 		var program = BC.GL.createProgram(gl, [vertexShader, fragmentShader]);
 		gl.useProgram(program);
 
+		function getAttrib(name) {
+			return gl.getAttribLocation(program, name);
+		}
+
+		function getUniform(name) {
+			return gl.getUniformLocation(program, name);
+		}
+
 		var programLocations = {
-			positionLocation: gl.getAttribLocation(program, "a_position"),
-			textureCoordLocation: gl.getAttribLocation(program, "a_texcoord"),
-			projectionMatrixLocation: gl.getUniformLocation(program, "u_projectionMatrix"),
-			viewMatrixLocation: gl.getUniformLocation(program, "u_viewMatrix"),
-			matrixLocation: gl.getUniformLocation(program, "u_matrix")
+			positionLocation: getAttrib("a_position"),
+			textureCoordLocation: getAttrib("a_texcoord"),
+
+			projectionMatrixLocation: getUniform("u_projectionMatrix"),
+			viewMatrixLocation: getUniform("u_viewMatrix"),
+
+			boardMatrixLocation: getUniform("u_boardMatrix"),
+			ringMatrixLocation: getUniform("u_ringMatrix"),
+			cellMatrixLocation: getUniform("u_cellMatrix")
 		};
 
 		var up = [0, 1, 0];

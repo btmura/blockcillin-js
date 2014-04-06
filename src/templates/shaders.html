@@ -5,13 +5,21 @@
 
 		uniform mat4 u_projectionMatrix;
 		uniform mat4 u_viewMatrix;
-		uniform mat4 u_matrix;
+
+		uniform mat4 u_boardMatrix;
+		uniform mat4 u_ringMatrix;
+		uniform mat4 u_cellMatrix;
 
 		varying vec2 v_texcoord;
 
 		void main() {
-			// Multiply the position by the matrix.
-			gl_Position = u_projectionMatrix * u_viewMatrix * u_matrix * a_position;
+			// Multiply the position by all matrices.
+			gl_Position = u_projectionMatrix
+					* u_viewMatrix
+					* u_boardMatrix
+					* u_ringMatrix
+					* u_cellMatrix
+					* a_position;
 
 			// Pass the texcoord to the fragment shader.
 			v_texcoord = a_texcoord;
