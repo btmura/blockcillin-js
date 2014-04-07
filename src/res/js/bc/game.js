@@ -109,7 +109,7 @@ var BC = (function(parent) {
 			ringMinY: -0.15
 		});
 
-		var boardView = BC.Board.makeView(board, gl, programLocations);
+		var boardView = BC.BoardView.make(board, gl, programLocations);
 
 		var Direction = BC.Common.Direction;
 

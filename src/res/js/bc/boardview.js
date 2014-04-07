@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Board = parent.Board || {}
+	var my = parent.BoardView = parent.BoardView || {}
 
 	/**
 	 * Makes a board's view that can draw itself.
@@ -8,7 +8,7 @@ var BC = (function(parent) {
 	 * @param model - board model
 	 * @returns {Object} board view
 	 */
-	my.makeView = function(model, gl, programLocations) {
+	my.make = function(model, gl, programLocations) {
 		var boardMatrixLocation = programLocations.boardMatrixLocation;
 		var ringMatrixLocation = programLocations.ringMatrixLocation;
 		var cellMatrixLocation = programLocations.cellMatrixLocation;
