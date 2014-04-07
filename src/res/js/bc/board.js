@@ -18,14 +18,7 @@ var BC = (function(parent) {
 			SWAP_RIGHT: 2
 		};
 
-		var rings = [];
-
-		var currentRing = 0;
-		var currentCell = specs.numRingCells - 1;
-
 		var swapMovementDuration = 0.125;
-
-		var rotation = [0, 0, 0];
 
 		var ringRotationY = 2 * Math.PI / specs.numRingCells;
 		var ringTranslationY = specs.ringMaxY - specs.ringMinY;
@@ -42,7 +35,7 @@ var BC = (function(parent) {
 		};
 
 		var board = {
-			rings: rings,
+			rings: [],
 			selector: selector,
 			matrix: BC.Matrix.identity,
 
@@ -51,16 +44,21 @@ var BC = (function(parent) {
 			outerRingRadius: specs.outerRingRadius,
 			ringMaxY: specs.ringMaxY,
 			ringMinY: specs.ringMinY,
-			rotation: rotation,
 
 			move: move,
 			swap: swap,
 			update: update
 		};
 
+		var boardState = {
+			currentRing: 0,
+			currentCell: specs.numRingCells - 1,
+			rotation: [0, 0, 0]
+		};
+
 		var numRings = 3;
 		for (var i = 0; i < numRings; i++) {
-			rings[i] = makeRing(i);
+			board.rings[i] = makeRing(i);
 		}
 
 		function makeRing(ringIndex) {
@@ -116,8 +114,8 @@ var BC = (function(parent) {
 		function moveSelectorLeft() {
 			if (selectorState.direction === Direction.NONE) {
 				selectorState.direction = Direction.LEFT;
-				elapsedMovementTime = 0;
-				currentCell--;
+				selectorState.elapsedMovementTime = 0;
+				boardState.currentCell--;
 				if (currentCell < 0) {
 					currentCell = specs.numRingCells - 1;
 				}
@@ -127,36 +125,34 @@ var BC = (function(parent) {
 		function moveSelectorRight() {
 			if (selectorState.direction === Direction.NONE) {
 				selectorState.direction = Direction.RIGHT;
-				elapsedMovementTime = 0;
-				currentCell++;
-				if (currentCell >= specs.numRingCells) {
-					currentCell = 0;
+				selectorState.elapsedMovementTime = 0;
+				boardState.currentCell++;
+				if (boardState.currentCell >= specs.numRingCells) {
+					boardState.currentCell = 0;
 				}
 			}
 		}
 
 		function moveSelectorUp() {
-			if (selectorState.direction === Direction.NONE && currentRing > 0) {
+			if (selectorState.direction === Direction.NONE && boardState.currentRing > 0) {
 				selectorState.direction = Direction.UP;
-				elapsedMovementTime = 0;
-				currentRing--;
+				selectorState.elapsedMovementTime = 0;
+				boardState.currentRing--;
 			}
 		}
 
 		function moveSelectorDown() {
-			if (selectorState.direction === Direction.NONE && currentRing + 1 < rings.length) {
+			if (selectorState.direction === Direction.NONE && boardState.currentRing + 1 < board.rings.length) {
 				selectorState.direction = Direction.DOWN;
-				elapsedMovementTime = 0;
-				currentRing++;
+				selectorState.elapsedMovementTime = 0;
+				boardState.currentRing++;
 			}
 		}
 
 		function swap() {
-			console.log("ring: " + currentRing + " cell: " + currentCell);
-
-			var ring = rings[currentRing];
-			var cell = ring.cells[currentCell];
-			var nextCell = ring.cells[(currentCell + 1) % ring.cells.length];
+			var ring = board.rings[boardState.currentRing];
+			var cell = ring.cells[boardState.currentCell];
+			var nextCell = ring.cells[(boardState.currentCell + 1) % ring.cells.length];
 
 			var prevBlockStyle = cell.blockStyle;
 
@@ -172,6 +168,7 @@ var BC = (function(parent) {
 		}
 
 		function update(deltaTime, now) {
+			var rings = board.rings;
 			for (var i = 0; i < rings.length; i++) {
 				var cells = rings[i].cells;
 				for (var j = 0; j < cells.length; j++) {
@@ -217,11 +214,11 @@ var BC = (function(parent) {
 						break;
 
 					case Direction.LEFT:
-						rotation[1] += horizontalRotation;
+						boardState.rotation[1] += horizontalRotation;
 						break;
 
 					case Direction.RIGHT:
-						rotation[1] -= horizontalRotation;
+						boardState.rotation[1] -= horizontalRotation;
 						break;
 				}
 
@@ -237,9 +234,9 @@ var BC = (function(parent) {
 		}
 
 		function updateBoardMatrix() {
-			var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
-			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
-			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
+			var rotationXMatrix = BC.Matrix.makeXRotation(boardState.rotation[0]);
+			var rotationYMatrix = BC.Matrix.makeYRotation(boardState.rotation[1]);
+			var rotationZMatrix = BC.Matrix.makeZRotation(boardState.rotation[2]);
 
 			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
