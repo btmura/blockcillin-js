@@ -37,7 +37,7 @@ var BC = (function(parent) {
 
 		var model = {
 			rings: rings,
-			boardMatrix: BC.Matrix.identity,
+			matrix: BC.Matrix.identity,
 			selectorMatrix: BC.Matrix.identity,
 
 			numRingCells: specs.numRingCells,
@@ -238,7 +238,7 @@ var BC = (function(parent) {
 
 			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
-			model.boardMatrix = matrix;
+			model.matrix = matrix;
 		}
 
 		function updateSelectorMatrix(now) {

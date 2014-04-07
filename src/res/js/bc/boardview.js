@@ -27,7 +27,7 @@ var BC = (function(parent) {
 		}
 
 		function drawRings() {
-			gl.uniformMatrix4fv(boardMatrixLocation, false, board.boardMatrix);
+			gl.uniformMatrix4fv(boardMatrixLocation, false, board.matrix);
 			var rings = board.rings;
 			for (var i = 0; i < rings.length; i++) {
 				gl.uniformMatrix4fv(ringMatrixLocation, false, rings[i].matrix);
