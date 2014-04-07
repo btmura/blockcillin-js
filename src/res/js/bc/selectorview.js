@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Selector = parent.Selector || {};
+	var my = parent.SelectorView = parent.SelectorView || {};
 
 	my.make = function(gl, metrics, textureTile) {
 		var minY = metrics.ringMinY;

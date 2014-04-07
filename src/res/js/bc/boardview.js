@@ -2,13 +2,7 @@ var BC = (function(parent) {
 
 	var my = parent.BoardView = parent.BoardView || {}
 
-	/**
-	 * Makes a board's view that can draw itself.
-	 *
-	 * @param model - board model
-	 * @returns {Object} board view
-	 */
-	my.make = function(model, gl, programLocations) {
+	my.make = function(board, gl, programLocations) {
 		var boardMatrixLocation = programLocations.boardMatrixLocation;
 		var ringMatrixLocation = programLocations.ringMatrixLocation;
 		var cellMatrixLocation = programLocations.cellMatrixLocation;
@@ -24,19 +18,17 @@ var BC = (function(parent) {
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
 
-		var cellView = BC.CellView.make(gl, model, blockTextureTiles);
-		var selector = BC.Selector.make(gl, model, selectorTextureTile);
+		var cellView = BC.CellView.make(gl, board, blockTextureTiles);
+		var selectorView = BC.SelectorView.make(gl, board, selectorTextureTile);
 
-		function drawSelector() {
-			gl.uniformMatrix4fv(boardMatrixLocation, false, model.selectorMatrix);
-			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Matrix.identity);
-			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Matrix.identity);
-			selector.draw(programLocations);
+		function draw() {
+			drawRings();
+			drawSelector();
 		}
 
 		function drawRings() {
-			gl.uniformMatrix4fv(boardMatrixLocation, false, model.boardMatrix);
-			var rings = model.rings;
+			gl.uniformMatrix4fv(boardMatrixLocation, false, board.boardMatrix);
+			var rings = board.rings;
 			for (var i = 0; i < rings.length; i++) {
 				gl.uniformMatrix4fv(ringMatrixLocation, false, rings[i].matrix);
 				var cells = rings[i].cells;
@@ -47,9 +39,11 @@ var BC = (function(parent) {
 			}
 		}
 
-		function draw() {
-			drawRings();
-			drawSelector();
+		function drawSelector() {
+			gl.uniformMatrix4fv(boardMatrixLocation, false, board.selectorMatrix);
+			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Matrix.identity);
+			selectorView.draw(programLocations);
 		}
 
 		return {
