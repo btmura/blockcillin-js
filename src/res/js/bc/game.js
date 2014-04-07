@@ -3,6 +3,8 @@ var BC = (function(parent) {
 	var my = parent.Game = parent.Game || {}
 
 	my.run = function() {
+		var Direction = BC.Constants.Direction;
+
 		var canvas = document.getElementById("canvas");
 		if (!canvas) {
 			return;
@@ -110,8 +112,6 @@ var BC = (function(parent) {
 		});
 
 		var boardView = BC.BoardView.make(board, gl, programLocations);
-
-		var Direction = BC.Common.Direction;
 
 		var touchThreshold = 50;
 		var touchStartX = 0;

@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Common = parent.Common || {};
+	var my = parent.Constants = parent.Constants || {};
 
 	my.Direction = {
 		NONE : 0,

@@ -10,7 +10,7 @@ var BC = (function(parent) {
 	 * @returns {Object} board that tracks the state of all the blocks
 	 */
 	my.make = function(specs) {
-		var Direction = BC.Common.Direction;
+		var Direction = BC.Constants.Direction;
 
 		var CellState = {
 			NONE: 0,
