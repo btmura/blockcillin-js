@@ -27,8 +27,8 @@ var BC = (function(parent) {
 
 		var rotation = [0, 0, 0];
 
-		var ringRotation = 2 * Math.PI / specs.numRingCells;
-		var ringTranslation = specs.ringMaxY - specs.ringMinY;
+		var ringRotationY = 2 * Math.PI / specs.numRingCells;
+		var ringTranslationY = specs.ringMaxY - specs.ringMinY;
 
 		var selector = {
 			matrix: BC.Matrix.identity,
@@ -39,7 +39,7 @@ var BC = (function(parent) {
 			maxMovementTime: 0.05
 		};
 
-		var model = {
+		var board = {
 			rings: rings,
 			selector: selector,
 			matrix: BC.Matrix.identity,
@@ -67,7 +67,7 @@ var BC = (function(parent) {
 				cells[i] = makeCell(i);
 			}
 
-			var translationY = -ringIndex * ringTranslation;
+			var translationY = -ringIndex * ringTranslationY;
 			var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
 
 			return {
@@ -79,7 +79,7 @@ var BC = (function(parent) {
 		function makeCell(cellIndex) {
 			var blockStyle = BC.Math.randomInt(specs.numBlockStyles);
 
-			var rotation = [0, cellIndex * ringRotation, 0];
+			var rotation = [0, cellIndex * ringRotationY, 0];
 			var matrix = BC.Matrix.makeYRotation(rotation[1]);
 
 			return {
@@ -160,12 +160,12 @@ var BC = (function(parent) {
 
 			cell.blockStyle = nextCell.blockStyle;
 			cell.state = CellState.SWAP_RIGHT;
-			cell.rotation[1] += ringRotation;
+			cell.rotation[1] += ringRotationY;
 			cell.currentSwapTime = 0;
 
 			nextCell.blockStyle = prevBlockStyle;
 			nextCell.state = CellState.SWAP_LEFT;
-			nextCell.rotation[1] -= ringRotation;
+			nextCell.rotation[1] -= ringRotationY;
 			nextCell.currentSwapTime = 0;
 		}
 
@@ -180,7 +180,7 @@ var BC = (function(parent) {
 							time = swapMovementDuration - cell.currentSwapTime;
 						}
 
-						var rotationDelta = ringRotation * time / swapMovementDuration;
+						var rotationDelta = ringRotationY * time / swapMovementDuration;
 						if (cell.state == CellState.SWAP_LEFT) {
 							cell.rotation[1] += rotationDelta;
 						} else {
@@ -202,8 +202,8 @@ var BC = (function(parent) {
 					deltaTime = selector.maxMovementTime - selector.elapsedMovementTime;
 				}
 
-				var verticalTranslation = deltaTime * ringTranslation / selector.maxMovementTime;
-				var horizontalRotation = deltaTime * ringRotation / selector.maxMovementTime;
+				var verticalTranslation = deltaTime * ringTranslationY / selector.maxMovementTime;
+				var horizontalRotation = deltaTime * ringRotationY / selector.maxMovementTime;
 
 				switch (selector.direction) {
 					case Direction.UP:
@@ -241,7 +241,7 @@ var BC = (function(parent) {
 
 			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
-			model.matrix = matrix;
+			board.matrix = matrix;
 		}
 
 		function updateSelectorMatrix(now) {
@@ -251,10 +251,10 @@ var BC = (function(parent) {
 					selector.translation[0],
 					selector.translation[1],
 					selector.translation[2]);
-			model.selector.matrix = BC.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+			board.selector.matrix = BC.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
 		}
 
-		return model;
+		return board;
 	};
 
 	return parent;
