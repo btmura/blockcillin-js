@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Cell = parent.Cell || {};
+	var my = parent.CellView = parent.CellView || {};
 
 	my.make = function(gl, metrics, tiles) {
 		var numSlices = metrics.numRingCells;

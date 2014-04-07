@@ -24,7 +24,7 @@ var BC = (function(parent) {
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
 
-		var cell = BC.Cell.make(gl, model, blockTextureTiles);
+		var cellView = BC.CellView.make(gl, model, blockTextureTiles);
 		var selector = BC.Selector.make(gl, model, selectorTextureTile);
 
 		function drawSelector() {
@@ -42,7 +42,7 @@ var BC = (function(parent) {
 				var cells = rings[i].cells;
 				for (var j = 0; j < cells.length; j++) {
 					gl.uniformMatrix4fv(cellMatrixLocation, false, cells[j].matrix);
-					cell.draw(cells[j], programLocations);
+					cellView.draw(cells[j], programLocations);
 				}
 			}
 		}
