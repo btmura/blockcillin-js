@@ -23,29 +23,32 @@ var BC = (function(parent) {
 		var currentRing = 0;
 		var currentCell = specs.numRingCells - 1;
 
-		var selectorDirection = Direction.NONE;
-		var currentSelectorMovementPeriod = 0;
-		var maxSelectorMovementPeriod = 0.05;
-
 		var swapMovementDuration = 0.125;
 
-		var selectorTranslation = [0, 0, 0];
 		var rotation = [0, 0, 0];
 
 		var ringRotation = 2 * Math.PI / specs.numRingCells;
 		var ringTranslation = specs.ringMaxY - specs.ringMinY;
 
+		var selector = {
+			matrix: BC.Matrix.identity,
+			translation: [0, 0, 0],
+
+			direction: Direction.NONE,
+			elapsedMovementTime: 0,
+			maxMovementTime: 0.05
+		};
+
 		var model = {
 			rings: rings,
+			selector: selector,
 			matrix: BC.Matrix.identity,
-			selectorMatrix: BC.Matrix.identity,
 
 			numRingCells: specs.numRingCells,
 			innerRingRadius: specs.innerRingRadius,
 			outerRingRadius: specs.outerRingRadius,
 			ringMaxY: specs.ringMaxY,
 			ringMinY: specs.ringMinY,
-			selectorTranslation: selectorTranslation,
 			rotation: rotation,
 
 			move: move,
@@ -109,9 +112,9 @@ var BC = (function(parent) {
 		}
 
 		function moveSelectorLeft() {
-			if (selectorDirection === Direction.NONE) {
-				selectorDirection = Direction.LEFT;
-				currentSelectorMovementPeriod = 0;
+			if (selector.direction === Direction.NONE) {
+				selector.direction = Direction.LEFT;
+				elapsedMovementTime = 0;
 				currentCell--;
 				if (currentCell < 0) {
 					currentCell = specs.numRingCells - 1;
@@ -120,9 +123,9 @@ var BC = (function(parent) {
 		}
 
 		function moveSelectorRight() {
-			if (selectorDirection === Direction.NONE) {
-				selectorDirection = Direction.RIGHT;
-				currentSelectorMovementPeriod = 0;
+			if (selector.direction === Direction.NONE) {
+				selector.direction = Direction.RIGHT;
+				elapsedMovementTime = 0;
 				currentCell++;
 				if (currentCell >= specs.numRingCells) {
 					currentCell = 0;
@@ -131,17 +134,17 @@ var BC = (function(parent) {
 		}
 
 		function moveSelectorUp() {
-			if (selectorDirection === Direction.NONE && currentRing > 0) {
-				selectorDirection = Direction.UP;
-				currentSelectorMovementPeriod = 0;
+			if (selector.direction === Direction.NONE && currentRing > 0) {
+				selector.direction = Direction.UP;
+				elapsedMovementTime = 0;
 				currentRing--;
 			}
 		}
 
 		function moveSelectorDown() {
-			if (selectorDirection === Direction.NONE && currentRing + 1 < rings.length) {
-				selectorDirection = Direction.DOWN;
-				currentSelectorMovementPeriod = 0;
+			if (selector.direction === Direction.NONE && currentRing + 1 < rings.length) {
+				selector.direction = Direction.DOWN;
+				elapsedMovementTime = 0;
 				currentRing++;
 			}
 		}
@@ -194,21 +197,21 @@ var BC = (function(parent) {
 				}
 			}
 
-			if (selectorDirection !== Direction.NONE) {
-				if (currentSelectorMovementPeriod + deltaTime > maxSelectorMovementPeriod) {
-					deltaTime = maxSelectorMovementPeriod - currentSelectorMovementPeriod;
+			if (selector.direction !== Direction.NONE) {
+				if (selector.elapsedMovementTime + deltaTime > selector.maxMovementTime) {
+					deltaTime = selector.maxMovementTime - selector.elapsedMovementTime;
 				}
 
-				var verticalTranslation = deltaTime * ringTranslation / maxSelectorMovementPeriod;
-				var horizontalRotation = deltaTime * ringRotation / maxSelectorMovementPeriod;
+				var verticalTranslation = deltaTime * ringTranslation / selector.maxMovementTime;
+				var horizontalRotation = deltaTime * ringRotation / selector.maxMovementTime;
 
-				switch (selectorDirection) {
+				switch (selector.direction) {
 					case Direction.UP:
-						selectorTranslation[1] += verticalTranslation;
+						selector.translation[1] += verticalTranslation;
 						break;
 
 					case Direction.DOWN:
-						selectorTranslation[1] -= verticalTranslation;
+						selector.translation[1] -= verticalTranslation;
 						break;
 
 					case Direction.LEFT:
@@ -220,10 +223,10 @@ var BC = (function(parent) {
 						break;
 				}
 
-				currentSelectorMovementPeriod += deltaTime;
-				if (currentSelectorMovementPeriod >= maxSelectorMovementPeriod) {
-					selectorDirection = Direction.NONE;
-					currentSelectorMovementPeriod = 0;
+				selector.elapsedMovementTime += deltaTime;
+				if (selector.elapsedMovementTime >= selector.maxMovementTime) {
+					selector.direction = Direction.NONE;
+					selector.elapsedMovementTime = 0;
 				}
 			}
 
@@ -245,11 +248,10 @@ var BC = (function(parent) {
 			var scale = 1 + Math.abs(Math.sin(4 * now)) / 25;
 			var scaleMatrix = BC.Matrix.makeScale(scale, scale, 1);
 			var translationMatrix = BC.Matrix.makeTranslation(
-					selectorTranslation[0],
-					selectorTranslation[1],
-					selectorTranslation[2]);
-			var matrix = BC.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
-			model.selectorMatrix = matrix;
+					selector.translation[0],
+					selector.translation[1],
+					selector.translation[2]);
+			model.selector.matrix = BC.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
 		}
 
 		return model;

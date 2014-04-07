@@ -40,7 +40,7 @@ var BC = (function(parent) {
 		}
 
 		function drawSelector() {
-			gl.uniformMatrix4fv(boardMatrixLocation, false, board.selectorMatrix);
+			gl.uniformMatrix4fv(boardMatrixLocation, false, board.selector.matrix);
 			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Matrix.identity);
 			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Matrix.identity);
 			selectorView.draw(programLocations);
