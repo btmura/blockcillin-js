@@ -11,7 +11,7 @@ var BC = (function(parent) {
 		SWAP_RIGHT_EMPTY: 5,
 		DROP_BLOCK_SRC: 6,
 		DROP_BLOCK_DST: 7,
-		DISAPPEARING_BLOCK: 8,
+		DISAPPEARING_BLOCK: 8
 	};
 
 	my.make = function(cellIndex, metrics) {
