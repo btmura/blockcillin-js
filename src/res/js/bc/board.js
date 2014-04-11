@@ -17,7 +17,7 @@ var BC = (function(parent) {
 			move: move,
 			rotate: rotate,
 			swap: swap,
-			update: update,
+			update: update
 		};
 
 		var currentRing = 0;
