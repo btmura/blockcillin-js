@@ -41,10 +41,10 @@ var BC = (function(parent) {
 			otherCell.elapsedSwapTime = 0;
 		}
 
-		function update(deltaTime) {
+		function update(watch) {
 			if (cell.state == CellState.SWAP_LEFT || cell.state == CellState.SWAP_RIGHT) {
-				var time = deltaTime;
-				if (cell.elapsedSwapTime + deltaTime > maxCellSwapTime) {
+				var time = watch.deltaTime;
+				if (cell.elapsedSwapTime + time > maxCellSwapTime) {
 					time = maxCellSwapTime - cell.elapsedSwapTime;
 				}
 

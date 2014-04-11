@@ -75,8 +75,9 @@ var BC = (function(parent) {
 			elapsedMovementTime = 0;
 		}
 
-		function update(deltaTime, now) {
+		function update(watch) {
 			if (isMoving()) {
+				var deltaTime = watch.deltaTime;
 				if (elapsedMovementTime + deltaTime > maxMovementTime) {
 					deltaTime = maxMovementTime - elapsedMovementTime;
 				}
@@ -109,7 +110,7 @@ var BC = (function(parent) {
 				}
 			}
 
-			var scale = 1 + Math.abs(Math.sin(4 * now)) / 25;
+			var scale = 1 + Math.abs(Math.sin(4 * watch.now)) / 25;
 			var scaleMatrix = BC.Matrix.makeScale(scale, scale, 1);
 			var translationMatrix = BC.Matrix.makeTranslation(
 					translation[0],

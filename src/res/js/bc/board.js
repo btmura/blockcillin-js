@@ -88,13 +88,13 @@ var BC = (function(parent) {
 			cell.swap(nextCell);
 		}
 
-		function update(deltaTime, now) {
+		function update(watch) {
 			var rings = board.rings;
 			for (var i = 0; i < rings.length; i++) {
-				rings[i].update(deltaTime);
+				rings[i].update(watch);
 			}
 
-			selector.update(deltaTime, now);
+			selector.update(watch);
 			updateBoardMatrix();
 		}
 
