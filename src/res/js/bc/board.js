@@ -4,6 +4,7 @@ var BC = (function(parent) {
 
 	my.make = function(metrics) {
 		var Direction = BC.Constants.Direction;
+		var CellState = BC.Cell.CellState;
 
 		var rings = [];
 		for (var i = 0; i < metrics.numRings; i++) {
@@ -89,13 +90,94 @@ var BC = (function(parent) {
 		}
 
 		function update(watch) {
-			var rings = board.rings;
-			for (var i = 0; i < rings.length; i++) {
-				rings[i].update(watch);
+			for (var i = 0; i < metrics.numRings; i++) {
+				for (var j = 0; j < metrics.numCells; j++) {
+					var cell = getCell(i, j);
+					cell.update(watch);
+					updateCell(i, j);
+				}
 			}
 
 			selector.update(watch);
 			updateBoardMatrix();
+		}
+
+		function updateCell(row, col) {
+			checkHorizontal(row, col);
+			checkVertical(row, col);
+		}
+
+		function checkHorizontal(row, col) {
+			var cell = getCell(row, col);
+			if (cell.state !== CellState.BLOCK) {
+				return false;
+			}
+
+			// Check left cell
+			var leftCol = col - 1;
+			if (leftCol < 0) {
+				leftCol = metrics.numCells - 1;
+			}
+
+			var leftCell = getCell(row, leftCol);
+			if (leftCell.state !== CellState.BLOCK || leftCell.blockStyle !== cell.blockStyle) {
+				return false;
+			}
+
+			// Check right cell
+			var rightCol = col + 1;
+			if (rightCol >= metrics.numCells) {
+				rightCol = 0;
+			}
+
+			var rightCell = getCell(row, rightCol);
+			if (rightCell.state !== CellState.BLOCK || rightCell.blockStyle !== cell.blockStyle) {
+				return false;
+			}
+
+
+			leftCell.state = CellState.EMPTY;
+			cell.state = CellState.EMPTY;
+			rightCell.state = CellState.EMPTY;
+			return true;
+		}
+
+		function checkVertical(row, col) {
+			var cell = getCell(row, col);
+			if (cell.state !== CellState.BLOCK) {
+				return false;
+			}
+
+			// Check left cell
+			var upRow = row - 1;
+			if (upRow < 0) {
+				return false;
+			}
+
+			var upCell = getCell(upRow, col);
+			if (upCell.state !== CellState.BLOCK || upCell.blockStyle !== cell.blockStyle) {
+				return false;
+			}
+
+			// Check right cell
+			var downRow = row + 1;
+			if (downRow >= metrics.numRings) {
+				return false;
+			}
+
+			var downCell = getCell(downRow, col);
+			if (downCell.state !== CellState.BLOCK || downCell.blockStyle !== cell.blockStyle) {
+				return false;
+			}
+
+			upCell.state = CellState.EMPTY;
+			cell.state = CellState.EMPTY;
+			downCell.state = CellState.EMPTY;
+			return true;
+		}
+
+		function getCell(row, col) {
+			return board.rings[row].cells[col];
 		}
 
 		function updateBoardMatrix() {

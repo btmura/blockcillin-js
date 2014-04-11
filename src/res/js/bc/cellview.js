@@ -178,7 +178,7 @@ var BC = (function(parent) {
 		var count = indexArray.length;
 
 		function draw(cell, programLocations) {
-			if (cell.state == CellState.NONE) {
+			if (cell.state === CellState.EMPTY) {
 				return;
 			}
 

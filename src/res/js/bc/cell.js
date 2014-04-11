@@ -3,7 +3,7 @@ var BC = (function(parent) {
 	var my = parent.Cell = parent.Cell || {}
 
 	my.CellState = {
-		NONE: 0,
+		EMPTY: 0,
 		BLOCK: 1,
 		SWAP_LEFT: 2,
 		SWAP_RIGHT: 3
@@ -20,11 +20,9 @@ var BC = (function(parent) {
 		var rotation = [0, cellIndex * ringRotationY, 0];
 		var matrix = BC.Matrix.makeYRotation(rotation[1]);
 
-		var state = BC.Math.randomInt(2);
-
 		var cell = {
 			matrix: matrix,
-			state: state,
+			state: CellState.BLOCK,
 			blockStyle: blockStyle,
 			rotation: rotation,
 
@@ -33,6 +31,10 @@ var BC = (function(parent) {
 		};
 
 		function swap(otherCell) {
+			if (cell.state !== CellState.BLOCK || otherCell.state !== CellState.BLOCK) {
+				return false;
+			}
+
 			var prevBlockStyle = cell.blockStyle;
 
 			cell.blockStyle = otherCell.blockStyle;
@@ -44,6 +46,8 @@ var BC = (function(parent) {
 			otherCell.state = CellState.SWAP_LEFT;
 			otherCell.rotation[1] -= ringRotationY;
 			otherCell.elapsedSwapTime = 0;
+
+			return true;
 		}
 
 		function update(watch) {
@@ -63,7 +67,7 @@ var BC = (function(parent) {
 
 				cell.elapsedSwapTime += time;
 				if (cell.elapsedSwapTime >= maxCellSwapTime) {
-					cell.state = CellState.NONE;
+					cell.state = CellState.BLOCK;
 					cell.elapsedSwapTime = 0;
 				}
 			}

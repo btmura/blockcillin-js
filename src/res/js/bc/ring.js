@@ -11,16 +11,9 @@ var BC = (function(parent) {
 		var translationY = -ringIndex * metrics.ringHeight;
 		var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
 
-		function update(watch) {
-			for (var i = 0; i < cells.length; i++) {
-				cells[i].update(watch);
-			}
-		}
-
 		return {
 			cells: cells,
-			matrix: matrix,
-			update: update
+			matrix: matrix
 		};
 	};
 
