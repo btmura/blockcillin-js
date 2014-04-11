@@ -42,12 +42,11 @@ var BC = (function(parent) {
 			rotate: rotate,
 			swap: swap,
 			update: update,
-
-			// private details
-			currentRing: 0,
-			currentCell: specs.numRingCells - 1,
-			rotation: [0, 0, 0]
 		};
+
+		var currentRing = 0;
+		var currentCell = specs.numRingCells - 1;
+		var rotation = [0, 0, 0];
 
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
@@ -74,42 +73,42 @@ var BC = (function(parent) {
 
 		function moveSelectorLeft() {
 			if (selector.move(Direction.LEFT)) {;
-				board.currentCell--;
-				if (board.currentCell < 0) {
-					board.currentCell = specs.numRingCells - 1;
+				currentCell--;
+				if (currentCell < 0) {
+					currentCell = specs.numRingCells - 1;
 				}
 			}
 		}
 
 		function moveSelectorRight() {
 			if (selector.move(Direction.RIGHT)) {
-				board.currentCell++;
-				if (board.currentCell >= specs.numRingCells) {
-					board.currentCell = 0;
+				currentCell++;
+				if (currentCell >= specs.numRingCells) {
+					currentCell = 0;
 				}
 			}
 		}
 
 		function moveSelectorUp() {
-			if (board.currentRing > 0 && selector.move(Direction.UP)) {
-				board.currentRing--;
+			if (currentRing > 0 && selector.move(Direction.UP)) {
+				currentRing--;
 			}
 		}
 
 		function moveSelectorDown() {
-			if (board.currentRing + 1 < board.rings.length && selector.move(Direction.DOWN)) {
-				board.currentRing++;
+			if (currentRing + 1 < board.rings.length && selector.move(Direction.DOWN)) {
+				currentRing++;
 			}
 		}
 
 		function rotate(deltaRotation) {
-			board.rotation[1] += deltaRotation;
+			rotation[1] += deltaRotation;
 		}
 
 		function swap() {
-			var ring = board.rings[board.currentRing];
-			var cell = ring.cells[board.currentCell];
-			var nextCell = ring.cells[(board.currentCell + 1) % ring.cells.length];
+			var ring = board.rings[currentRing];
+			var cell = ring.cells[currentCell];
+			var nextCell = ring.cells[(currentCell + 1) % ring.cells.length];
 			cell.swap(nextCell);
 		}
 
@@ -125,9 +124,9 @@ var BC = (function(parent) {
 		}
 
 		function updateBoardMatrix() {
-			var rotationXMatrix = BC.Matrix.makeXRotation(board.rotation[0]);
-			var rotationYMatrix = BC.Matrix.makeYRotation(board.rotation[1]);
-			var rotationZMatrix = BC.Matrix.makeZRotation(board.rotation[2]);
+			var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
+			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
+			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 
 			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
