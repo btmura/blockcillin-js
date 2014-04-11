@@ -12,6 +12,10 @@ var BC = (function(parent) {
 		return  degrees * Math.PI / 180;
 	}
 
+	my.sliceRadians = function(numSlices) {
+		return 2 * Math.PI / numSlices;
+	}
+
 	/**
 	 * Returns a random integer between 0 and max exclusive.
 	 *

@@ -105,12 +105,12 @@ var BC = (function(parent) {
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
 		var board = BC.Board.make({
-			numRingCells: 24,
-			numBlockStyles: 6,
-			innerRingRadius: 0.75,
-			outerRingRadius: 1,
-			ringMaxY: 0.15,
-			ringMinY: -0.15
+			numRings: 3,
+			numCells: 24,
+			numBlockTypes: 6,
+			ringInnerRadius: 0.75,
+			ringOuterRadius: 1,
+			ringHeight: 0.3
 		});
 
 		var boardView = BC.BoardView.make(board, gl, programLocations);

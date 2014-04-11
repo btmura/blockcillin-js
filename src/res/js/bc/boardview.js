@@ -18,8 +18,8 @@ var BC = (function(parent) {
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
 
-		var cellView = BC.CellView.make(gl, board, blockTextureTiles);
-		var selectorView = BC.SelectorView.make(gl, board, selectorTextureTile);
+		var cellView = BC.CellView.make(gl, board.metrics, blockTextureTiles);
+		var selectorView = BC.SelectorView.make(gl, board.metrics, selectorTextureTile);
 
 		function draw() {
 			drawRings();

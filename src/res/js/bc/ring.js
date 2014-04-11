@@ -8,7 +8,7 @@ var BC = (function(parent) {
 			cells[i] = BC.Cell.make(i, metrics);
 		}
 
-		var translationY = -ringIndex * metrics.ringTranslationY;
+		var translationY = -ringIndex * metrics.ringHeight;
 		var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
 
 		function update(deltaTime) {

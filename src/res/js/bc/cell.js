@@ -13,7 +13,8 @@ var BC = (function(parent) {
 
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
 
-		var rotation = [0, cellIndex * metrics.ringRotationY, 0];
+		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
+		var rotation = [0, cellIndex * ringRotationY, 0];
 		var matrix = BC.Matrix.makeYRotation(rotation[1]);
 
 		var cell = {
@@ -31,12 +32,12 @@ var BC = (function(parent) {
 
 			cell.blockStyle = otherCell.blockStyle;
 			cell.state = CellState.SWAP_RIGHT;
-			cell.rotation[1] += metrics.ringRotationY;
+			cell.rotation[1] += ringRotationY;
 			cell.elapsedSwapTime = 0;
 
 			otherCell.blockStyle = prevBlockStyle;
 			otherCell.state = CellState.SWAP_LEFT;
-			otherCell.rotation[1] -= metrics.ringRotationY;
+			otherCell.rotation[1] -= ringRotationY;
 			otherCell.elapsedSwapTime = 0;
 		}
 
@@ -47,7 +48,7 @@ var BC = (function(parent) {
 					time = maxCellSwapTime - cell.elapsedSwapTime;
 				}
 
-				var rotationDelta = metrics.ringRotationY * time / maxCellSwapTime;
+				var rotationDelta = ringRotationY * time / maxCellSwapTime;
 				if (cell.state == CellState.SWAP_LEFT) {
 					cell.rotation[1] += rotationDelta;
 				} else {

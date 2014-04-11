@@ -3,11 +3,11 @@ var BC = (function(parent) {
 	var my = parent.CellView = parent.CellView || {};
 
 	my.make = function(gl, metrics, tiles) {
-		var numSlices = metrics.numRingCells;
-		var innerRadius = metrics.innerRingRadius;
-		var outerRadius = metrics.outerRingRadius;
-		var maxY = metrics.ringMaxY;
-		var minY = metrics.ringMinY;
+		var numSlices = metrics.numCells;
+		var innerRadius = metrics.ringInnerRadius;
+		var outerRadius = metrics.ringOuterRadius;
+		var maxY = metrics.ringHeight / 2;
+		var minY = -maxY;
 
 		var offset = -Math.PI / 2;
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices, offset);

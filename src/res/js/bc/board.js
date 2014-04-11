@@ -2,26 +2,8 @@ var BC = (function(parent) {
 
 	var my = parent.Board = parent.Board || {}
 
-	/**
-	 * Makes a board which tracks the state of all the blocks.
-	 *
-	 * @param specs.numRingCells - number of cells in each ring
-	 * @param specs.numBlockStyles - number of block styles
-	 * @returns {Object} board that tracks the state of all the blocks
-	 */
-	my.make = function(specs) {
+	my.make = function(metrics) {
 		var Direction = BC.Constants.Direction;
-
-		var ringRotationY = 2 * Math.PI / specs.numRingCells;
-		var ringTranslationY = specs.ringMaxY - specs.ringMinY;
-
-		var metrics = {
-			numRings: 3,
-			numCells: specs.numRingCells,
-			numBlockTypes: specs.numBlockStyles,
-			ringRotationY: ringRotationY,
-			ringTranslationY: ringTranslationY
-		};
 
 		var rings = [];
 		for (var i = 0; i < metrics.numRings; i++) {
@@ -31,13 +13,7 @@ var BC = (function(parent) {
 		var board = {
 			rings: rings,
 			matrix: BC.Matrix.identity,
-
-			numRingCells: specs.numRingCells,
-			innerRingRadius: specs.innerRingRadius,
-			outerRingRadius: specs.outerRingRadius,
-			ringMaxY: specs.ringMaxY,
-			ringMinY: specs.ringMinY,
-
+			metrics: metrics,
 			move: move,
 			rotate: rotate,
 			swap: swap,
@@ -45,7 +21,7 @@ var BC = (function(parent) {
 		};
 
 		var currentRing = 0;
-		var currentCell = specs.numRingCells - 1;
+		var currentCell = metrics.numCells - 1;
 		var rotation = [0, 0, 0];
 
 		var selector = BC.Selector.make(metrics, board);
@@ -75,7 +51,7 @@ var BC = (function(parent) {
 			if (selector.move(Direction.LEFT)) {;
 				currentCell--;
 				if (currentCell < 0) {
-					currentCell = specs.numRingCells - 1;
+					currentCell = metrics.numCells - 1;
 				}
 			}
 		}
@@ -83,7 +59,7 @@ var BC = (function(parent) {
 		function moveSelectorRight() {
 			if (selector.move(Direction.RIGHT)) {
 				currentCell++;
-				if (currentCell >= specs.numRingCells) {
+				if (currentCell >= metrics.numCells) {
 					currentCell = 0;
 				}
 			}
@@ -118,9 +94,8 @@ var BC = (function(parent) {
 				rings[i].update(deltaTime);
 			}
 
-			updateBoardMatrix();
-
 			selector.update(deltaTime, now);
+			updateBoardMatrix();
 		}
 
 		function updateBoardMatrix() {

@@ -3,10 +3,10 @@ var BC = (function(parent) {
 	var my = parent.SelectorView = parent.SelectorView || {};
 
 	my.make = function(gl, metrics, textureTile) {
-		var minY = metrics.ringMinY;
-		var maxY = metrics.ringMaxY;
-		var outerRadius = metrics.outerRingRadius + 0.01;
-		var outerCirclePoints = BC.Math.circlePoints(outerRadius, metrics.numRingCells, -Math.PI / 2);
+		var minY = -metrics.ringHeight / 2;
+		var maxY = -minY;
+		var outerRadius = metrics.ringOuterRadius + 0.01;
+		var outerCirclePoints = BC.Math.circlePoints(outerRadius, metrics.numCells, -Math.PI / 2);
 
 		var lp = outerCirclePoints.length - 2;
 		var mp = 0;
