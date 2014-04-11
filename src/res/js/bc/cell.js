@@ -7,7 +7,9 @@ var BC = (function(parent) {
 		BLOCK: 1,
 		SWAP_LEFT: 2,
 		SWAP_RIGHT: 3,
-		DISAPPEARING_BLOCK: 4
+		SWAP_LEFT_EMPTY: 4,
+		SWAP_RIGHT_EMPTY: 5,
+		DISAPPEARING_BLOCK: 6,
 	};
 
 	my.make = function(cellIndex, metrics) {
@@ -38,31 +40,53 @@ var BC = (function(parent) {
 		};
 
 		function isEmpty() {
-			return cell.state === CellState.EMPTY;
+			return cell.state === CellState.EMPTY
+					|| cell.state === CellState.SWAP_LEFT_EMPTY
+					|| cell.state === CellState.SWAP_RIGHT_EMPTY;
 		}
 
 		function isTransparent() {
 			return cell.state === CellState.DISAPPEARING_BLOCK;
 		}
 
-		function swap(otherCell) {
-			if (cell.state !== CellState.BLOCK || otherCell.state !== CellState.BLOCK) {
+		function swap(rightCell) {
+			var moveLeft = cell.state === CellState.EMPTY && rightCell.state === CellState.BLOCK;
+			var moveRight = cell.state === CellState.BLOCK && rightCell.state === CellState.EMPTY;
+			var swap = cell.state === CellState.BLOCK && rightCell.state === CellState.BLOCK;
+			if (!moveLeft && !moveRight && !swap) {
 				return false;
 			}
 
 			var prevBlockStyle = cell.blockStyle;
 
-			cell.blockStyle = otherCell.blockStyle;
-			cell.state = CellState.SWAP_RIGHT;
-			cell.rotation[1] += ringRotationY;
-			cell.elapsedSwapTime = 0;
+			function swapCells(leftState, rightState) {
+				cell.blockStyle = rightCell.blockStyle;
+				cell.state = leftState;
+				cell.rotation[1] += ringRotationY;
+				cell.elapsedSwapTime = 0;
 
-			otherCell.blockStyle = prevBlockStyle;
-			otherCell.state = CellState.SWAP_LEFT;
-			otherCell.rotation[1] -= ringRotationY;
-			otherCell.elapsedSwapTime = 0;
+				rightCell.blockStyle = prevBlockStyle;
+				rightCell.state = rightState;
+				rightCell.rotation[1] -= ringRotationY;
+				rightCell.elapsedSwapTime = 0;
+			}
 
-			return true;
+			if (moveLeft) {
+				swapCells(CellState.SWAP_RIGHT, CellState.SWAP_LEFT_EMPTY);
+				return true;
+			}
+
+			if (moveRight) {
+				swapCells(CellState.SWAP_RIGHT_EMPTY, CellState.SWAP_LEFT);
+				return true;
+			}
+
+			if (swap) {
+				swapCells(CellState.SWAP_RIGHT, CellState.SWAP_LEFT);
+				return true;
+			}
+
+			return false;
 		}
 
 		function clear() {
@@ -79,6 +103,8 @@ var BC = (function(parent) {
 
 				case CellState.SWAP_LEFT:
 				case CellState.SWAP_RIGHT:
+				case CellState.SWAP_LEFT_EMPTY:
+				case CellState.SWAP_RIGHT_EMPTY:
 					updateSwappingBlock(watch);
 					break;
 			}
@@ -107,7 +133,7 @@ var BC = (function(parent) {
 			}
 
 			var rotationDelta = ringRotationY * time / maxSwapTime;
-			if (cell.state == CellState.SWAP_LEFT) {
+			if (cell.state === CellState.SWAP_LEFT || cell.state === CellState.SWAP_LEFT_EMPTY) {
 				cell.rotation[1] += rotationDelta;
 			} else {
 				cell.rotation[1] -= rotationDelta;
@@ -116,7 +142,7 @@ var BC = (function(parent) {
 
 			cell.elapsedSwapTime += time;
 			if (cell.elapsedSwapTime >= maxSwapTime) {
-				cell.state = CellState.BLOCK;
+				cell.state = cell.isEmpty() ? CellState.EMPTY : CellState.BLOCK;
 				cell.elapsedSwapTime = 0;
 			}
 		}
