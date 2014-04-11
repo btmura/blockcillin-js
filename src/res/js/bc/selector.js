@@ -10,7 +10,7 @@ var BC = (function(parent) {
 		var selector = {
 			matrix: BC.Matrix.identity,
 			move: move,
-			update: update,
+			update: update
 		};
 
 		var direction = Direction.NONE;
