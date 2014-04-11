@@ -15,11 +15,17 @@ var BC = (function(parent) {
 		var ringRotationY = 2 * Math.PI / specs.numRingCells;
 		var ringTranslationY = specs.ringMaxY - specs.ringMinY;
 
+		var metrics = {
+			numRings: 3,
+			numCells: specs.numRingCells,
+			numBlockTypes: specs.numBlockStyles,
+			ringRotationY: ringRotationY,
+			ringTranslationY: ringTranslationY
+		};
+
 		var rings = [];
-		var numRings = 3;
-		for (var i = 0; i < numRings; i++) {
-			rings[i] = BC.Ring.make(i, specs.numRingCells, specs.numBlockStyles, ringTranslationY,
-					ringRotationY);
+		for (var i = 0; i < metrics.numRings; i++) {
+			rings[i] = BC.Ring.make(i, metrics);
 		}
 
 		var selector = BC.Selector.make();

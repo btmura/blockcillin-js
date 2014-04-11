@@ -2,13 +2,13 @@ var BC = (function(parent) {
 
 	var my = parent.Ring = parent.Ring || {}
 
-	my.make = function(ringIndex, numRingCells, numBlockStyles, ringTranslationY, ringRotationY) {
+	my.make = function(ringIndex, metrics) {
 		var cells = [];
-		for (var i = 0; i < numRingCells; i++) {
-			cells[i] = BC.Cell.make(i, numBlockStyles, ringRotationY);
+		for (var i = 0; i < metrics.numCells; i++) {
+			cells[i] = BC.Cell.make(i, metrics);
 		}
 
-		var translationY = -ringIndex * ringTranslationY;
+		var translationY = -ringIndex * metrics.ringTranslationY;
 		var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
 
 		function update(deltaTime) {
