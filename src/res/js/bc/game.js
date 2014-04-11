@@ -115,62 +115,21 @@ var BC = (function(parent) {
 
 		var boardView = BC.BoardView.make(board, gl, programLocations);
 
-		var touchThreshold = 50;
-		var touchStartX = 0;
-		var touchStartY = 0;
-
-		$(canvas).on("touchstart touchmove touchend", function(event) {
-			var touch = event.originalEvent.changedTouches[0];
-			switch (event.type) {
-				case "touchstart":
-					touchStartX = touch.pageX;
-					touchStartY = touch.pageY;
-					break;
-
-				case "touchend":
-					var deltaX = touch.pageX - touchStartX;
-					var deltaY = touch.pageY - touchStartY;
-
-					var direction = Direction.NONE;
-					if (deltaX > touchThreshold) {
-						board.move(Direction.LEFT);
-					} else if (deltaX < -touchThreshold) {
-						board.move(Direction.RIGHT);
-					} else if (deltaY > touchThreshold) {
-						board.move(Direction.DOWN);
-					} else if (deltaY < -touchThreshold) {
-						board.move(Direction.UP);
-					} else {
-						board.swap();
-					}
-					break;
-			}
-			return false;
+		var controller = BC.Controller.make(canvas);
+		controller.setMoveLeftListener(function() {
+			board.move(Direction.LEFT);
 		});
-
-		$(document).keydown(function(event) {
-			switch (event.keyCode) {
-				case 32: // space
-					board.swap();
-					break;
-
-				case 37: // left
-					board.move(Direction.LEFT);
-					break;
-
-				case 39: // right
-					board.move(Direction.RIGHT);
-					break;
-
-				case 38: // up
-					board.move(Direction.UP);
-					break;
-
-				case 40: // down
-					board.move(Direction.DOWN);
-					break;
-			}
-			return false;
+		controller.setMoveRightListener(function() {
+			board.move(Direction.RIGHT);
+		});
+		controller.setMoveUpListener(function() {
+			board.move(Direction.UP);
+		});
+		controller.setMoveDownListener(function() {
+			board.move(Direction.DOWN);
+		});
+		controller.setPrimaryActionListener(function() {
+			board.swap();
 		});
 
 		var watch = BC.StopWatch.make();
