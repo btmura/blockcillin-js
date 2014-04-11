@@ -28,7 +28,7 @@ var BC = (function(parent) {
 			rings[i] = BC.Ring.make(i, metrics);
 		}
 
-		var selector = BC.Selector.make();
+		var selector = BC.Selector.make(metrics);
 
 		var board = {
 			rings: rings,
@@ -116,7 +116,7 @@ var BC = (function(parent) {
 
 			updateBoardMatrix();
 
-			selector.update(deltaTime, now, ringTranslationY, ringRotationY, board.rotation);
+			selector.update(deltaTime, now, board.rotation);
 		}
 
 		function updateBoardMatrix() {

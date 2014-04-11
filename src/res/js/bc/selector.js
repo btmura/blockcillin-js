@@ -2,7 +2,7 @@ var BC = (function(parent) {
 
 	var my = parent.Selector = parent.Selector || {}
 
-	my.make = function() {
+	my.make = function(metrics) {
 		var Direction = BC.Constants.Direction;
 
 		var maxSelectorMovementTime = 0.05;
@@ -74,14 +74,14 @@ var BC = (function(parent) {
 			elapsedMovementTime = 0;
 		}
 
-		function update(deltaTime, now, ringTranslationY, ringRotationY, boardRotation) {
+		function update(deltaTime, now, boardRotation) {
 			if (isMoving()) {
 				if (elapsedMovementTime + deltaTime > maxSelectorMovementTime) {
 					deltaTime = maxSelectorMovementTime - elapsedMovementTime;
 				}
 
-				var translationDelta = deltaTime * ringTranslationY / maxSelectorMovementTime;
-				var rotationDelta = deltaTime * ringRotationY / maxSelectorMovementTime;
+				var translationDelta = deltaTime * metrics.ringTranslationY / maxSelectorMovementTime;
+				var rotationDelta = deltaTime * metrics.ringRotationY / maxSelectorMovementTime;
 
 				switch (direction) {
 					case Direction.UP:
