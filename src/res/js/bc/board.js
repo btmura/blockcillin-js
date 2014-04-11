@@ -105,7 +105,7 @@ var BC = (function(parent) {
 		function update(deltaTime, now) {
 			var rings = board.rings;
 			for (var i = 0; i < rings.length; i++) {
-				rings[j].update(deltaTime);
+				rings[i].update(deltaTime);
 			}
 
 			updateBoardMatrix();
