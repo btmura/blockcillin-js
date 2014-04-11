@@ -32,11 +32,14 @@
 		// Passed in from the vertex shader.
 		varying vec2 v_textureCoord;
 
+		uniform float u_alpha;
+
 		// The texture.
 		uniform sampler2D u_texture;
 
 		void main() {
-			gl_FragColor = texture2D(u_texture, v_textureCoord);
+			vec4 textureColor = texture2D(u_texture, v_textureCoord);
+			gl_FragColor = vec4(textureColor.rgb, textureColor.a * u_alpha);
 		}
 	</script>
 {{end}}

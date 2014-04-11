@@ -33,6 +33,8 @@ var BC = (function(parent) {
 
 		gl.enable(gl.CULL_FACE);
 		gl.enable(gl.DEPTH_TEST);
+
+		gl.enable(gl.BLEND);
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 		var vertexShader = BC.GL.loadShader(gl, 'vertex-shader', gl.VERTEX_SHADER);
@@ -57,7 +59,8 @@ var BC = (function(parent) {
 
 			boardMatrixLocation: getUniform("u_boardMatrix"),
 			ringMatrixLocation: getUniform("u_ringMatrix"),
-			cellMatrixLocation: getUniform("u_cellMatrix")
+			cellMatrixLocation: getUniform("u_cellMatrix"),
+			alphaLocation: getUniform("u_alpha")
 		};
 
 		// Sets the canvas's width and height to the size it's being displayed at.

@@ -178,6 +178,7 @@ var BC = (function(parent) {
 		function draw(cell, programLocations) {
 			var positionLocation = programLocations.positionLocation;
 			var textureCoordLocation = programLocations.textureCoordLocation;
+			var alphaLocation = programLocations.alphaLocation;
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 			gl.enableVertexAttribArray(positionLocation);
@@ -187,6 +188,8 @@ var BC = (function(parent) {
 			gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
 			gl.enableVertexAttribArray(textureCoordLocation);
 			gl.vertexAttribPointer(textureCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+			gl.uniform1f(alphaLocation, 1.0);
 
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 			gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);
