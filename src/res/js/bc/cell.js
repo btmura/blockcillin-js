@@ -2,12 +2,15 @@ var BC = (function(parent) {
 
 	var my = parent.Cell = parent.Cell || {}
 
+	my.CellState = {
+		NONE: 0,
+		BLOCK: 1,
+		SWAP_LEFT: 2,
+		SWAP_RIGHT: 3
+	};
+
 	my.make = function(cellIndex, metrics) {
-		var CellState = {
-			NONE: 0,
-			SWAP_LEFT: 1,
-			SWAP_RIGHT: 2
-		};
+		var CellState = BC.Cell.CellState;
 
 		var maxCellSwapTime = 0.125;
 
@@ -17,9 +20,11 @@ var BC = (function(parent) {
 		var rotation = [0, cellIndex * ringRotationY, 0];
 		var matrix = BC.Matrix.makeYRotation(rotation[1]);
 
+		var state = BC.Math.randomInt(2);
+
 		var cell = {
 			matrix: matrix,
-			state: CellState.NONE,
+			state: state,
 			blockStyle: blockStyle,
 			rotation: rotation,
 

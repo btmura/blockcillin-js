@@ -3,6 +3,8 @@ var BC = (function(parent) {
 	var my = parent.CellView = parent.CellView || {};
 
 	my.make = function(gl, metrics, tiles) {
+		var CellState = BC.Cell.CellState;
+
 		var numSlices = metrics.numCells;
 		var innerRadius = metrics.ringInnerRadius;
 		var outerRadius = metrics.ringOuterRadius;
@@ -176,6 +178,10 @@ var BC = (function(parent) {
 		var count = indexArray.length;
 
 		function draw(cell, programLocations) {
+			if (cell.state == CellState.NONE) {
+				return;
+			}
+
 			var positionLocation = programLocations.positionLocation;
 			var textureCoordLocation = programLocations.textureCoordLocation;
 			var alphaLocation = programLocations.alphaLocation;
