@@ -18,26 +18,8 @@ var BC = (function(parent) {
 		var rings = [];
 		var numRings = 3;
 		for (var i = 0; i < numRings; i++) {
-			rings[i] = makeRing(i);
-		}
-
-		function makeRing(ringIndex) {
-			var cells = [];
-			for (var i = 0; i < specs.numRingCells; i++) {
-				cells[i] = makeCell(i);
-			}
-
-			var translationY = -ringIndex * ringTranslationY;
-			var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
-
-			return {
-				cells: cells,
-				matrix: matrix
-			};
-		}
-
-		function makeCell(cellIndex) {
-			return BC.Cell.make(cellIndex, specs.numBlockStyles, ringRotationY);
+			rings[i] = BC.Ring.make(i, specs.numRingCells, specs.numBlockStyles, ringTranslationY,
+					ringRotationY);
 		}
 
 		var selector = BC.Selector.make();
@@ -123,10 +105,7 @@ var BC = (function(parent) {
 		function update(deltaTime, now) {
 			var rings = board.rings;
 			for (var i = 0; i < rings.length; i++) {
-				var cells = rings[i].cells;
-				for (var j = 0; j < cells.length; j++) {
-					cells[j].update(deltaTime);
-				}
+				rings[j].update(deltaTime);
 			}
 
 			updateBoardMatrix();
