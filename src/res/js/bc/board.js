@@ -12,14 +12,6 @@ var BC = (function(parent) {
 	my.make = function(specs) {
 		var Direction = BC.Constants.Direction;
 
-		var CellState = {
-			NONE: 0,
-			SWAP_LEFT: 1,
-			SWAP_RIGHT: 2
-		};
-
-		var maxCellSwapTime = 0.125;
-
 		var ringRotationY = 2 * Math.PI / specs.numRingCells;
 		var ringTranslationY = specs.ringMaxY - specs.ringMinY;
 
@@ -45,20 +37,7 @@ var BC = (function(parent) {
 		}
 
 		function makeCell(cellIndex) {
-			var blockStyle = BC.Math.randomInt(specs.numBlockStyles);
-
-			var rotation = [0, cellIndex * ringRotationY, 0];
-			var matrix = BC.Matrix.makeYRotation(rotation[1]);
-
-			return {
-				matrix: matrix,
-				state: CellState.NONE,
-				blockStyle: blockStyle,
-
-				// private details
-				elapsedSwapTime: 0,
-				rotation: rotation
-			};
+			return BC.Cell.make(cellIndex, specs.numBlockStyles, ringRotationY);
 		}
 
 		var selector = BC.Selector.make();
@@ -138,18 +117,7 @@ var BC = (function(parent) {
 			var ring = board.rings[board.currentRing];
 			var cell = ring.cells[board.currentCell];
 			var nextCell = ring.cells[(board.currentCell + 1) % ring.cells.length];
-
-			var prevBlockStyle = cell.blockStyle;
-
-			cell.blockStyle = nextCell.blockStyle;
-			cell.state = CellState.SWAP_RIGHT;
-			cell.rotation[1] += ringRotationY;
-			cell.elapsedSwapTime = 0;
-
-			nextCell.blockStyle = prevBlockStyle;
-			nextCell.state = CellState.SWAP_LEFT;
-			nextCell.rotation[1] -= ringRotationY;
-			nextCell.elapsedSwapTime = 0;
+			cell.swap(nextCell);
 		}
 
 		function update(deltaTime, now) {
@@ -157,27 +125,7 @@ var BC = (function(parent) {
 			for (var i = 0; i < rings.length; i++) {
 				var cells = rings[i].cells;
 				for (var j = 0; j < cells.length; j++) {
-					var cell = cells[j];
-					if (cell.state == CellState.SWAP_LEFT || cell.state == CellState.SWAP_RIGHT) {
-						var time = deltaTime;
-						if (cell.elapsedSwapTime + deltaTime > maxCellSwapTime) {
-							time = maxCellSwapTime - cell.elapsedSwapTime;
-						}
-
-						var rotationDelta = ringRotationY * time / maxCellSwapTime;
-						if (cell.state == CellState.SWAP_LEFT) {
-							cell.rotation[1] += rotationDelta;
-						} else {
-							cell.rotation[1] -= rotationDelta;
-						}
-						cell.matrix = BC.Matrix.makeYRotation(cell.rotation[1]);
-
-						cell.elapsedSwapTime += time;
-						if (cell.elapsedSwapTime >= maxCellSwapTime) {
-							cell.state = CellState.NONE;
-							cell.elapsedSwapTime = 0;
-						}
-					}
+					cells[j].update(deltaTime);
 				}
 			}
 
