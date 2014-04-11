@@ -28,11 +28,8 @@ var BC = (function(parent) {
 			rings[i] = BC.Ring.make(i, metrics);
 		}
 
-		var selector = BC.Selector.make(metrics);
-
 		var board = {
 			rings: rings,
-			selector: selector,
 			matrix: BC.Matrix.identity,
 
 			numRingCells: specs.numRingCells,
@@ -42,6 +39,7 @@ var BC = (function(parent) {
 			ringMinY: specs.ringMinY,
 
 			move: move,
+			rotate: rotate,
 			swap: swap,
 			update: update,
 
@@ -50,6 +48,9 @@ var BC = (function(parent) {
 			currentCell: specs.numRingCells - 1,
 			rotation: [0, 0, 0]
 		};
+
+		var selector = BC.Selector.make(metrics, board);
+		board.selector = selector;
 
 		function move(direction) {
 			switch (direction) {
@@ -101,6 +102,10 @@ var BC = (function(parent) {
 			}
 		}
 
+		function rotate(deltaRotation) {
+			board.rotation[1] += deltaRotation;
+		}
+
 		function swap() {
 			var ring = board.rings[board.currentRing];
 			var cell = ring.cells[board.currentCell];
@@ -116,7 +121,7 @@ var BC = (function(parent) {
 
 			updateBoardMatrix();
 
-			selector.update(deltaTime, now, board.rotation);
+			selector.update(deltaTime, now);
 		}
 
 		function updateBoardMatrix() {
