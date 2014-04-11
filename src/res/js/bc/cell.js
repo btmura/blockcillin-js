@@ -6,13 +6,15 @@ var BC = (function(parent) {
 		EMPTY: 0,
 		BLOCK: 1,
 		SWAP_LEFT: 2,
-		SWAP_RIGHT: 3
+		SWAP_RIGHT: 3,
+		DISAPPEARING_BLOCK: 4
 	};
 
 	my.make = function(cellIndex, metrics) {
 		var CellState = BC.Cell.CellState;
 
-		var maxCellSwapTime = 0.125;
+		var maxSwapTime = 0.125;
+		var maxDisappearingTime = 4;
 
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
 
@@ -25,9 +27,11 @@ var BC = (function(parent) {
 			state: CellState.BLOCK,
 			blockStyle: blockStyle,
 			rotation: rotation,
+			alpha: 1,
 
 			swap: swap,
-			update: update
+			update: update,
+			clear: clear
 		};
 
 		function swap(otherCell) {
@@ -50,26 +54,59 @@ var BC = (function(parent) {
 			return true;
 		}
 
+		function clear() {
+			cell.state = CellState.DISAPPEARING_BLOCK;
+			cell.elapsedDisappearingTime = 0;
+			cell.alpha = 1;
+		}
+
 		function update(watch) {
-			if (cell.state == CellState.SWAP_LEFT || cell.state == CellState.SWAP_RIGHT) {
-				var time = watch.deltaTime;
-				if (cell.elapsedSwapTime + time > maxCellSwapTime) {
-					time = maxCellSwapTime - cell.elapsedSwapTime;
-				}
+			switch (cell.state) {
+				case CellState.DISAPPEARING_BLOCK:
+					updateDisappearingBlock(watch);
+					break;
 
-				var rotationDelta = ringRotationY * time / maxCellSwapTime;
-				if (cell.state == CellState.SWAP_LEFT) {
-					cell.rotation[1] += rotationDelta;
-				} else {
-					cell.rotation[1] -= rotationDelta;
-				}
-				cell.matrix = BC.Matrix.makeYRotation(cell.rotation[1]);
+				case CellState.SWAP_LEFT:
+				case CellState.SWAP_RIGHT:
+					updateSwappingBlock(watch);
+					break;
+			}
+		}
 
-				cell.elapsedSwapTime += time;
-				if (cell.elapsedSwapTime >= maxCellSwapTime) {
-					cell.state = CellState.BLOCK;
-					cell.elapsedSwapTime = 0;
-				}
+		function updateDisappearingBlock(watch) {
+			var deltaTime = watch.deltaTime;
+			if (cell.elapsedDisappearingTime + deltaTime > maxDisappearingTime) {
+				deltaTime = maxDisappearingTime - cell.elapsedDisappearingTime;
+			}
+
+			cell.elapsedDisappearingTime += deltaTime;
+			cell.alpha = 1.0 - cell.elapsedDisappearingTime / maxDisappearingTime;
+
+			if (cell.elapsedDisappearingTime >= maxDisappearingTime) {
+				cell.state = CellState.EMPTY;
+				cell.elapsedDisappearingTime = 0;
+				cell.alpha = 1;
+			}
+		}
+
+		function updateSwappingBlock(watch) {
+			var time = watch.deltaTime;
+			if (cell.elapsedSwapTime + time > maxSwapTime) {
+				time = maxSwapTime - cell.elapsedSwapTime;
+			}
+
+			var rotationDelta = ringRotationY * time / maxSwapTime;
+			if (cell.state == CellState.SWAP_LEFT) {
+				cell.rotation[1] += rotationDelta;
+			} else {
+				cell.rotation[1] -= rotationDelta;
+			}
+			cell.matrix = BC.Matrix.makeYRotation(cell.rotation[1]);
+
+			cell.elapsedSwapTime += time;
+			if (cell.elapsedSwapTime >= maxSwapTime) {
+				cell.state = CellState.BLOCK;
+				cell.elapsedSwapTime = 0;
 			}
 		}
 

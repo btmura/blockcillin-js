@@ -195,7 +195,7 @@ var BC = (function(parent) {
 			gl.enableVertexAttribArray(textureCoordLocation);
 			gl.vertexAttribPointer(textureCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
-			gl.uniform1f(alphaLocation, 1.0);
+			gl.uniform1f(alphaLocation, cell.alpha);
 
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 			gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);

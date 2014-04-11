@@ -136,9 +136,9 @@ var BC = (function(parent) {
 			}
 
 
-			leftCell.state = CellState.EMPTY;
-			cell.state = CellState.EMPTY;
-			rightCell.state = CellState.EMPTY;
+			leftCell.clear();
+			cell.clear();
+			rightCell.clear();
 			return true;
 		}
 
@@ -170,9 +170,9 @@ var BC = (function(parent) {
 				return false;
 			}
 
-			upCell.state = CellState.EMPTY;
-			cell.state = CellState.EMPTY;
-			downCell.state = CellState.EMPTY;
+			upCell.clear();
+			cell.clear();
+			downCell.clear();
 			return true;
 		}
 
