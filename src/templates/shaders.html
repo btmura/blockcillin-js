@@ -1,7 +1,7 @@
 {{define "shaders"}}
 	<script id="vertex-shader" type="x-shader/x-vertex">
 		attribute vec4 a_position;
-		attribute vec2 a_texcoord;
+		attribute vec2 a_textureCoord;
 
 		uniform mat4 u_projectionMatrix;
 		uniform mat4 u_viewMatrix;
@@ -10,7 +10,7 @@
 		uniform mat4 u_ringMatrix;
 		uniform mat4 u_cellMatrix;
 
-		varying vec2 v_texcoord;
+		varying vec2 v_textureCoord;
 
 		void main() {
 			// Multiply the position by all matrices.
@@ -22,7 +22,7 @@
 					* a_position;
 
 			// Pass the texcoord to the fragment shader.
-			v_texcoord = a_texcoord;
+			v_textureCoord = a_textureCoord;
 		}
 	</script>
 
@@ -30,13 +30,13 @@
 		precision mediump float;
 
 		// Passed in from the vertex shader.
-		varying vec2 v_texcoord;
+		varying vec2 v_textureCoord;
 
 		// The texture.
 		uniform sampler2D u_texture;
 
 		void main() {
-			gl_FragColor = texture2D(u_texture, v_texcoord);
+			gl_FragColor = texture2D(u_texture, v_textureCoord);
 		}
 	</script>
 {{end}}

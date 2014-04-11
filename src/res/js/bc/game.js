@@ -50,7 +50,7 @@ var BC = (function(parent) {
 
 		var programLocations = {
 			positionLocation: getAttrib("a_position"),
-			textureCoordLocation: getAttrib("a_texcoord"),
+			textureCoordLocation: getAttrib("a_textureCoord"),
 
 			projectionMatrixLocation: getUniform("u_projectionMatrix"),
 			viewMatrixLocation: getUniform("u_viewMatrix"),
