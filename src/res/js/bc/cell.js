@@ -14,7 +14,7 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 
 		var maxSwapTime = 0.125;
-		var maxDisappearingTime = 4;
+		var maxDisappearingTime = 0.25;
 
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
 
@@ -29,10 +29,21 @@ var BC = (function(parent) {
 			rotation: rotation,
 			alpha: 1,
 
+			isEmpty: isEmpty,
+			isTransparent: isTransparent,
+
 			swap: swap,
 			update: update,
 			clear: clear
 		};
+
+		function isEmpty() {
+			return cell.state === CellState.EMPTY;
+		}
+
+		function isTransparent() {
+			return cell.state === CellState.DISAPPEARING_BLOCK;
+		}
 
 		function swap(otherCell) {
 			if (cell.state !== CellState.BLOCK || otherCell.state !== CellState.BLOCK) {

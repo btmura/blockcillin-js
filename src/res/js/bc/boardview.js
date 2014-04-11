@@ -29,12 +29,18 @@ var BC = (function(parent) {
 		function drawRings() {
 			gl.uniformMatrix4fv(boardMatrixLocation, false, board.matrix);
 			var rings = board.rings;
-			for (var i = 0; i < rings.length; i++) {
-				gl.uniformMatrix4fv(ringMatrixLocation, false, rings[i].matrix);
-				var cells = rings[i].cells;
-				for (var j = 0; j < cells.length; j++) {
-					gl.uniformMatrix4fv(cellMatrixLocation, false, cells[j].matrix);
-					cellView.draw(cells[j], programLocations);
+			for (var i = 0; i < 2; i++) {
+				for (var j = 0; j < rings.length; j++) {
+					gl.uniformMatrix4fv(ringMatrixLocation, false, rings[j].matrix);
+					var cells = rings[j].cells;
+					for (var k = 0; k < cells.length; k++) {
+						gl.uniformMatrix4fv(cellMatrixLocation, false, cells[k].matrix);
+						if (i == 0) {
+							cellView.drawOpaque(cells[k], programLocations);
+						} else {
+							cellView.drawTransparent(cells[k], programLocations);
+						}
+					}
 				}
 			}
 		}

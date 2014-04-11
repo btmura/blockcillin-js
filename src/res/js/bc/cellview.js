@@ -177,11 +177,21 @@ var BC = (function(parent) {
 
 		var count = indexArray.length;
 
-		function draw(cell, programLocations) {
-			if (cell.state === CellState.EMPTY) {
-				return;
+		function drawOpaque(cell, programLocations) {
+			if (!cell.isEmpty() && !cell.isTransparent()) {
+				drawCell(cell, programLocations);
 			}
+		}
 
+		function drawTransparent(cell, programLocations) {
+			if (!cell.isEmpty() && cell.isTransparent()) {
+				gl.disable(gl.CULL_FACE);
+				drawCell(cell, programLocations);
+				gl.enable(gl.CULL_FACE);
+			}
+		}
+
+		function drawCell(cell, programLocations) {
 			var positionLocation = programLocations.positionLocation;
 			var textureCoordLocation = programLocations.textureCoordLocation;
 			var alphaLocation = programLocations.alphaLocation;
@@ -202,7 +212,8 @@ var BC = (function(parent) {
 		}
 
 		return {
-			draw: draw
+			drawOpaque: drawOpaque,
+			drawTransparent: drawTransparent
 		};
 	}
 
