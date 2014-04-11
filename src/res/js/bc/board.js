@@ -105,6 +105,7 @@ var BC = (function(parent) {
 		function updateCell(row, col) {
 			checkHorizontal(row, col);
 			checkVertical(row, col);
+			checkMoveDown(row, col);
 		}
 
 		function checkHorizontal(row, col) {
@@ -148,7 +149,7 @@ var BC = (function(parent) {
 				return false;
 			}
 
-			// Check left cell
+			// Check cell above
 			var upRow = row - 1;
 			if (upRow < 0) {
 				return false;
@@ -159,7 +160,7 @@ var BC = (function(parent) {
 				return false;
 			}
 
-			// Check right cell
+			// Check cell below
 			var downRow = row + 1;
 			if (downRow >= metrics.numRings) {
 				return false;
@@ -174,6 +175,21 @@ var BC = (function(parent) {
 			cell.clear();
 			downCell.clear();
 			return true;
+		}
+
+		function checkMoveDown(row, col) {
+			var cell = getCell(row, col);
+			if (cell.state !== CellState.BLOCK) {
+				return;
+			}
+
+			var downRow = row + 1;
+			if (downRow >= metrics.numRings) {
+				return;
+			}
+
+			var downCell = getCell(downRow, col);
+			cell.drop(downCell);
 		}
 
 		function getCell(row, col) {

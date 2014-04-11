@@ -9,7 +9,9 @@ var BC = (function(parent) {
 		SWAP_RIGHT: 3,
 		SWAP_LEFT_EMPTY: 4,
 		SWAP_RIGHT_EMPTY: 5,
-		DISAPPEARING_BLOCK: 6,
+		DROP_BLOCK_SRC: 6,
+		DROP_BLOCK_DST: 7,
+		DISAPPEARING_BLOCK: 8,
 	};
 
 	my.make = function(cellIndex, metrics) {
@@ -17,11 +19,13 @@ var BC = (function(parent) {
 
 		var maxSwapTime = 0.125;
 		var maxDisappearingTime = 0.25;
+		var maxDropTime = 0.075;
 
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
 
 		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
 		var rotation = [0, cellIndex * ringRotationY, 0];
+		var translation = [0, 0, 0];
 		var matrix = BC.Matrix.makeYRotation(rotation[1]);
 
 		var cell = {
@@ -29,6 +33,7 @@ var BC = (function(parent) {
 			state: CellState.BLOCK,
 			blockStyle: blockStyle,
 			rotation: rotation,
+			translation: translation,
 			alpha: 1,
 
 			isEmpty: isEmpty,
@@ -36,20 +41,43 @@ var BC = (function(parent) {
 
 			swap: swap,
 			update: update,
-			clear: clear
+			clear: clear,
+			drop: drop
 		};
 
 		function isEmpty() {
 			return cell.state === CellState.EMPTY
 					|| cell.state === CellState.SWAP_LEFT_EMPTY
-					|| cell.state === CellState.SWAP_RIGHT_EMPTY;
+					|| cell.state === CellState.SWAP_RIGHT_EMPTY
+					|| cell.state === CellState.DROP_BLOCK_SRC;
 		}
 
 		function isTransparent() {
 			return cell.state === CellState.DISAPPEARING_BLOCK;
 		}
 
+		function drop(downCell) {
+			var drop = cell.state === CellState.BLOCK && downCell.state == CellState.EMPTY;
+			if (!drop) {
+				return;
+			}
+
+			downCell.blockStyle = cell.blockStyle;
+			downCell.state = CellState.DROP_BLOCK_DST;
+			downCell.translation[1] = metrics.ringHeight;
+			downCell.elapsedAnimationTime = 0;
+			downCell.alpha = 1;
+
+			cell.blockStyle = 0;
+			cell.state = CellState.DROP_BLOCK_SRC;
+			cell.translation[1] = 0;
+			cell.elapsedAnimationTime = 0;
+			cell.alpha = 1;
+		}
+
 		function swap(rightCell) {
+			console.log("left: " + cell.state + " right: " + rightCell.state);
+
 			var moveLeft = cell.state === CellState.EMPTY && rightCell.state === CellState.BLOCK;
 			var moveRight = cell.state === CellState.BLOCK && rightCell.state === CellState.EMPTY;
 			var swap = cell.state === CellState.BLOCK && rightCell.state === CellState.BLOCK;
@@ -96,18 +124,53 @@ var BC = (function(parent) {
 		}
 
 		function update(watch) {
+			var needMatrixUpdate = false;
+
 			switch (cell.state) {
+				case CellState.DROP_BLOCK_SRC:
+				case CellState.DROP_BLOCK_DST:
+					needMatrixUpdate |= updateDroppingBlock(watch);
+					break;
+
 				case CellState.DISAPPEARING_BLOCK:
-					updateDisappearingBlock(watch);
+					needMatrixUpdate |= updateDisappearingBlock(watch);
 					break;
 
 				case CellState.SWAP_LEFT:
 				case CellState.SWAP_RIGHT:
 				case CellState.SWAP_LEFT_EMPTY:
 				case CellState.SWAP_RIGHT_EMPTY:
-					updateSwappingBlock(watch);
+					needMatrixUpdate |= updateSwappingBlock(watch);
 					break;
 			}
+
+			if (needMatrixUpdate) {
+				updateCellMatrix();
+			}
+		}
+
+		function updateDroppingBlock(watch) {
+			var deltaTime = watch.deltaTime;
+			if (cell.elapsedAnimationTime + deltaTime > maxDropTime) {
+				deltaTime = maxDropTime - cell.elapsedAnimationTime;
+			}
+
+			if (cell.state == CellState.DROP_BLOCK_DST) {
+				var translationDelta = metrics.ringHeight * deltaTime / maxDropTime;
+				cell.translation[1] -= translationDelta;
+			}
+
+			cell.elapsedAnimationTime += deltaTime;
+			if (cell.elapsedAnimationTime >= maxDropTime) {
+				if (cell.state === CellState.DROP_BLOCK_SRC) {
+					cell.state = CellState.EMPTY;
+				} else {
+					cell.state = CellState.BLOCK;
+				}
+				cell.elapsedAnimationTime = 0;
+			}
+
+			return true;
 		}
 
 		function updateDisappearingBlock(watch) {
@@ -124,6 +187,8 @@ var BC = (function(parent) {
 				cell.elapsedDisappearingTime = 0;
 				cell.alpha = 1;
 			}
+
+			return false;
 		}
 
 		function updateSwappingBlock(watch) {
@@ -145,6 +210,17 @@ var BC = (function(parent) {
 				cell.state = cell.isEmpty() ? CellState.EMPTY : CellState.BLOCK;
 				cell.elapsedSwapTime = 0;
 			}
+
+			return true;
+		}
+
+		function updateCellMatrix() {
+			var rotationMatrix = BC.Matrix.makeYRotation(cell.rotation[1]);
+			var translationMatrix = BC.Matrix.makeTranslation(
+					cell.translation[0],
+					cell.translation[1],
+					cell.translation[2]);
+			cell.matrix = BC.Matrix.matrixMultiply(rotationMatrix, translationMatrix);
 		}
 
 		return cell;
