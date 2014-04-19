@@ -6,6 +6,9 @@ var BC = (function(parent) {
 		var Direction = BC.Constants.Direction;
 		var CellState = BC.Cell.CellState;
 
+		var DROP_DURATION = 0.075;
+		var SWAP_DURATION = 0.125;
+
 		var rings = [];
 		for (var i = 0; i < metrics.numRings; i++) {
 			rings[i] = BC.Ring.make(i, metrics);
@@ -84,9 +87,34 @@ var BC = (function(parent) {
 
 		function swap() {
 			var ring = board.rings[currentRing];
-			var cell = ring.cells[currentCell];
-			var nextCell = ring.cells[(currentCell + 1) % ring.cells.length];
-			cell.swap(nextCell);
+			var leftCell = ring.cells[currentCell];
+			var rightCell = ring.cells[(currentCell + 1) % ring.cells.length];
+
+			var leftBlockStyle = leftCell.blockStyle;
+			var rightBlockStyle = rightCell.blockStyle;
+
+			console.log(leftCell.state + ", " + rightCell.state);
+
+			var moveLeft = leftCell.state === CellState.EMPTY && rightCell.state === CellState.BLOCK;
+			if (moveLeft) {
+				rightCell.sendBlock(SWAP_DURATION, Direction.LEFT);
+				leftCell.receiveBlock(SWAP_DURATION, Direction.RIGHT, rightBlockStyle);
+				return;
+			}
+
+			var moveRight = leftCell.state === CellState.BLOCK && rightCell.state === CellState.EMPTY;
+			if (moveRight) {
+				leftCell.sendBlock(SWAP_DURATION, Direction.RIGHT);
+				rightCell.receiveBlock(SWAP_DURATION, Direction.LEFT, leftBlockStyle);
+				return;
+			}
+
+			var swap = leftCell.state === CellState.BLOCK && rightCell.state === CellState.BLOCK;
+			if (swap) {
+				leftCell.receiveBlock(SWAP_DURATION, Direction.RIGHT, rightBlockStyle);
+				rightCell.receiveBlock(SWAP_DURATION, Direction.LEFT, leftBlockStyle);
+				return;
+			}
 		}
 
 		function update(watch) {
@@ -137,9 +165,9 @@ var BC = (function(parent) {
 			}
 
 
-			leftCell.clear();
-			cell.clear();
-			rightCell.clear();
+			leftCell.clearBlock();
+			cell.clearBlock();
+			rightCell.clearBlock();
 			return true;
 		}
 
@@ -171,9 +199,9 @@ var BC = (function(parent) {
 				return false;
 			}
 
-			upCell.clear();
-			cell.clear();
-			downCell.clear();
+			upCell.clearBlock();
+			cell.clearBlock();
+			downCell.clearBlock();
 			return true;
 		}
 
@@ -190,8 +218,8 @@ var BC = (function(parent) {
 			var downCell = getCell(downRow, col);
 
 			if (cell.state === CellState.BLOCK && downCell.state == CellState.EMPTY) {
-				var blockStyle = cell.sendBlock();
-				downCell.receiveBlock(blockStyle);
+				var blockStyle = cell.sendBlock(DROP_DURATION);
+				downCell.receiveBlock(DROP_DURATION, Direction.UP, blockStyle);
 			}
 		}
 
