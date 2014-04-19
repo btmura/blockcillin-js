@@ -4,10 +4,14 @@ var BC = (function(parent) {
 
 	my.make = function(args) {
 		var duration = args.duration;
+		var startCallback = args.startCallback;
 		var updateCallback = args.updateCallback;
 		var finishCallback = args.finishCallback;
 
 		var elapsedTime = 0;
+		var done = false;
+
+		startCallback();
 
 		function update(watch) {
 			var deltaTime = watch.deltaTime;
@@ -15,7 +19,7 @@ var BC = (function(parent) {
 				deltaTime = duration - elapsedTime;
 			}
 
-			updateCallback({
+			var result = updateCallback({
 				now: watch.now,
 				deltaTime: deltaTime,
 			});
@@ -23,11 +27,19 @@ var BC = (function(parent) {
 			elapsedTime += deltaTime;
 			if (elapsedTime >= duration) {
 				finishCallback();
+				done = true;
 			}
+
+			return result;
+		}
+
+		function isDone() {
+			return done;
 		}
 
 		return {
-			update: update
+			update: update,
+			isDone: isDone
 		};
 	};
 

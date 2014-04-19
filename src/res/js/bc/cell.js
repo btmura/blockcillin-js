@@ -122,21 +122,18 @@ var BC = (function(parent) {
 
 		function clear() {
 			var animation = BC.Animation.make({
-				duration: 5,
-
+				duration: 1,
 				startCallback: function() {
-
+					cell.state = CellState.DISAPPEARING_BLOCK;
 				},
-
 				updateCallback: function(watch) {
 					cell.yellowBoost = Math.abs(Math.sin(50 * watch.now) / 2);
+					return false;
 				},
-
 				finishCallback: function() {
-
+					cell.yellowBoost = 0;
 				}
 			});
-
 			cell.animations.push(animation);
 		}
 
@@ -149,10 +146,6 @@ var BC = (function(parent) {
 					needMatrixUpdate |= updateDroppingBlock(watch);
 					break;
 
-				case CellState.DISAPPEARING_BLOCK:
-					needMatrixUpdate |= updateDisappearingBlock(watch);
-					break;
-
 				case CellState.SWAP_LEFT:
 				case CellState.SWAP_RIGHT:
 				case CellState.SWAP_LEFT_EMPTY:
@@ -161,8 +154,12 @@ var BC = (function(parent) {
 					break;
 			}
 
-			for (var i = 0; i < cell.animations.length; i++) {
-				cell.animations[i].update(watch);
+			if (cell.animations.length > 0) {
+				var animation = cell.animations[0];
+				needMatrixUpdate |= animation.update(watch);
+				if (animation.isDone()) {
+					cell.animations.shift();
+				}
 			}
 
 			if (needMatrixUpdate) {
