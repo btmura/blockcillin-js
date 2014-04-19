@@ -60,6 +60,8 @@ var BC = (function(parent) {
 			boardMatrixLocation: getUniform("u_boardMatrix"),
 			ringMatrixLocation: getUniform("u_ringMatrix"),
 			cellMatrixLocation: getUniform("u_cellMatrix"),
+
+			yellowBoostLocation: getUniform("u_yellowBoost"),
 			alphaLocation: getUniform("u_alpha")
 		};
 

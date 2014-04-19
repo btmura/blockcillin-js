@@ -35,9 +35,12 @@ var BC = (function(parent) {
 			rotation: rotation,
 			translation: translation,
 			alpha: 1,
+			yellowBoost: 0,
 
 			isEmpty: isEmpty,
 			isTransparent: isTransparent,
+
+			animations: [],
 
 			swap: swap,
 			update: update,
@@ -118,9 +121,23 @@ var BC = (function(parent) {
 		}
 
 		function clear() {
-			cell.state = CellState.DISAPPEARING_BLOCK;
-			cell.elapsedDisappearingTime = 0;
-			cell.alpha = 1;
+			var animation = BC.Animation.make({
+				duration: 5,
+
+				startCallback: function() {
+
+				},
+
+				updateCallback: function() {
+					cell.yellowBoost = 1.0;
+				},
+
+				finishCallback: function() {
+
+				}
+			});
+
+			cell.animations.push(animation);
 		}
 
 		function update(watch) {
@@ -142,6 +159,10 @@ var BC = (function(parent) {
 				case CellState.SWAP_RIGHT_EMPTY:
 					needMatrixUpdate |= updateSwappingBlock(watch);
 					break;
+			}
+
+			for (var i = 0; i < cell.animations.length; i++) {
+				cell.animations[i].update(watch);
 			}
 
 			if (needMatrixUpdate) {

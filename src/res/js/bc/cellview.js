@@ -194,6 +194,7 @@ var BC = (function(parent) {
 		function drawCell(cell, programLocations) {
 			var positionLocation = programLocations.positionLocation;
 			var textureCoordLocation = programLocations.textureCoordLocation;
+			var yellowBoostLocation = programLocations.yellowBoostLocation;
 			var alphaLocation = programLocations.alphaLocation;
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
@@ -205,6 +206,7 @@ var BC = (function(parent) {
 			gl.enableVertexAttribArray(textureCoordLocation);
 			gl.vertexAttribPointer(textureCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
+			gl.uniform1f(yellowBoostLocation, cell.yellowBoost);
 			gl.uniform1f(alphaLocation, cell.alpha);
 
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
