@@ -14,14 +14,16 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
+		var FLICKER_DURATION = 0.5;
+		var FADE_OUT_DURATION = 0.125;
+
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
+		var animations = [];
 
 		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
 		var rotation = [0, cellIndex * ringRotationY, 0];
 		var translation = [0, 0, 0];
 		var matrix = BC.Matrix.makeYRotation(rotation[1]);
-
-		var animations = [];
 
 		var cell = {
 			matrix: matrix,
@@ -29,10 +31,6 @@ var BC = (function(parent) {
 			blockStyle: blockStyle,
 			yellowBoost: 0,
 			alpha: 1,
-
-			// TODO(btmura): private state members that should not be visible
-			rotation: rotation,
-			translation: translation,
 
 			clearBlock: clearBlock,
 			sendBlock: sendBlock,
@@ -43,17 +41,9 @@ var BC = (function(parent) {
 			update: update
 		};
 
-		function isEmpty() {
-			return cell.state === CellState.EMPTY || cell.state === CellState.EMPTY_RESERVED;
-		}
-
-		function isTransparent() {
-			return cell.state === CellState.CLEARING_BLOCK;
-		}
-
 		function clearBlock() {
 			var flicker = BC.Animation.make({
-				duration: 0.5,
+				duration: FLICKER_DURATION,
 				startCallback: function() {
 					cell.state = CellState.CLEARING_BLOCK;
 				},
@@ -67,7 +57,7 @@ var BC = (function(parent) {
 			});
 
 			var fadeOut = BC.Animation.make({
-				duration: 0.25,
+				duration: FADE_OUT_DURATION,
 				startCallback: function() {},
 				updateCallback: function(watch) {
 					cell.alpha = 1.0 - watch.elapsedPercent;
@@ -109,15 +99,15 @@ var BC = (function(parent) {
 
 					switch (direction) {
 						case Direction.LEFT:
-							cell.rotation[1] -= ringRotationY;
+							rotation[1] -= ringRotationY;
 							break;
 
 						case Direction.RIGHT:
-							cell.rotation[1] += ringRotationY;
+							rotation[1] += ringRotationY;
 							break;
 
 						case Direction.UP:
-							cell.translation[1] = metrics.ringHeight;
+							translation[1] = metrics.ringHeight;
 							break;
 
 						default:
@@ -129,15 +119,15 @@ var BC = (function(parent) {
 					var translationDelta = metrics.ringHeight * watch.deltaPercent;
 					switch (direction) {
 						case Direction.LEFT:
-							cell.rotation[1] += rotationDelta;
+							rotation[1] += rotationDelta;
 							return true;
 
 						case Direction.RIGHT:
-							cell.rotation[1] -= rotationDelta;
+							rotation[1] -= rotationDelta;
 							return true;
 
 						case Direction.UP:
-							cell.translation[1] -= translationDelta;
+							translation[1] -= translationDelta;
 							return true;
 
 						default:
@@ -149,6 +139,14 @@ var BC = (function(parent) {
 					cell.state = CellState.BLOCK;
 				}
 			}));
+		}
+
+		function isEmpty() {
+			return cell.state === CellState.EMPTY || cell.state === CellState.EMPTY_RESERVED;
+		}
+
+		function isTransparent() {
+			return cell.state === CellState.CLEARING_BLOCK;
 		}
 
 		function update(watch) {
@@ -168,11 +166,11 @@ var BC = (function(parent) {
 		}
 
 		function updateCellMatrix() {
-			var rotationMatrix = BC.Matrix.makeYRotation(cell.rotation[1]);
+			var rotationMatrix = BC.Matrix.makeYRotation(rotation[1]);
 			var translationMatrix = BC.Matrix.makeTranslation(
-					cell.translation[0],
-					cell.translation[1],
-					cell.translation[2]);
+					translation[0],
+					translation[1],
+					translation[2]);
 			cell.matrix = BC.Matrix.matrixMultiply(rotationMatrix, translationMatrix);
 		}
 
