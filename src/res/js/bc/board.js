@@ -187,9 +187,12 @@ var BC = (function(parent) {
 			if (downRow >= metrics.numRings) {
 				return;
 			}
-
 			var downCell = getCell(downRow, col);
-			cell.drop(downCell);
+
+			if (cell.state === CellState.BLOCK && downCell.state == CellState.EMPTY) {
+				var blockStyle = cell.sendBlock();
+				downCell.receiveBlock(blockStyle);
+			}
 		}
 
 		function getCell(row, col) {

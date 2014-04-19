@@ -17,8 +17,8 @@ var BC = (function(parent) {
 	my.make = function(cellIndex, metrics) {
 		var CellState = BC.Cell.CellState;
 
+		var DROP_DURATION = 0.075;
 		var maxSwapTime = 0.125;
-		var maxDropTime = 0.075;
 
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
 
@@ -44,7 +44,9 @@ var BC = (function(parent) {
 			swap: swap,
 			update: update,
 			clear: clear,
-			drop: drop
+
+			sendBlock: sendBlock,
+			receiveBlock: receiveBlock
 		};
 
 		function isEmpty() {
@@ -58,17 +60,11 @@ var BC = (function(parent) {
 			return cell.state === CellState.DISAPPEARING_BLOCK;
 		}
 
-		function drop(downCell) {
-			var drop = cell.state === CellState.BLOCK && downCell.state == CellState.EMPTY;
-			if (!drop) {
-				return;
-			}
-
-			var dropDuration = 0.075;
-			var downBlockStyle = cell.blockStyle;
+		function sendBlock() {
+			var blockStyle = cell.blockStyle;
 
 			cell.animations.push(BC.Animation.make({
-				duration: dropDuration,
+				duration: DROP_DURATION,
 				startCallback: function() {
 					cell.blockStyle = 0;
 					cell.state = CellState.DROP_BLOCK_SRC;
@@ -83,21 +79,25 @@ var BC = (function(parent) {
 				}
 			}));
 
-			downCell.animations.push(BC.Animation.make({
-				duration: dropDuration,
+			return blockStyle;
+		}
+
+		function receiveBlock(blockStyle) {
+			cell.animations.push(BC.Animation.make({
+				duration: DROP_DURATION,
 				startCallback: function() {
-					downCell.blockStyle = downBlockStyle;
-					downCell.state = CellState.DROP_BLOCK_DST;
-					downCell.translation[1] = metrics.ringHeight;
-					downCell.alpha = 1;
+					cell.blockStyle = blockStyle;
+					cell.state = CellState.DROP_BLOCK_DST;
+					cell.translation[1] = metrics.ringHeight;
+					cell.alpha = 1;
 				},
 				updateCallback: function(watch) {
 					var translationDelta = metrics.ringHeight * watch.deltaPercent;
-					downCell.translation[1] -= translationDelta;
+					cell.translation[1] -= translationDelta;
 					return true;
 				},
 				finishCallback: function() {
-					downCell.state = CellState.BLOCK;
+					cell.state = CellState.BLOCK;
 				}
 			}));
 		}
