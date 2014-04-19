@@ -128,8 +128,8 @@ var BC = (function(parent) {
 
 				},
 
-				updateCallback: function() {
-					cell.yellowBoost = 1.0;
+				updateCallback: function(watch) {
+					cell.yellowBoost = Math.abs(Math.sin(50 * watch.now) / 2);
 				},
 
 				finishCallback: function() {

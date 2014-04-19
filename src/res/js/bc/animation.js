@@ -15,7 +15,10 @@ var BC = (function(parent) {
 				deltaTime = duration - elapsedTime;
 			}
 
-			updateCallback();
+			updateCallback({
+				now: watch.now,
+				deltaTime: deltaTime,
+			});
 
 			elapsedTime += deltaTime;
 			if (elapsedTime >= duration) {
