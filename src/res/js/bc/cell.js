@@ -15,6 +15,7 @@ var BC = (function(parent) {
 		var Direction = BC.Constants.Direction;
 
 		var FLICKER_DURATION = 0.5;
+		var FREEZE_DURATION = 0.5;
 		var FADE_OUT_DURATION = 0.125;
 
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
@@ -56,6 +57,19 @@ var BC = (function(parent) {
 				}
 			});
 
+			var freeze = BC.Animation.make({
+				duration: FREEZE_DURATION,
+				startCallback: function() {
+					cell.blockStyle += metrics.numBlockTypes;
+				},
+				updateCallback: function(watch) {
+					return false;
+				},
+				finishCallback: function() {
+					cell.blockStyle -= metrics.numBlockTypes;
+				}
+			});
+
 			var fadeOut = BC.Animation.make({
 				duration: FADE_OUT_DURATION,
 				startCallback: function() {},
@@ -69,7 +83,7 @@ var BC = (function(parent) {
 				}
 			});
 
-			animations.push(flicker, fadeOut);
+			animations.push(flicker, freeze, fadeOut);
 		}
 
 		function sendBlock(duration) {

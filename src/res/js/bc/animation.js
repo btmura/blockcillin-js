@@ -9,16 +9,19 @@ var BC = (function(parent) {
 		var finishCallback = args.finishCallback;
 
 		var elapsedTime = 0;
+		var started = false;
 		var done = false;
 
-		startCallback();
-
 		function update(watch) {
+			if (!started) {
+				started = true;
+				startCallback();
+			}
+
 			var deltaTime = watch.deltaTime;
 			if (elapsedTime + deltaTime > duration) {
 				deltaTime = duration - elapsedTime;
 			}
-
 			elapsedTime += deltaTime;
 
 			var result = updateCallback({

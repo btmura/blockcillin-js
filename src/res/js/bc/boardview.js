@@ -9,15 +9,21 @@ var BC = (function(parent) {
 
 		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
 		var blockTextureTiles = [
-			tileSet.tile(0, 0),
-			tileSet.tile(0, 1),
-			tileSet.tile(0, 2),
-			tileSet.tile(0, 3),
-			tileSet.tile(1, 0),
-			tileSet.tile(1, 1)
+			tileSet.tile(0, 0), // red
+			tileSet.tile(0, 1), // green
+			tileSet.tile(0, 2), // cyan
+			tileSet.tile(0, 3), // magenta
+			tileSet.tile(1, 0), // yellow
+			tileSet.tile(1, 1), // blue
+
+			tileSet.tile(2, 0), // red
+			tileSet.tile(2, 1), // green
+			tileSet.tile(2, 2), // cyan
+			tileSet.tile(2, 3), // magenta
+			tileSet.tile(3, 0), // yellow
+			tileSet.tile(3, 1), // blue
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
-
 		var cellView = BC.CellView.make(gl, board.metrics, blockTextureTiles);
 		var selectorView = BC.SelectorView.make(gl, board.metrics, selectorTextureTile);
 
