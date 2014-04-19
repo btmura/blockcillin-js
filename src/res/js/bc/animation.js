@@ -25,6 +25,7 @@ var BC = (function(parent) {
 				now: watch.now,
 				deltaTime: deltaTime,
 				elapsedPercent: elapsedTime / duration,
+				deltaPercent: deltaTime / duration
 			});
 
 			if (elapsedTime >= duration) {

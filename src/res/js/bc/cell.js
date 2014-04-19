@@ -64,17 +64,42 @@ var BC = (function(parent) {
 				return;
 			}
 
-			downCell.blockStyle = cell.blockStyle;
-			downCell.state = CellState.DROP_BLOCK_DST;
-			downCell.translation[1] = metrics.ringHeight;
-			downCell.elapsedAnimationTime = 0;
-			downCell.alpha = 1;
+			var dropDuration = 0.075;
+			var downBlockStyle = cell.blockStyle;
 
-			cell.blockStyle = 0;
-			cell.state = CellState.DROP_BLOCK_SRC;
-			cell.translation[1] = 0;
-			cell.elapsedAnimationTime = 0;
-			cell.alpha = 1;
+			cell.animations.push(BC.Animation.make({
+				duration: dropDuration,
+				startCallback: function() {
+					cell.blockStyle = 0;
+					cell.state = CellState.DROP_BLOCK_SRC;
+					cell.translation[1] = 0;
+					cell.alpha = 1;
+				},
+				updateCallback: function(watch) {
+					return false;
+				},
+				finishCallback: function() {
+					cell.state = CellState.EMPTY;
+				}
+			}));
+
+			downCell.animations.push(BC.Animation.make({
+				duration: dropDuration,
+				startCallback: function() {
+					downCell.blockStyle = downBlockStyle;
+					downCell.state = CellState.DROP_BLOCK_DST;
+					downCell.translation[1] = metrics.ringHeight;
+					downCell.alpha = 1;
+				},
+				updateCallback: function(watch) {
+					var translationDelta = metrics.ringHeight * watch.deltaPercent;
+					downCell.translation[1] -= translationDelta;
+					return true;
+				},
+				finishCallback: function() {
+					downCell.state = CellState.BLOCK;
+				}
+			}));
 		}
 
 		function swap(rightCell) {
@@ -155,11 +180,6 @@ var BC = (function(parent) {
 			var needMatrixUpdate = false;
 
 			switch (cell.state) {
-				case CellState.DROP_BLOCK_SRC:
-				case CellState.DROP_BLOCK_DST:
-					needMatrixUpdate |= updateDroppingBlock(watch);
-					break;
-
 				case CellState.SWAP_LEFT:
 				case CellState.SWAP_RIGHT:
 				case CellState.SWAP_LEFT_EMPTY:
@@ -179,30 +199,6 @@ var BC = (function(parent) {
 			if (needMatrixUpdate) {
 				updateCellMatrix();
 			}
-		}
-
-		function updateDroppingBlock(watch) {
-			var deltaTime = watch.deltaTime;
-			if (cell.elapsedAnimationTime + deltaTime > maxDropTime) {
-				deltaTime = maxDropTime - cell.elapsedAnimationTime;
-			}
-
-			if (cell.state == CellState.DROP_BLOCK_DST) {
-				var translationDelta = metrics.ringHeight * deltaTime / maxDropTime;
-				cell.translation[1] -= translationDelta;
-			}
-
-			cell.elapsedAnimationTime += deltaTime;
-			if (cell.elapsedAnimationTime >= maxDropTime) {
-				if (cell.state === CellState.DROP_BLOCK_SRC) {
-					cell.state = CellState.EMPTY;
-				} else {
-					cell.state = CellState.BLOCK;
-				}
-				cell.elapsedAnimationTime = 0;
-			}
-
-			return true;
 		}
 
 		function updateSwappingBlock(watch) {
