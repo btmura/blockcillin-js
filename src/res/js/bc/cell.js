@@ -133,7 +133,6 @@ var BC = (function(parent) {
 						default:
 							return false;
 					}
-					return true;
 				},
 				finishCallback: function() {
 					cell.state = CellState.BLOCK;
