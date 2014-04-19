@@ -18,7 +18,6 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 
 		var maxSwapTime = 0.125;
-		var maxDisappearingTime = 0.25;
 		var maxDropTime = 0.075;
 
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
@@ -121,8 +120,8 @@ var BC = (function(parent) {
 		}
 
 		function clear() {
-			var animation = BC.Animation.make({
-				duration: 1,
+			var flicker = BC.Animation.make({
+				duration: 0.5,
 				startCallback: function() {
 					cell.state = CellState.DISAPPEARING_BLOCK;
 				},
@@ -134,7 +133,22 @@ var BC = (function(parent) {
 					cell.yellowBoost = 0;
 				}
 			});
-			cell.animations.push(animation);
+
+			var fadeOut = BC.Animation.make({
+				duration: 0.25,
+				startCallback: function() {
+				},
+				updateCallback: function(watch) {
+					cell.alpha = 1.0 - watch.elapsedPercent;
+					return false;
+				},
+				finishCallback: function() {
+					cell.state = CellState.EMPTY;
+					cell.alpha = 1;
+				}
+			});
+
+			cell.animations.push(flicker, fadeOut);
 		}
 
 		function update(watch) {
@@ -189,24 +203,6 @@ var BC = (function(parent) {
 			}
 
 			return true;
-		}
-
-		function updateDisappearingBlock(watch) {
-			var deltaTime = watch.deltaTime;
-			if (cell.elapsedDisappearingTime + deltaTime > maxDisappearingTime) {
-				deltaTime = maxDisappearingTime - cell.elapsedDisappearingTime;
-			}
-
-			cell.elapsedDisappearingTime += deltaTime;
-			cell.alpha = 1.0 - cell.elapsedDisappearingTime / maxDisappearingTime;
-
-			if (cell.elapsedDisappearingTime >= maxDisappearingTime) {
-				cell.state = CellState.EMPTY;
-				cell.elapsedDisappearingTime = 0;
-				cell.alpha = 1;
-			}
-
-			return false;
 		}
 
 		function updateSwappingBlock(watch) {

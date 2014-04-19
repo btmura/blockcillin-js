@@ -19,12 +19,14 @@ var BC = (function(parent) {
 				deltaTime = duration - elapsedTime;
 			}
 
+			elapsedTime += deltaTime;
+
 			var result = updateCallback({
 				now: watch.now,
 				deltaTime: deltaTime,
+				elapsedPercent: elapsedTime / duration,
 			});
 
-			elapsedTime += deltaTime;
 			if (elapsedTime >= duration) {
 				finishCallback();
 				done = true;
