@@ -108,19 +108,8 @@ var BC = (function(parent) {
 		}
 
 		function update(watch) {
-			var needMatrixUpdate = false;
-
-			if (animations.length > 0) {
-				var currentAnimation = animations[0];
-				needMatrixUpdate |= currentAnimation.update(watch);
-				if (currentAnimation.isDone()) {
-					animations.shift();
-				}
-			}
-
-			if (needMatrixUpdate) {
-				updateSelectorMatrix(watch);
-			}
+			BC.Animation.process(animations, watch);
+			updateSelectorMatrix(watch);
 		}
 
 		function updateSelectorMatrix(watch) {

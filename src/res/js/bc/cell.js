@@ -149,16 +149,7 @@ var BC = (function(parent) {
 		}
 
 		function update(watch) {
-			var needMatrixUpdate = false;
-
-			if (animations.length > 0) {
-				var currentAnimation = animations[0];
-				needMatrixUpdate |= currentAnimation.update(watch);
-				if (currentAnimation.isDone()) {
-					animations.shift();
-				}
-			}
-
+			var needMatrixUpdate = BC.Animation.process(animations, watch);
 			if (needMatrixUpdate) {
 				updateCellMatrix();
 			}

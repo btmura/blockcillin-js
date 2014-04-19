@@ -46,6 +46,18 @@ var BC = (function(parent) {
 		};
 	};
 
+	my.process = function(animations, watch) {
+		var changed = false;
+		if (animations.length > 0) {
+			var currentAnimation = animations[0];
+			changed |= currentAnimation.update(watch);
+			if (currentAnimation.isDone()) {
+				animations.shift();
+			}
+		}
+		return changed;
+	};
+
 	return parent;
 
 }(BC || {}))
