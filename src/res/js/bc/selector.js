@@ -5,7 +5,7 @@ var BC = (function(parent) {
 	my.make = function(metrics, board) {
 		var Direction = BC.Constants.Direction;
 
-		var maxMovementTime = 0.05;
+		var MOVEMENT_DURATION = 0.05;
 
 		var selector = {
 			matrix: BC.Matrix.identity,
@@ -14,8 +14,8 @@ var BC = (function(parent) {
 		};
 
 		var direction = Direction.NONE;
+		var animations = [];
 		var translation = [0, 0, 0];
-		var elapsedMovementTime = 0;
 		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
 
 		function move(direction) {
@@ -71,45 +71,59 @@ var BC = (function(parent) {
 		}
 
 		function startMoving(newDirection) {
-			direction = newDirection;
-			elapsedMovementTime = 0;
+			animations.push(BC.Animation.make({
+				duration: MOVEMENT_DURATION,
+				startCallback: function() {
+					direction = newDirection;
+				},
+				updateCallback: function(watch) {
+					var translationDelta = metrics.ringHeight * watch.deltaPercent;
+					var rotationDelta = ringRotationY * watch.deltaPercent;
+
+					switch (direction) {
+						case Direction.UP:
+							translation[1] += translationDelta;
+							return true;
+
+						case Direction.DOWN:
+							translation[1] -= translationDelta;
+							return true;
+
+						case Direction.LEFT:
+							board.rotate(rotationDelta);
+							return true;
+
+						case Direction.RIGHT:
+							board.rotate(-rotationDelta);
+							return true;
+
+						default:
+							return false;
+					}
+				},
+				finishCallback: function() {
+					direction = Direction.NONE;
+				}
+			}));
 		}
 
 		function update(watch) {
-			if (isMoving()) {
-				var deltaTime = watch.deltaTime;
-				if (elapsedMovementTime + deltaTime > maxMovementTime) {
-					deltaTime = maxMovementTime - elapsedMovementTime;
-				}
+			var needMatrixUpdate = false;
 
-				var translationDelta = deltaTime * metrics.ringHeight / maxMovementTime;
-				var rotationDelta = deltaTime * ringRotationY / maxMovementTime;
-
-				switch (direction) {
-					case Direction.UP:
-						translation[1] += translationDelta;
-						break;
-
-					case Direction.DOWN:
-						translation[1] -= translationDelta;
-						break;
-
-					case Direction.LEFT:
-						board.rotate(rotationDelta);
-						break;
-
-					case Direction.RIGHT:
-						board.rotate(-rotationDelta);
-						break;
-				}
-
-				elapsedMovementTime += deltaTime;
-				if (elapsedMovementTime >= maxMovementTime) {
-					direction = Direction.NONE;
-					elapsedMovementTime = 0;
+			if (animations.length > 0) {
+				var currentAnimation = animations[0];
+				needMatrixUpdate |= currentAnimation.update(watch);
+				if (currentAnimation.isDone()) {
+					animations.shift();
 				}
 			}
 
+			if (needMatrixUpdate) {
+				updateSelectorMatrix(watch);
+			}
+		}
+
+		function updateSelectorMatrix(watch) {
 			var scale = 1 + Math.abs(Math.sin(4 * watch.now)) / 25;
 			var scaleMatrix = BC.Matrix.makeScale(scale, scale, 1);
 			var translationMatrix = BC.Matrix.makeTranslation(
