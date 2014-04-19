@@ -21,6 +21,8 @@ var BC = (function(parent) {
 		var translation = [0, 0, 0];
 		var matrix = BC.Matrix.makeYRotation(rotation[1]);
 
+		var animations = [];
+
 		var cell = {
 			matrix: matrix,
 			state: CellState.BLOCK,
@@ -31,7 +33,6 @@ var BC = (function(parent) {
 			// TODO(btmura): private state members that should not be visible
 			rotation: rotation,
 			translation: translation,
-			animations: [],
 
 			clearBlock: clearBlock,
 			sendBlock: sendBlock,
@@ -78,12 +79,12 @@ var BC = (function(parent) {
 				}
 			});
 
-			cell.animations.push(flicker, fadeOut);
+			animations.push(flicker, fadeOut);
 		}
 
 		function sendBlock(duration) {
 			var blockStyle = cell.blockStyle;
-			cell.animations.push(BC.Animation.make({
+			animations.push(BC.Animation.make({
 				duration: duration,
 				startCallback: function() {
 					cell.blockStyle = 0;
@@ -100,7 +101,7 @@ var BC = (function(parent) {
 		}
 
 		function receiveBlock(duration, direction, blockStyle) {
-			cell.animations.push(BC.Animation.make({
+			animations.push(BC.Animation.make({
 				duration: duration,
 				startCallback: function() {
 					cell.state = CellState.RECEIVING_BLOCK;
@@ -153,11 +154,11 @@ var BC = (function(parent) {
 		function update(watch) {
 			var needMatrixUpdate = false;
 
-			if (cell.animations.length > 0) {
-				var animation = cell.animations[0];
-				needMatrixUpdate |= animation.update(watch);
-				if (animation.isDone()) {
-					cell.animations.shift();
+			if (animations.length > 0) {
+				var currentAnimation = animations[0];
+				needMatrixUpdate |= currentAnimation.update(watch);
+				if (currentAnimation.isDone()) {
+					animations.shift();
 				}
 			}
 
