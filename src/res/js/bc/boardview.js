@@ -21,7 +21,7 @@ var BC = (function(parent) {
 			tileSet.tile(2, 2), // cyan
 			tileSet.tile(2, 3), // magenta
 			tileSet.tile(3, 0), // yellow
-			tileSet.tile(3, 1), // blue
+			tileSet.tile(3, 1)  // blue
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
 
