@@ -28,6 +28,8 @@ var BC = (function(parent) {
 		var currentCell = metrics.numCells - 1;
 		var rotation = [0, 0, 0];
 
+		var clearCellQueue = [];
+
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
 
@@ -120,11 +122,18 @@ var BC = (function(parent) {
 		function update(watch) {
 			for (var i = 0; i < metrics.numRings; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
-					var cell = getCell(i, j);
-					cell.update(watch);
 					updateCell(i, j);
 				}
 			}
+
+			for (var i = 0; i < metrics.numRings; i++) {
+				for (var j = 0; j < metrics.numCells; j++) {
+					var cell = getCell(i, j);
+					cell.update(watch);
+				}
+			}
+
+			updateClearCellQueue();
 
 			selector.update(watch);
 			updateBoardMatrix();
@@ -164,10 +173,10 @@ var BC = (function(parent) {
 				return false;
 			}
 
-
-			leftCell.clearBlock();
-			cell.clearBlock();
-			rightCell.clearBlock();
+			leftCell.markBlock();
+			cell.markBlock();
+			rightCell.markBlock();
+			clearCellQueue.push(leftCell, cell, rightCell);
 			return true;
 		}
 
@@ -199,9 +208,10 @@ var BC = (function(parent) {
 				return false;
 			}
 
-			upCell.clearBlock();
-			cell.clearBlock();
-			downCell.clearBlock();
+			upCell.markBlock();
+			cell.markBlock();
+			downCell.markBlock();
+			clearCellQueue.push(upCell, cell, downCell);
 			return true;
 		}
 
@@ -225,6 +235,34 @@ var BC = (function(parent) {
 
 		function getCell(row, col) {
 			return board.rings[row].cells[col];
+		}
+
+		function updateClearCellQueue() {
+			if (clearCellQueue.length > 0) {
+				console.log("CC LENGTH " + clearCellQueue.length);
+				var cell = clearCellQueue[0];
+				switch (cell.state) {
+					case CellState.PREPARING_TO_CLEAR_BLOCK:
+						break;
+
+					case CellState.READY_TO_CLEAR_BLOCK:
+						console.log("STARTING");
+						cell.clearBlock();
+						break;
+
+					case CellState.CLEARING_BLOCK:
+						break;
+
+					case CellState.EMPTY:
+						clearCellQueue.shift();
+						break;
+
+					default:
+						console.log("STATE " + cell.state);
+						// clearCellQueue.shift();
+						break;
+				}
+			}
 		}
 
 		function updateBoardMatrix() {

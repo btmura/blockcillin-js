@@ -7,7 +7,9 @@ var BC = (function(parent) {
 		EMPTY_RESERVED: 1,
 		BLOCK: 2,
 		RECEIVING_BLOCK: 3,
-		CLEARING_BLOCK: 4
+		PREPARING_TO_CLEAR_BLOCK: 4,
+		READY_TO_CLEAR_BLOCK: 5,
+		CLEARING_BLOCK: 6
 	};
 
 	my.make = function(cellIndex, metrics) {
@@ -15,8 +17,8 @@ var BC = (function(parent) {
 		var Direction = BC.Constants.Direction;
 
 		var FLICKER_DURATION = 0.5;
-		var FREEZE_DURATION = 0.5;
-		var FADE_OUT_DURATION = 0.125;
+		var FREEZE_DURATION = 0.25;
+		var FADE_OUT_DURATION = 0.25;
 
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
 		var animations = [];
@@ -33,6 +35,7 @@ var BC = (function(parent) {
 			yellowBoost: 0,
 			alpha: 1,
 
+			markBlock: markBlock,
 			clearBlock: clearBlock,
 			sendBlock: sendBlock,
 			receiveBlock: receiveBlock,
@@ -42,11 +45,11 @@ var BC = (function(parent) {
 			update: update
 		};
 
-		function clearBlock() {
+		function markBlock() {
 			var flicker = BC.Animation.make({
 				duration: FLICKER_DURATION,
 				startCallback: function() {
-					cell.state = CellState.CLEARING_BLOCK;
+					cell.state = CellState.PREPARING_TO_CLEAR_BLOCK;
 				},
 				updateCallback: function(watch) {
 					cell.yellowBoost = Math.abs(Math.sin(50 * watch.now) / 2);
@@ -66,13 +69,20 @@ var BC = (function(parent) {
 					return false;
 				},
 				finishCallback: function() {
-					cell.blockStyle -= metrics.numBlockTypes;
+					cell.state = CellState.READY_TO_CLEAR_BLOCK;
 				}
 			});
 
+			animations.push(flicker, freeze);
+		}
+
+		function clearBlock() {
+			console.log("Clearing!");
 			var fadeOut = BC.Animation.make({
 				duration: FADE_OUT_DURATION,
-				startCallback: function() {},
+				startCallback: function() {
+					cell.state = CellState.CLEARING_BLOCK;
+				},
 				updateCallback: function(watch) {
 					cell.alpha = 1.0 - watch.elapsedPercent;
 					return false;
@@ -83,7 +93,7 @@ var BC = (function(parent) {
 				}
 			});
 
-			animations.push(flicker, freeze, fadeOut);
+			animations.push(fadeOut);
 		}
 
 		function sendBlock(duration) {

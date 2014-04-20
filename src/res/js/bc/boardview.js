@@ -24,6 +24,7 @@ var BC = (function(parent) {
 			tileSet.tile(3, 1), // blue
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
+
 		var cellView = BC.CellView.make(gl, board.metrics, blockTextureTiles);
 		var selectorView = BC.SelectorView.make(gl, board.metrics, selectorTextureTile);
 
