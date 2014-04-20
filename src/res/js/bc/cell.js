@@ -7,7 +7,7 @@ var BC = (function(parent) {
 		EMPTY_RESERVED: 1,
 		BLOCK: 2,
 		RECEIVING_BLOCK: 3,
-		PREPARING_TO_CLEAR_BLOCK: 4,
+		MARK_TO_CLEAR_BLOCK: 4,
 		READY_TO_CLEAR_BLOCK: 5,
 		CLEARING_BLOCK: 6
 	};
@@ -46,7 +46,7 @@ var BC = (function(parent) {
 		};
 
 		function markBlock() {
-			cell.state = CellState.PREPARING_TO_CLEAR_BLOCK;
+			cell.state = CellState.MARK_TO_CLEAR_BLOCK;
 
 			var flicker = BC.Animation.make({
 				duration: FLICKER_DURATION,
@@ -65,6 +65,7 @@ var BC = (function(parent) {
 				duration: FREEZE_DURATION,
 				startCallback: function() {
 					cell.blockStyle += metrics.numBlockTypes;
+
 				},
 				updateCallback: function(watch) {
 					return false;

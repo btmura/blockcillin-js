@@ -294,7 +294,7 @@ var BC = (function(parent) {
 			if (clearCellQueue.length > 0) {
 				var cell = clearCellQueue[0];
 				switch (cell.state) {
-					case CellState.PREPARING_TO_CLEAR_BLOCK:
+					case CellState.MARK_TO_CLEAR_BLOCK:
 						break;
 
 					case CellState.READY_TO_CLEAR_BLOCK:
@@ -304,11 +304,8 @@ var BC = (function(parent) {
 					case CellState.CLEARING_BLOCK:
 						break;
 
-					case CellState.EMPTY:
-						clearCellQueue.shift();
-						break;
-
 					default:
+						clearCellQueue.shift();
 						break;
 				}
 			}
