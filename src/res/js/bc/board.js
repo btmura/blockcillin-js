@@ -8,6 +8,7 @@ var BC = (function(parent) {
 
 		var DROP_DURATION = 0.075;
 		var SWAP_DURATION = 0.125;
+		var NUM_REQUIRED_MATCHES = 3;
 
 		var rings = [];
 		for (var i = 0; i < metrics.numRings; i++) {
@@ -140,82 +141,118 @@ var BC = (function(parent) {
 		}
 
 		function updateCell(row, col) {
-			checkHorizontal(row, col);
-			checkVertical(row, col);
-			checkMoveDown(row, col);
+			findMatches(row, col);
+			findDrops(row, col);
 		}
 
-		function checkHorizontal(row, col) {
-			var cell = getCell(row, col);
-			if (cell.state !== CellState.BLOCK) {
+		function findMatches(row, col) {
+			var centerCell = getCell(row, col);
+			if (centerCell.state !== CellState.BLOCK) {
 				return false;
 			}
 
-			// Check left cell
-			var leftCol = col - 1;
-			if (leftCol < 0) {
-				leftCol = metrics.numCells - 1;
+			function isMatch(cell) {
+				return cell.state === CellState.BLOCK && cell.blockStyle === centerCell.blockStyle;
 			}
 
-			var leftCell = getCell(row, leftCol);
-			if (leftCell.state !== CellState.BLOCK || leftCell.blockStyle !== cell.blockStyle) {
-				return false;
+			var horizontalMatches = [];
+			var verticalMatches = [];
+
+			// Go left
+			var i = 0;
+			for (var leftCol = getLeftCol(col); leftCol != col; leftCol = getLeftCol(leftCol)) {
+				var leftCell = getCell(row, leftCol);
+				if (isMatch(leftCell)) {
+					horizontalMatches.push({
+						cell: leftCell,
+						row: row,
+						col: --i
+					});
+				} else {
+					break;
+				}
 			}
 
-			// Check right cell
-			var rightCol = col + 1;
-			if (rightCol >= metrics.numCells) {
-				rightCol = 0;
+			// Go right
+			var i = 0;
+			for (var rightCol = getRightCol(col); rightCol != col; rightCol = getRightCol(rightCol)) {
+				var rightCell = getCell(row, rightCol);
+				if (isMatch(rightCell)) {
+					horizontalMatches.push({
+						cell: rightCell,
+						row: row,
+						col: ++i
+					});
+				} else {
+					break;
+				}
 			}
 
-			var rightCell = getCell(row, rightCol);
-			if (rightCell.state !== CellState.BLOCK || rightCell.blockStyle !== cell.blockStyle) {
-				return false;
+			// Go up
+			for (var upRow = row - 1; upRow >= 0; upRow--) {
+				var upCell = getCell(upRow, col);
+				if (isMatch(upCell)) {
+					verticalMatches.push({
+						cell: upCell,
+						row: upRow,
+						col: 0
+					});
+				} else {
+					break;
+				}
 			}
 
-			leftCell.markBlock();
-			cell.markBlock();
-			rightCell.markBlock();
-			clearCellQueue.push(leftCell, cell, rightCell);
-			return true;
+			// Go down
+			for (var downRow = row + 1; downRow < metrics.numRings; downRow++) {
+				var downCell = getCell(downRow, col);
+				if (isMatch(downCell)) {
+					verticalMatches.push({
+						cell: downCell,
+						row: downRow,
+						col: 0
+					});
+				} else {
+					break;
+				}
+			}
+
+			var finalMatches = [];
+			if (horizontalMatches.length + 1 >= NUM_REQUIRED_MATCHES) {
+				finalMatches = finalMatches.concat(horizontalMatches);
+			}
+			if (verticalMatches.length + 1 >= NUM_REQUIRED_MATCHES) {
+				finalMatches = finalMatches.concat(verticalMatches);
+			}
+			if (finalMatches.length > 0) {
+				finalMatches.push({
+					cell: centerCell,
+					row: row,
+					col: 0
+				});
+			}
+
+			finalMatches.sort(function(m1, m2) {
+				if (m1.row - m2.row != 0) {
+					return m1.row - m2.row;
+				}
+				if (m1.col - m2.col != 0) {
+					return m1.col - m2.col;
+				}
+				return 0;
+			});
+
+			for (var i = 0; i < finalMatches.length; i++) {
+				finalMatches[i].cell.markBlock();
+				clearCellQueue.push(finalMatches[i].cell);
+			}
 		}
 
-		function checkVertical(row, col) {
-			var cell = getCell(row, col);
-			if (cell.state !== CellState.BLOCK) {
-				return false;
+		function findDrops(row, col) {
+			 // Don't drop any new blocks until everything is cleared.
+			if (clearCellQueue.length > 0) {
+				return;
 			}
 
-			// Check cell above
-			var upRow = row - 1;
-			if (upRow < 0) {
-				return false;
-			}
-
-			var upCell = getCell(upRow, col);
-			if (upCell.state !== CellState.BLOCK || upCell.blockStyle !== cell.blockStyle) {
-				return false;
-			}
-
-			// Check cell below
-			var downRow = row + 1;
-			if (downRow >= metrics.numRings) {
-				return false;
-			}
-
-			var downCell = getCell(downRow, col);
-			if (downCell.state !== CellState.BLOCK || downCell.blockStyle !== cell.blockStyle) {
-				return false;
-			}
-
-			upCell.markBlock();
-			cell.markBlock();
-			downCell.markBlock();
-			clearCellQueue.push(upCell, cell, downCell);
-			return true;
-		}
-
-		function checkMoveDown(row, col) {
 			var cell = getCell(row, col);
 			if (cell.state !== CellState.BLOCK) {
 				return;
@@ -237,16 +274,30 @@ var BC = (function(parent) {
 			return board.rings[row].cells[col];
 		}
 
+		function getLeftCol(col) {
+			var leftCol = col - 1;
+			if (leftCol < 0) {
+				return metrics.numCells - 1;
+			}
+			return leftCol;
+		}
+
+		function getRightCol(col) {
+			var rightCol = col + 1;
+			if (rightCol === metrics.numCells) {
+				return 0;
+			}
+			return rightCol;
+		}
+
 		function updateClearCellQueue() {
 			if (clearCellQueue.length > 0) {
-				console.log("CC LENGTH " + clearCellQueue.length);
 				var cell = clearCellQueue[0];
 				switch (cell.state) {
 					case CellState.PREPARING_TO_CLEAR_BLOCK:
 						break;
 
 					case CellState.READY_TO_CLEAR_BLOCK:
-						console.log("STARTING");
 						cell.clearBlock();
 						break;
 
@@ -258,8 +309,6 @@ var BC = (function(parent) {
 						break;
 
 					default:
-						console.log("STATE " + cell.state);
-						// clearCellQueue.shift();
 						break;
 				}
 			}

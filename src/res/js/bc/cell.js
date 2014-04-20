@@ -16,7 +16,7 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
-		var FLICKER_DURATION = 0.5;
+		var FLICKER_DURATION = 0.75;
 		var FREEZE_DURATION = 0.25;
 		var FADE_OUT_DURATION = 0.25;
 
@@ -46,10 +46,11 @@ var BC = (function(parent) {
 		};
 
 		function markBlock() {
+			cell.state = CellState.PREPARING_TO_CLEAR_BLOCK;
+
 			var flicker = BC.Animation.make({
 				duration: FLICKER_DURATION,
 				startCallback: function() {
-					cell.state = CellState.PREPARING_TO_CLEAR_BLOCK;
 				},
 				updateCallback: function(watch) {
 					cell.yellowBoost = Math.abs(Math.sin(50 * watch.now) / 2);
@@ -77,11 +78,11 @@ var BC = (function(parent) {
 		}
 
 		function clearBlock() {
-			console.log("Clearing!");
+			cell.state = CellState.CLEARING_BLOCK;
+
 			var fadeOut = BC.Animation.make({
 				duration: FADE_OUT_DURATION,
 				startCallback: function() {
-					cell.state = CellState.CLEARING_BLOCK;
 				},
 				updateCallback: function(watch) {
 					cell.alpha = 1.0 - watch.elapsedPercent;

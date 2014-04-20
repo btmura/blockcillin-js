@@ -5,7 +5,7 @@ var BC = (function(parent) {
 	my.make = function(metrics, board) {
 		var Direction = BC.Constants.Direction;
 
-		var MOVEMENT_DURATION = 0.05;
+		var MOVEMENT_DURATION = 0.025;
 
 		var selector = {
 			matrix: BC.Matrix.identity,
