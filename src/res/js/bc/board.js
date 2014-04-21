@@ -27,9 +27,8 @@ var BC = (function(parent) {
 
 		var currentRing = 0;
 		var currentCell = metrics.numCells - 1;
+		var clearBlockQueue = [];
 		var rotation = [0, 0, 0];
-
-		var clearCellQueue = [];
 
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
@@ -96,7 +95,7 @@ var BC = (function(parent) {
 			var leftBlockStyle = leftCell.blockStyle;
 			var rightBlockStyle = rightCell.blockStyle;
 
-			console.log(leftCell.state + ", " + rightCell.state);
+			BC.Util.log("swap: (" + leftCell.state + ", " + rightCell.state + ")");
 
 			var moveLeft = leftCell.state === CellState.EMPTY && rightCell.state === CellState.BLOCK;
 			if (moveLeft) {
@@ -121,31 +120,39 @@ var BC = (function(parent) {
 		}
 
 		function update(watch) {
+			// 1st pass - update each cell's existing animations.
 			for (var i = 0; i < metrics.numRings; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
-					updateCell(i, j);
+					updateCell(watch, i, j);
 				}
 			}
 
+			// 2nd pass - look for new matches and dropping blocks.
 			for (var i = 0; i < metrics.numRings; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
-					var cell = getCell(i, j);
-					cell.update(watch);
+					updateCell2(i, j);
 				}
 			}
 
-			updateClearCellQueue();
+			// Clear one block at a time.
+			updateClearBlockQueue();
 
+			// Update selector which might have moved the board.
 			selector.update(watch);
 			updateBoardMatrix();
 		}
 
-		function updateCell(row, col) {
-			findMatches(row, col);
-			findDrops(row, col);
+		function updateCell(watch, row, col) {
+			var cell = getCell(row, col);
+			cell.update(watch);
 		}
 
-		function findMatches(row, col) {
+		function updateCell2(row, col) {
+			updateBlockMatches(row, col);
+			updateBlockDrops(row, col);
+		}
+
+		function updateBlockMatches(row, col) {
 			var centerCell = getCell(row, col);
 			if (centerCell.state !== CellState.BLOCK) {
 				return false;
@@ -243,13 +250,13 @@ var BC = (function(parent) {
 
 			for (var i = 0; i < finalMatches.length; i++) {
 				finalMatches[i].cell.markBlock();
-				clearCellQueue.push(finalMatches[i].cell);
+				clearBlockQueue.push(finalMatches[i].cell);
 			}
 		}
 
-		function findDrops(row, col) {
+		function updateBlockDrops(row, col) {
 			 // Don't drop any new blocks until everything is cleared.
-			if (clearCellQueue.length > 0) {
+			if (clearBlockQueue.length > 0) {
 				return;
 			}
 
@@ -290,9 +297,9 @@ var BC = (function(parent) {
 			return rightCol;
 		}
 
-		function updateClearCellQueue() {
-			if (clearCellQueue.length > 0) {
-				var cell = clearCellQueue[0];
+		function updateClearBlockQueue() {
+			if (clearBlockQueue.length > 0) {
+				var cell = clearBlockQueue[0];
 				switch (cell.state) {
 					case CellState.MARK_TO_CLEAR_BLOCK:
 						break;
@@ -305,7 +312,7 @@ var BC = (function(parent) {
 						break;
 
 					default:
-						clearCellQueue.shift();
+						clearBlockQueue.shift();
 						break;
 				}
 			}

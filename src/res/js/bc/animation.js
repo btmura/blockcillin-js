@@ -4,9 +4,9 @@ var BC = (function(parent) {
 
 	my.make = function(args) {
 		var duration = args.duration;
-		var startCallback = args.startCallback;
-		var updateCallback = args.updateCallback;
-		var finishCallback = args.finishCallback;
+		var startCallback = args.startCallback || function() {};
+		var updateCallback = args.updateCallback || function() {return false;};
+		var finishCallback = args.finishCallback || function() {};
 
 		var elapsedTime = 0;
 		var started = false;
@@ -32,8 +32,8 @@ var BC = (function(parent) {
 			});
 
 			if (elapsedTime >= duration) {
-				finishCallback();
 				done = true;
+				finishCallback();
 			}
 
 			return result;

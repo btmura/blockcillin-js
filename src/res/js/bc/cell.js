@@ -47,11 +47,12 @@ var BC = (function(parent) {
 
 		function markBlock() {
 			cell.state = CellState.MARK_TO_CLEAR_BLOCK;
+			if (animations.length > 0) {
+				BC.Util.error("markBlock: pending animations: " + animations.length);
+			}
 
 			var flicker = BC.Animation.make({
 				duration: FLICKER_DURATION,
-				startCallback: function() {
-				},
 				updateCallback: function(watch) {
 					cell.yellowBoost = Math.abs(Math.sin(50 * watch.now) / 2);
 					return false;
@@ -65,10 +66,6 @@ var BC = (function(parent) {
 				duration: FREEZE_DURATION,
 				startCallback: function() {
 					cell.blockStyle += metrics.numBlockTypes;
-
-				},
-				updateCallback: function(watch) {
-					return false;
 				},
 				finishCallback: function() {
 					cell.state = CellState.READY_TO_CLEAR_BLOCK;
@@ -80,11 +77,12 @@ var BC = (function(parent) {
 
 		function clearBlock() {
 			cell.state = CellState.CLEARING_BLOCK;
+			if (animations.length > 0) {
+				BC.Util.error("clearBlock: pending animations: " + animations.length);
+			}
 
 			var fadeOut = BC.Animation.make({
 				duration: FADE_OUT_DURATION,
-				startCallback: function() {
-				},
 				updateCallback: function(watch) {
 					cell.alpha = 1.0 - watch.elapsedPercent;
 					return false;
@@ -100,15 +98,15 @@ var BC = (function(parent) {
 
 		function sendBlock(duration) {
 			var blockStyle = cell.blockStyle;
+			cell.blockStyle = 0;
+			cell.state = CellState.EMPTY_RESERVED;
+
+			if (animations.length > 0) {
+				BC.Util.error("sendBlock: pending animations: " + animations.length);
+			}
+
 			animations.push(BC.Animation.make({
 				duration: duration,
-				startCallback: function() {
-					cell.blockStyle = 0;
-					cell.state = CellState.EMPTY_RESERVED;
-				},
-				updateCallback: function(watch) {
-					return false;
-				},
 				finishCallback: function() {
 					cell.state = CellState.EMPTY;
 				}
@@ -117,29 +115,33 @@ var BC = (function(parent) {
 		}
 
 		function receiveBlock(duration, direction, blockStyle) {
+			cell.state = CellState.RECEIVING_BLOCK;
+			cell.blockStyle = blockStyle;
+
+			switch (direction) {
+				case Direction.LEFT:
+					rotation[1] -= ringRotationY;
+					break;
+
+				case Direction.RIGHT:
+					rotation[1] += ringRotationY;
+					break;
+
+				case Direction.UP:
+					translation[1] = metrics.ringHeight;
+					break;
+
+				default:
+					BC.Util.error("receiveBlock: unsupport direction: " + direction);
+					break;
+			}
+
+			if (animations.length > 0) {
+				BC.Util.error("receiveBlock: pending animations: " + animations.length);
+			}
+
 			animations.push(BC.Animation.make({
 				duration: duration,
-				startCallback: function() {
-					cell.state = CellState.RECEIVING_BLOCK;
-					cell.blockStyle = blockStyle;
-
-					switch (direction) {
-						case Direction.LEFT:
-							rotation[1] -= ringRotationY;
-							break;
-
-						case Direction.RIGHT:
-							rotation[1] += ringRotationY;
-							break;
-
-						case Direction.UP:
-							translation[1] = metrics.ringHeight;
-							break;
-
-						default:
-							break;
-					}
-				},
 				updateCallback: function(watch) {
 					var rotationDelta = ringRotationY * watch.deltaPercent;
 					var translationDelta = metrics.ringHeight * watch.deltaPercent;

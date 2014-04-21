@@ -31,6 +31,10 @@ var BC = (function(parent) {
 
 				case Direction.DOWN:
 					return moveDown();
+
+				default:
+					BC.Util.error("move: unsupported direction: " + direction);
+					return false;
 			}
 		}
 
@@ -71,11 +75,13 @@ var BC = (function(parent) {
 		}
 
 		function startMoving(newDirection) {
+			direction = newDirection;
+			if (animations.length > 0) {
+				BC.Util.error("startMoving: pending animations: " + animations.length);
+			}
+
 			animations.push(BC.Animation.make({
 				duration: MOVEMENT_DURATION,
-				startCallback: function() {
-					direction = newDirection;
-				},
 				updateCallback: function(watch) {
 					var translationDelta = metrics.ringHeight * watch.deltaPercent;
 					var rotationDelta = ringRotationY * watch.deltaPercent;
