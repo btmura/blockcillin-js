@@ -128,14 +128,15 @@ var BC = (function(parent) {
 			}
 
 			// 2nd pass - look for new matches and dropping blocks.
+			var newBlockMatches = false;
 			for (var i = 0; i < metrics.numRings; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
-					updateCell2(i, j);
+					newBlockMatches |= updateCell2(i, j);
 				}
 			}
 
 			// Clear one block at a time.
-			updateClearBlockQueue();
+			updateClearBlockQueue(newBlockMatches);
 
 			// Update selector which might have moved the board.
 			selector.update(watch);
@@ -148,8 +149,9 @@ var BC = (function(parent) {
 		}
 
 		function updateCell2(row, col) {
-			updateBlockMatches(row, col);
+			var newBlockMatches = updateBlockMatches(row, col);
 			updateBlockDrops(row, col);
+			return newBlockMatches;
 		}
 
 		function updateBlockMatches(row, col) {
@@ -158,9 +160,10 @@ var BC = (function(parent) {
 				var cell = matches[i].cell;
 				if (cell.state !== CellState.MARKED_BLOCK) {
 					cell.markBlock();
-					clearBlockQueue.push(cell);
+					clearBlockQueue.push(matches[i]);
 				}
 			}
+			return matches.length > 0;
 		}
 
 		function getBlockMatches(row, col) {
@@ -185,17 +188,7 @@ var BC = (function(parent) {
 				matches.push({
 					cell: centerCell,
 					row: row,
-					col: 0
-				});
-
-				matches.sort(function(m1, m2) {
-					if (m1.col - m2.col != 0) {
-						return m1.col - m2.col;
-					}
-					if (m1.row - m2.row != 0) {
-						return m1.row - m2.row;
-					}
-					return 0;
+					col: col
 				});
 			}
 
@@ -206,14 +199,13 @@ var BC = (function(parent) {
 			var matches = [];
 
 			// Go left
-			var relativeCol = 0;
 			for (var leftCol = getLeftCol(col); leftCol != col; leftCol = getLeftCol(leftCol)) {
 				var leftCell = getCell(row, leftCol);
 				if (isMatch(blockStyle, leftCell)) {
 					matches.push({
 						cell: leftCell,
 						row: row,
-						col: --relativeCol
+						col: leftCol
 					});
 				} else {
 					break;
@@ -221,14 +213,13 @@ var BC = (function(parent) {
 			}
 
 			// Go right
-			var relativeCol = 0;
 			for (var rightCol = getRightCol(col); rightCol != col; rightCol = getRightCol(rightCol)) {
 				var rightCell = getCell(row, rightCol);
 				if (isMatch(blockStyle, rightCell)) {
 					matches.push({
 						cell: rightCell,
 						row: row,
-						col: ++relativeCol
+						col: rightCol
 					});
 				} else {
 					break;
@@ -248,7 +239,7 @@ var BC = (function(parent) {
 					matches.push({
 						cell: upCell,
 						row: upRow,
-						col: 0
+						col: col
 					});
 				} else {
 					break;
@@ -262,7 +253,7 @@ var BC = (function(parent) {
 					matches.push({
 						cell: downCell,
 						row: downRow,
-						col: 0
+						col: col
 					});
 				} else {
 					break;
@@ -320,9 +311,21 @@ var BC = (function(parent) {
 			}
 		}
 
-		function updateClearBlockQueue() {
+		function updateClearBlockQueue(newBlockMatches) {
 			if (clearBlockQueue.length > 0) {
-				var cell = clearBlockQueue[0];
+				if (newBlockMatches) {
+					clearBlockQueue.sort(function(m1, m2) {
+						if (m1.row - m2.row != 0) {
+							return m1.row - m2.row;
+						}
+						if (m1.col - m2.col != 0) {
+							return m1.col - m2.col;
+						}
+						return 0;
+					});
+				}
+
+				var cell = clearBlockQueue[0].cell;
 				switch (cell.state) {
 					case CellState.MARKED_BLOCK:
 					case CellState.FREEZING_BLOCK:
