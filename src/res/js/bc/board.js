@@ -289,11 +289,6 @@ var BC = (function(parent) {
 		}
 
 		function updateBlockDrops(row, col) {
-			 // Don't drop any new blocks until everything is cleared.
-			if (clearBlockQueue.length > 0) {
-				return;
-			}
-
 			var cell = getCell(row, col);
 			if (cell.state !== CellState.BLOCK) {
 				return;
