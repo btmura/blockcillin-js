@@ -98,7 +98,7 @@ var BC = (function(parent) {
 
 		// Creates the view matrix.
 		function makeViewMatrix() {
-			var cameraPosition = [0, 0.5, 2];
+			var cameraPosition = [0, 0.5, 3];
 			var targetPosition = [0, 0, 0];
 			var up = [0, 1, 0];
 			var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
