@@ -7,9 +7,10 @@ var BC = (function(parent) {
 		EMPTY_RESERVED: 1,
 		BLOCK: 2,
 		RECEIVING_BLOCK: 3,
-		MARK_TO_CLEAR_BLOCK: 4,
-		READY_TO_CLEAR_BLOCK: 5,
-		CLEARING_BLOCK: 6
+		MARKED_BLOCK: 4,
+		FREEZING_BLOCK: 5,
+		READY_TO_CLEAR_BLOCK: 6,
+		CLEARING_BLOCK: 7
 	};
 
 	my.make = function(cellIndex, metrics) {
@@ -46,13 +47,16 @@ var BC = (function(parent) {
 		};
 
 		function markBlock() {
-			cell.state = CellState.MARK_TO_CLEAR_BLOCK;
+			cell.state = CellState.MARKED_BLOCK;
 			if (animations.length > 0) {
 				BC.Util.error("markBlock: pending animations: " + animations.length);
 			}
 
 			var flicker = BC.Animation.make({
 				duration: FLICKER_DURATION,
+				startCallback: function() {
+					cell.state = CellState.FREEZING_BLOCK;
+				},
 				updateCallback: function(watch) {
 					cell.yellowBoost = Math.abs(Math.sin(50 * watch.now) / 2);
 					return false;

@@ -153,27 +153,67 @@ var BC = (function(parent) {
 		}
 
 		function updateBlockMatches(row, col) {
+			var matches = getBlockMatches(row, col);
+			for (var i = 0; i < matches.length; i++) {
+				var cell = matches[i].cell;
+				if (cell.state !== CellState.MARKED_BLOCK) {
+					cell.markBlock();
+					clearBlockQueue.push(cell);
+				}
+			}
+		}
+
+		function getBlockMatches(row, col) {
 			var centerCell = getCell(row, col);
 			if (centerCell.state !== CellState.BLOCK) {
-				return false;
+				return [];
 			}
 
-			function isMatch(cell) {
-				return cell.state === CellState.BLOCK && cell.blockStyle === centerCell.blockStyle;
+			var matches = [];
+
+			var horizontalMatches = getHorizontalMatches(centerCell.blockStyle, row, col);
+			if (horizontalMatches.length + 1 >= NUM_REQUIRED_MATCHES) {
+				matches = matches.concat(horizontalMatches);
 			}
 
-			var horizontalMatches = [];
-			var verticalMatches = [];
+			var verticalMatches = getVerticalMatches(centerCell.blockStyle, row, col);
+			if (verticalMatches.length + 1 >= NUM_REQUIRED_MATCHES) {
+				matches = matches.concat(verticalMatches);
+			}
+
+			if (matches.length > 0) {
+				matches.push({
+					cell: centerCell,
+					row: row,
+					col: 0
+				});
+
+				matches.sort(function(m1, m2) {
+					if (m1.col - m2.col != 0) {
+						return m1.col - m2.col;
+					}
+					if (m1.row - m2.row != 0) {
+						return m1.row - m2.row;
+					}
+					return 0;
+				});
+			}
+
+			return matches;
+		}
+
+		function getHorizontalMatches(blockStyle, row, col) {
+			var matches = [];
 
 			// Go left
-			var i = 0;
+			var relativeCol = 0;
 			for (var leftCol = getLeftCol(col); leftCol != col; leftCol = getLeftCol(leftCol)) {
 				var leftCell = getCell(row, leftCol);
-				if (isMatch(leftCell)) {
-					horizontalMatches.push({
+				if (isMatch(blockStyle, leftCell)) {
+					matches.push({
 						cell: leftCell,
 						row: row,
-						col: --i
+						col: --relativeCol
 					});
 				} else {
 					break;
@@ -181,25 +221,31 @@ var BC = (function(parent) {
 			}
 
 			// Go right
-			var i = 0;
+			var relativeCol = 0;
 			for (var rightCol = getRightCol(col); rightCol != col; rightCol = getRightCol(rightCol)) {
 				var rightCell = getCell(row, rightCol);
-				if (isMatch(rightCell)) {
-					horizontalMatches.push({
+				if (isMatch(blockStyle, rightCell)) {
+					matches.push({
 						cell: rightCell,
 						row: row,
-						col: ++i
+						col: ++relativeCol
 					});
 				} else {
 					break;
 				}
 			}
 
+			return matches;
+		}
+
+		function getVerticalMatches(blockStyle, row, col) {
+			var matches = [];
+
 			// Go up
 			for (var upRow = row - 1; upRow >= 0; upRow--) {
 				var upCell = getCell(upRow, col);
-				if (isMatch(upCell)) {
-					verticalMatches.push({
+				if (isMatch(blockStyle, upCell)) {
+					matches.push({
 						cell: upCell,
 						row: upRow,
 						col: 0
@@ -212,8 +258,8 @@ var BC = (function(parent) {
 			// Go down
 			for (var downRow = row + 1; downRow < metrics.numRings; downRow++) {
 				var downCell = getCell(downRow, col);
-				if (isMatch(downCell)) {
-					verticalMatches.push({
+				if (isMatch(blockStyle, downCell)) {
+					matches.push({
 						cell: downCell,
 						row: downRow,
 						col: 0
@@ -223,35 +269,32 @@ var BC = (function(parent) {
 				}
 			}
 
-			var finalMatches = [];
-			if (horizontalMatches.length + 1 >= NUM_REQUIRED_MATCHES) {
-				finalMatches = finalMatches.concat(horizontalMatches);
-			}
-			if (verticalMatches.length + 1 >= NUM_REQUIRED_MATCHES) {
-				finalMatches = finalMatches.concat(verticalMatches);
-			}
-			if (finalMatches.length > 0) {
-				finalMatches.push({
-					cell: centerCell,
-					row: row,
-					col: 0
-				});
-			}
+			return matches;
+		}
 
-			finalMatches.sort(function(m1, m2) {
-				if (m1.row - m2.row != 0) {
-					return m1.row - m2.row;
-				}
-				if (m1.col - m2.col != 0) {
-					return m1.col - m2.col;
-				}
+		function isMatch(blockStyle, cell) {
+			return (cell.state === CellState.BLOCK || cell.state === CellState.MARKED_BLOCK)
+					&& cell.blockStyle === blockStyle;
+		}
+
+		function getCell(row, col) {
+			return board.rings[row].cells[col];
+		}
+
+		function getLeftCol(col) {
+			var leftCol = col - 1;
+			if (leftCol < 0) {
+				return metrics.numCells - 1;
+			}
+			return leftCol;
+		}
+
+		function getRightCol(col) {
+			var rightCol = col + 1;
+			if (rightCol === metrics.numCells) {
 				return 0;
-			});
-
-			for (var i = 0; i < finalMatches.length; i++) {
-				finalMatches[i].cell.markBlock();
-				clearBlockQueue.push(finalMatches[i].cell);
 			}
+			return rightCol;
 		}
 
 		function updateBlockDrops(row, col) {
@@ -277,31 +320,12 @@ var BC = (function(parent) {
 			}
 		}
 
-		function getCell(row, col) {
-			return board.rings[row].cells[col];
-		}
-
-		function getLeftCol(col) {
-			var leftCol = col - 1;
-			if (leftCol < 0) {
-				return metrics.numCells - 1;
-			}
-			return leftCol;
-		}
-
-		function getRightCol(col) {
-			var rightCol = col + 1;
-			if (rightCol === metrics.numCells) {
-				return 0;
-			}
-			return rightCol;
-		}
-
 		function updateClearBlockQueue() {
 			if (clearBlockQueue.length > 0) {
 				var cell = clearBlockQueue[0];
 				switch (cell.state) {
-					case CellState.MARK_TO_CLEAR_BLOCK:
+					case CellState.MARKED_BLOCK:
+					case CellState.FREEZING_BLOCK:
 						break;
 
 					case CellState.READY_TO_CLEAR_BLOCK:
