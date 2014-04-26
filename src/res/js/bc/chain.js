@@ -15,36 +15,37 @@ var BC = (function(parent) {
 		var numRows = board.rings.length;
 
 		// Find horizontal chains of 3+ rows.
-		var row = 0;
-		for (var startCol = 0; startCol < numCols; ) {
-			var cell = getCell(row, startCol);
-			if (cell.state !== CellState.BLOCK) {
-				startCol++;
-				continue;
-			}
-
-			for (var endCol = startCol + 1; endCol < numCols; endCol++) {
-				var nextCell = getCell(row, endCol);
-				if (nextCell.state !== cell.state || nextCell.blockStyle !== cell.blockStyle) {
-					break;
+		for (var row = 0; row < numRows; row++) {
+			for (var startCol = 0; startCol < numCols; ) {
+				var cell = getCell(row, startCol);
+				if (cell.state !== CellState.BLOCK) {
+					startCol++;
+					continue;
 				}
-			}
 
-			var matching = endCol - startCol;
-			if (matching >= 3) {
-				var newChain = [];
-				for (var matchCol = startCol; matchCol < endCol; matchCol++) {
-					var matchCell = getCell(row, matchCol);
-					newChain.push({
-						cell: matchCell,
-						row: row,
-						col: matchCol
-					});
+				for (var endCol = startCol + 1; endCol < numCols; endCol++) {
+					var nextCell = getCell(row, endCol);
+					if (nextCell.state !== cell.state || nextCell.blockStyle !== cell.blockStyle) {
+						break;
+					}
 				}
-				chains.push(newChain);
-			}
 
-			startCol = endCol;
+				var matching = endCol - startCol;
+				if (matching >= 3) {
+					var newChain = [];
+					for (var matchCol = startCol; matchCol < endCol; matchCol++) {
+						var matchCell = getCell(row, matchCol);
+						newChain.push({
+							cell: matchCell,
+							row: row,
+							col: matchCol
+						});
+					}
+					chains.push(newChain);
+				}
+
+				startCol = endCol;
+			}
 		}
 
 		// Find vertical chains of 3+ cells

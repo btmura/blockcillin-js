@@ -2,9 +2,10 @@ module("BC.Chain");
 
 test("find_horizontalChains", function() {
 	var board = BC.Chain.makeBoard([
-		[1, 1, 1],
-		[0, 2, 0],
-		[1, 2, 3]
+		[1, 1, 1, 0],
+		[0, 2, 0, 1],
+		[1, 2, 3, 0],
+		[4, 4, 4, 4]
 	]);
 
 	var actual = BC.Chain.find(board);
@@ -25,6 +26,30 @@ test("find_horizontalChains", function() {
 				cell: board.rings[0].cells[2],
 				row: 0,
 				col: 2
+			}
+		],
+
+		// Chain of 4s in the 4th row
+		[
+			{
+				cell: board.rings[3].cells[0],
+				row: 3,
+				col: 0
+			},
+			{
+				cell: board.rings[3].cells[1],
+				row: 3,
+				col: 1
+			},
+			{
+				cell: board.rings[3].cells[2],
+				row: 3,
+				col: 2
+			},
+			{
+				cell: board.rings[3].cells[2],
+				row: 3,
+				col: 3
 			}
 		],
 	];
