@@ -2,18 +2,13 @@ var BC = (function(parent) {
 
 	var my = parent.Board = parent.Board || {}
 
-	my.make = function(metrics) {
+	my.make = function(metrics, rings) {
 		var Direction = BC.Constants.Direction;
 		var CellState = BC.Cell.CellState;
 
 		var DROP_DURATION = 0.075;
 		var SWAP_DURATION = 0.125;
 		var NUM_REQUIRED_MATCHES = 3;
-
-		var rings = [];
-		for (var i = 0; i < metrics.numRings; i++) {
-			rings[i] = BC.Ring.make(i, metrics);
-		}
 
 		var board = {
 			rings: rings,

@@ -109,14 +109,21 @@ var BC = (function(parent) {
 		var viewMatrix = makeViewMatrix();
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
-		var board = BC.Board.make({
+		var metrics = {
 			numRings: 3,
 			numCells: 24,
 			numBlockTypes: 6,
 			ringInnerRadius: 0.75,
 			ringOuterRadius: 1,
 			ringHeight: 0.3
-		});
+		};
+
+		var rings = [];
+		for (var i = 0; i < metrics.numRings; i++) {
+			rings[i] = BC.Ring.make(i, metrics);
+		}
+
+		var board = BC.Board.make(metrics, rings);
 
 		var boardView = BC.BoardView.make(board, gl, programLocations);
 
