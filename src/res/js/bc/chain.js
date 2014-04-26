@@ -3,24 +3,28 @@ var BC = (function(parent) {
 	var my = parent.Chain = parent.Chain || {}
 
 	my.find = function(board) {
+		var CellState = BC.Cell.CellState;
+
 		var chains = [];
 
 		function getCell(row, col) {
 			return board.rings[row].cells[col];
 		}
 
-		var numRows = 4;
+		var numRows = board.rings.length;
 		var col = 0;
 
 		// Find vertical chains of 3+ cells
 		for (var startRow = 0; startRow < numRows; ) {
 			var cell = getCell(startRow, col);
-			var blockStyle = cell.blockStyle;
+			if (cell.state !== CellState.BLOCK) {
+				startRow++;
+				continue;
+			}
 
 			for (var endRow = startRow + 1; endRow < numRows; endRow++) {
 				var cell2 = getCell(endRow, col);
-				var blockStyle2 = cell2.blockStyle;
-				if (blockStyle !== blockStyle2) {
+				if (cell.state !== cell2.state || cell.blockStyle !== cell2.blockStyle) {
 					break;
 				}
 			}

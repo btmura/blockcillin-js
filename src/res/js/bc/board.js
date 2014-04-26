@@ -122,16 +122,27 @@ var BC = (function(parent) {
 				}
 			}
 
-			// 2nd pass - look for new matches and dropping blocks.
+			// 2nd pass - look for new matches.
+			var newChains = BC.Chain.find(board);
+			for (var i = 0; i < newChains.length; i++) {
+				var chain = newChains[i];
+				for (var j = 0; j < chain.length; j++) {
+					var match = chain[j];
+					match.cell.markBlock();
+					clearBlockQueue.push(match);
+				}
+			}
+
+			// 3rd pass - look for dropping blocks.
 			var newBlockMatches = false;
 			for (var i = 0; i < metrics.numRings; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
-					newBlockMatches |= updateCell2(i, j);
+					updateBlockDrops(i, j);
 				}
 			}
 
 			// Clear one block at a time.
-			updateClearBlockQueue(newBlockMatches);
+			updateClearBlockQueue();
 
 			// Update selector which might have moved the board.
 			selector.update(watch);
@@ -141,146 +152,6 @@ var BC = (function(parent) {
 		function updateCell(watch, row, col) {
 			var cell = getCell(row, col);
 			cell.update(watch);
-		}
-
-		function updateCell2(row, col) {
-			var newBlockMatches = updateBlockMatches(row, col);
-			updateBlockDrops(row, col);
-			return newBlockMatches;
-		}
-
-		function updateBlockMatches(row, col) {
-			var matches = getBlockMatches(row, col);
-			for (var i = 0; i < matches.length; i++) {
-				var cell = matches[i].cell;
-				if (cell.state !== CellState.MARKED_BLOCK) {
-					cell.markBlock();
-					clearBlockQueue.push(matches[i]);
-				}
-			}
-			return matches.length > 0;
-		}
-
-		function getBlockMatches(row, col) {
-			var centerCell = getCell(row, col);
-			if (centerCell.state !== CellState.BLOCK) {
-				return [];
-			}
-
-			var matches = [];
-
-			var horizontalMatches = getHorizontalMatches(centerCell.blockStyle, row, col);
-			if (horizontalMatches.length + 1 >= NUM_REQUIRED_MATCHES) {
-				matches = matches.concat(horizontalMatches);
-			}
-
-			var verticalMatches = getVerticalMatches(centerCell.blockStyle, row, col);
-			if (verticalMatches.length + 1 >= NUM_REQUIRED_MATCHES) {
-				matches = matches.concat(verticalMatches);
-			}
-
-			if (matches.length > 0) {
-				matches.push({
-					cell: centerCell,
-					row: row,
-					col: col
-				});
-			}
-
-			return matches;
-		}
-
-		function getHorizontalMatches(blockStyle, row, col) {
-			var matches = [];
-
-			// Go left
-			for (var leftCol = getLeftCol(col); leftCol != col; leftCol = getLeftCol(leftCol)) {
-				var leftCell = getCell(row, leftCol);
-				if (isMatch(blockStyle, leftCell)) {
-					matches.push({
-						cell: leftCell,
-						row: row,
-						col: leftCol
-					});
-				} else {
-					break;
-				}
-			}
-
-			// Go right
-			for (var rightCol = getRightCol(col); rightCol != col; rightCol = getRightCol(rightCol)) {
-				var rightCell = getCell(row, rightCol);
-				if (isMatch(blockStyle, rightCell)) {
-					matches.push({
-						cell: rightCell,
-						row: row,
-						col: rightCol
-					});
-				} else {
-					break;
-				}
-			}
-
-			return matches;
-		}
-
-		function getVerticalMatches(blockStyle, row, col) {
-			var matches = [];
-
-			// Go up
-			for (var upRow = row - 1; upRow >= 0; upRow--) {
-				var upCell = getCell(upRow, col);
-				if (isMatch(blockStyle, upCell)) {
-					matches.push({
-						cell: upCell,
-						row: upRow,
-						col: col
-					});
-				} else {
-					break;
-				}
-			}
-
-			// Go down
-			for (var downRow = row + 1; downRow < metrics.numRings; downRow++) {
-				var downCell = getCell(downRow, col);
-				if (isMatch(blockStyle, downCell)) {
-					matches.push({
-						cell: downCell,
-						row: downRow,
-						col: col
-					});
-				} else {
-					break;
-				}
-			}
-
-			return matches;
-		}
-
-		function isMatch(blockStyle, cell) {
-			return (cell.state === CellState.BLOCK || cell.state === CellState.MARKED_BLOCK)
-					&& cell.blockStyle === blockStyle;
-		}
-
-		function getCell(row, col) {
-			return board.rings[row].cells[col];
-		}
-
-		function getLeftCol(col) {
-			var leftCol = col - 1;
-			if (leftCol < 0) {
-				return metrics.numCells - 1;
-			}
-			return leftCol;
-		}
-
-		function getRightCol(col) {
-			var rightCol = col + 1;
-			if (rightCol === metrics.numCells) {
-				return 0;
-			}
-			return rightCol;
 		}
 
 		function updateBlockDrops(row, col) {
@@ -301,20 +172,12 @@ var BC = (function(parent) {
 			}
 		}
 
+		function getCell(row, col) {
+			return board.rings[row].cells[col];
+		}
+
 		function updateClearBlockQueue(newBlockMatches) {
 			if (clearBlockQueue.length > 0) {
-				if (newBlockMatches) {
-					clearBlockQueue.sort(function(m1, m2) {
-						if (m1.row - m2.row != 0) {
-							return m1.row - m2.row;
-						}
-						if (m1.col - m2.col != 0) {
-							return m1.col - m2.col;
-						}
-						return 0;
-					});
-				}
-
 				var cell = clearBlockQueue[0].cell;
 				switch (cell.state) {
 					case CellState.MARKED_BLOCK:

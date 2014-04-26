@@ -78,7 +78,8 @@ QUnit.extend(BC.Chain, {
 			var cells = [];
 			for (var j = 0; j < specs[i].length; j++) {
 				var cell = {
-					blockStyle: specs[i][j]
+					blockStyle: specs[i][j],
+					state: BC.Cell.CellState.BLOCK
 				};
 				cells.push(cell);
 			}
