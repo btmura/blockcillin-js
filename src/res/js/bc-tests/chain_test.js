@@ -1,5 +1,37 @@
 module("BC.Chain");
 
+test("find_horizontalChains", function() {
+	var board = BC.Chain.makeBoard([
+		[1, 1, 1],
+		[0, 2, 0],
+		[1, 2, 3]
+	]);
+
+	var actual = BC.Chain.find(board);
+	var expected = [
+		// Chain of 1s in the 1st row
+		[
+			{
+				cell: board.rings[0].cells[0],
+				row: 0,
+				col: 0
+			},
+			{
+				cell: board.rings[0].cells[1],
+				row: 0,
+				col: 1
+			},
+			{
+				cell: board.rings[0].cells[2],
+				row: 0,
+				col: 2
+			}
+		],
+	];
+
+	deepEqual(actual, expected);
+});
+
 test("find_verticalChains", function() {
 	var board = BC.Chain.makeBoard([
 		[1, 2, 2, 4],
