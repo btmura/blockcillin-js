@@ -8,7 +8,6 @@ var BC = (function(parent) {
 
 		var DROP_DURATION = 0.1;
 		var SWAP_DURATION = 0.1;
-		var NUM_REQUIRED_MATCHES = 3;
 
 		var board = {
 			rings: rings,
