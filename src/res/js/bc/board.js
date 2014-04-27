@@ -6,8 +6,8 @@ var BC = (function(parent) {
 		var Direction = BC.Constants.Direction;
 		var CellState = BC.Cell.CellState;
 
-		var DROP_DURATION = 0.075;
-		var SWAP_DURATION = 0.125;
+		var DROP_DURATION = 0.1;
+		var SWAP_DURATION = 0.1;
 		var NUM_REQUIRED_MATCHES = 3;
 
 		var board = {

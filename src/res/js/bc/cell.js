@@ -6,7 +6,7 @@ var BC = (function(parent) {
 		EMPTY: 0,
 		EMPTY_RESERVED: 1,
 		BLOCK: 2,
-		RECEIVING_BLOCK: 3,
+		BLOCK_RECEIVING: 3,
 		MARKED_BLOCK: 4,
 		FREEZING_BLOCK: 5,
 		READY_TO_CLEAR_BLOCK: 6,
@@ -102,6 +102,7 @@ var BC = (function(parent) {
 
 		function sendBlock(duration) {
 			var blockStyle = cell.blockStyle;
+
 			cell.blockStyle = 0;
 			cell.state = CellState.EMPTY_RESERVED;
 
@@ -119,8 +120,8 @@ var BC = (function(parent) {
 		}
 
 		function receiveBlock(duration, direction, blockStyle) {
-			cell.state = CellState.RECEIVING_BLOCK;
 			cell.blockStyle = blockStyle;
+			cell.state = CellState.BLOCK_RECEIVING;
 
 			switch (direction) {
 				case Direction.LEFT:
@@ -139,6 +140,7 @@ var BC = (function(parent) {
 					BC.Util.error("receiveBlock: unsupport direction: " + direction);
 					break;
 			}
+			updateCellMatrix();
 
 			if (animations.length > 0) {
 				BC.Util.error("receiveBlock: pending animations: " + animations.length);
