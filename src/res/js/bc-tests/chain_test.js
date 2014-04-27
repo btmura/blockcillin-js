@@ -3,14 +3,16 @@ module("BC.Chain");
 test("find_horizontalChains", function() {
 	var board = BC.Chain.makeBoard([
 		[1, 1, 1, 0],
-		[0, 2, 0, 1],
-		[1, 2, 3, 0],
-		[4, 4, 4, 4]
+		[0, 2, 2, 2],
+		[3, 0, 3, 3],
+		[4, 4, 0, 4],
+		[5, 5, 5, 5]
 	]);
 
 	var actual = BC.Chain.find(board);
 	var expected = [
-		// Chain of 1s in the 1st row
+
+		// Chain of 1s in the 1st row with no wrapping.
 		[
 			{
 				cell: board.rings[0].cells[0],
@@ -29,8 +31,51 @@ test("find_horizontalChains", function() {
 			}
 		],
 
-		// Chain of 4s in the 4th row
+		// Chain of 2s in the 3rd row from wrapping around.
 		[
+			{
+				cell: board.rings[1].cells[1],
+				row: 1,
+				col: 1
+			},
+			{
+				cell: board.rings[1].cells[2],
+				row: 1,
+				col: 2
+			},
+			{
+				cell: board.rings[1].cells[3],
+				row: 1,
+				col: 3
+			}
+		],
+
+		// Chain of 3s in the 3rd row from wrapping aronud.
+		[
+			{
+				cell: board.rings[2].cells[2],
+				row: 2,
+				col: 2
+			},
+			{
+				cell: board.rings[2].cells[3],
+				row: 2,
+				col: 3
+			},
+			{
+				cell: board.rings[2].cells[0],
+				row: 2,
+				col: 0
+			}
+		],
+
+		// Chain of 4s in the 4th row from wrapping around.
+		[
+			{
+				cell: board.rings[3].cells[3],
+				row: 3,
+				col: 3
+			},
 			{
 				cell: board.rings[3].cells[0],
 				row: 3,
@@ -40,18 +85,32 @@ test("find_horizontalChains", function() {
 				cell: board.rings[3].cells[1],
 				row: 3,
 				col: 1
+			}
+		],
+
+		// Chain of all 5s in the 5th row
+		[
+			{
+				cell: board.rings[4].cells[0],
+				row: 4,
+				col: 0
 			},
 			{
-				cell: board.rings[3].cells[2],
-				row: 3,
+				cell: board.rings[4].cells[1],
+				row: 4,
+				col: 1
+			},
+			{
+				cell: board.rings[4].cells[2],
+				row: 4,
 				col: 2
 			},
 			{
-				cell: board.rings[3].cells[2],
-				row: 3,
+				cell: board.rings[4].cells[3],
+				row: 4,
 				col: 3
 			}
-		],
+		]
 	];
 
 	deepEqual(actual, expected);

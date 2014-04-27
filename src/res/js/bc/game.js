@@ -110,7 +110,7 @@ var BC = (function(parent) {
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
 		var metrics = {
-			numRings: 3,
+			numRings: 4,
 			numCells: 24,
 			numBlockTypes: 6,
 			ringInnerRadius: 0.75,

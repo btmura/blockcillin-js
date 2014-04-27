@@ -5,40 +5,80 @@ var BC = (function(parent) {
 	my.find = function(board) {
 		var CellState = BC.Cell.CellState;
 
+		var NUM_COLS = board.rings[0].cells.length;
+		var NUM_ROWS = board.rings.length;
+
 		var chains = [];
 
 		function getCell(row, col) {
 			return board.rings[row].cells[col];
 		}
 
-		var numCols = board.rings[0].cells.length;
-		var numRows = board.rings.length;
+		function getLeftCol(col) {
+			var leftCol = col - 1;
+			if (leftCol < 0) {
+				return NUM_COLS - 1;
+			}
+			return leftCol;
+		}
 
-		// Find horizontal chains of 3+ rows.
-		for (var row = 0; row < numRows; row++) {
-			for (var startCol = 0; startCol < numCols; ) {
-				var cell = getCell(row, startCol);
+		function getRightCol(col) {
+			var rightCol = col + 1;
+			if (rightCol === NUM_COLS) {
+				return 0;
+			}
+			return rightCol;
+		}
+
+		function isMatch(cell, otherCell) {
+			return cell.state === otherCell.state && cell.blockStyle == otherCell.blockStyle;
+		}
+
+		function getStartCol(row) {
+			var startCol = 0;
+			var cell = getCell(row, startCol);
+			for (var i = 0; i < NUM_COLS; i++) {
+				var nextCell = getCell(row, startCol);
+				if (!isMatch(cell, nextCell)) {
+					break;
+				}
+				startCol = getRightCol(startCol);
+			}
+			return startCol;
+		}
+
+		// Find horizontal chains of 3 or more identical blocks.
+		for (var row = 0; row < NUM_ROWS; row++) {
+			var startOffset = getStartCol(row);
+
+			for (var startCol = 0; startCol < NUM_COLS; ) {
+				var realCol = (startCol + startOffset) % NUM_COLS;
+				var cell = getCell(row, realCol);
 				if (cell.state !== CellState.BLOCK) {
 					startCol++;
 					continue;
 				}
 
-				for (var endCol = startCol + 1; endCol < numCols; endCol++) {
-					var nextCell = getCell(row, endCol);
-					if (nextCell.state !== cell.state || nextCell.blockStyle !== cell.blockStyle) {
+				var matching = 1;
+				for (var endCol = startCol + 1; endCol < NUM_COLS; endCol++) {
+					var realCol = (endCol + startOffset) % NUM_COLS;
+					var nextCell = getCell(row, realCol);
+					if (isMatch(cell, nextCell)) {
+						matching++;
+					} else {
 						break;
 					}
 				}
 
-				var matching = endCol - startCol;
 				if (matching >= 3) {
 					var newChain = [];
 					for (var matchCol = startCol; matchCol < endCol; matchCol++) {
-						var matchCell = getCell(row, matchCol);
+						var realCol = (matchCol + startOffset) % NUM_COLS;
+						var matchCell = getCell(row, realCol);
 						newChain.push({
 							cell: matchCell,
 							row: row,
-							col: matchCol
+							col: realCol
 						});
 					}
 					chains.push(newChain);
@@ -48,18 +88,18 @@ var BC = (function(parent) {
 			}
 		}
 
-		// Find vertical chains of 3+ cells
-		for (var col = 0; col < numCols; col++) {
-			for (var startRow = 0; startRow < numRows; ) {
+		// Find vertical chains of 3 or more identical blocks.
+		for (var col = 0; col < NUM_COLS; col++) {
+			for (var startRow = 0; startRow < NUM_ROWS; ) {
 				var cell = getCell(startRow, col);
 				if (cell.state !== CellState.BLOCK) {
 					startRow++;
 					continue;
 				}
 
-				for (var endRow = startRow + 1; endRow < numRows; endRow++) {
+				for (var endRow = startRow + 1; endRow < NUM_ROWS; endRow++) {
 					var nextCell = getCell(endRow, col);
-					if (nextCell.state !== cell.state || nextCell.blockStyle !== cell.blockStyle) {
+					if (!isMatch(cell, nextCell)) {
 						break;
 					}
 				}
