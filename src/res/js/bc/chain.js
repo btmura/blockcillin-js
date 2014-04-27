@@ -135,10 +135,95 @@ var BC = (function(parent) {
 			return chains;
 		}
 
+		function intersects(chain1, chain2) {
+			for (var i = 0; i < chain1.length; i++) {
+				var cell1 = chain1[i];
+				for (var j = 0; j < chain2.length; j++) {
+					var cell2 = chain2[j];
+					if (cell1.blockStyle === cell2.blockStyle
+							&& cell1.row === cell2.row
+							&& cell1.col === cell2.col) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		function contains(chain, otherMatch) {
+			for (var i = 0; i < chain.length; i++) {
+				var match = chain[i];
+				if (match.blockStyle === otherMatch.blockStyle
+						&& match.row === otherMatch.row
+						&& match.col === otherMatch.col) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		function getCombinedChains() {
+			var combinedChains = [];
+
 			var horizontalChains = getHorizontalChains();
 			var verticalChains = getVerticalChains();
-			return horizontalChains.concat(verticalChains);
+
+			while (horizontalChains.length > 0) {
+				var chain = horizontalChains.shift();
+				combinedChains.push(chain);
+
+				while (true) {
+					// Check for new vertical intersections.
+					var intersected = false;
+					for (var i = 0; i < verticalChains.length; i++) {
+						if (intersects(chain, verticalChains[i])) {
+							for (var j = 0; j < verticalChains[i].length; j++) {
+								if (!contains(chain, verticalChains[i][j])) {
+									chain.push(verticalChains[i][j]);
+								}
+							}
+							verticalChains.splice(i, 1);
+							intersected = true;
+						}
+					}
+
+					// Start creating the next combined chain if no intersections.
+					if (!intersected) {
+						break;
+					}
+
+					// Check for new horizontal intersections.
+					var intersected = false;
+					for (var i = 0; i < horizontalChains.length; i++) {
+						if (intersects(chain, horizontalChains[i])) {
+							for (var j = 0; j < horizontalChains[i].length; j++) {
+								if (!contains(chain, horizontalChains[i][j])) {
+									chain.push(horizontalChains[i][j]);
+								}
+							}
+							horizontalChains.splice(i, 1);
+							intersected = true;
+						}
+					}
+
+					if (!intersected) {
+						break;
+					}
+				}
+			}
+
+			while (verticalChains.length > 0) {
+				var chain = verticalChains.shift();
+				combinedChains.push(chain);
+			}
+
+			for (var i = 0; i < combinedChains.length; i++) {
+				combinedChains[i].sort(function(m1, m2) {
+					return m1.row - m2.row;
+				});
+			}
+
+			return combinedChains;
 		}
 
 		return getCombinedChains();

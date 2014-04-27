@@ -192,6 +192,48 @@ test("find_verticalChains", function() {
 	deepEqual(actual, expected);
 });
 
+test("find_crossChains", function() {
+	var board = BC.Chain.makeBoard([
+		[0, 1, 0],
+		[1, 1, 1],
+		[0, 1, 0]
+	]);
+
+	var actual = BC.Chain.find(board);
+	var expected = [
+		[
+			{
+				cell: board.rings[0].cells[1],
+				row: 0,
+				col: 1
+			},
+			{
+				cell: board.rings[1].cells[0],
+				row: 1,
+				col: 0
+			},
+			{
+				cell: board.rings[1].cells[1],
+				row: 1,
+				col: 1
+			},
+			{
+				cell: board.rings[1].cells[2],
+				row: 1,
+				col: 2
+			},
+			{
+				cell: board.rings[2].cells[1],
+				row: 2,
+				col: 1
+			}
+		],
+	];
+
+	deepEqual(actual, expected);
+});
+
+
 QUnit.extend(BC.Chain, {
 	makeBoard: function(specs) {
 		var rings = [];
