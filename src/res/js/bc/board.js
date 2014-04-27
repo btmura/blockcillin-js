@@ -127,9 +127,11 @@ var BC = (function(parent) {
 			for (var i = 0; i < newChains.length; i++) {
 				var chain = newChains[i];
 				for (var j = 0; j < chain.length; j++) {
-					var match = chain[j];
-					match.cell.markBlock();
-					clearBlockQueue.push(match);
+					var cell = chain[j].cell;
+					if (cell.state !== CellState.MARKED_BLOCK) {
+						cell.markBlock();
+						clearBlockQueue.push(cell);
+					}
 				}
 			}
 
@@ -176,9 +178,9 @@ var BC = (function(parent) {
 			return board.rings[row].cells[col];
 		}
 
-		function updateClearBlockQueue(newBlockMatches) {
+		function updateClearBlockQueue() {
 			if (clearBlockQueue.length > 0) {
-				var cell = clearBlockQueue[0].cell;
+				var cell = clearBlockQueue[0];
 				switch (cell.state) {
 					case CellState.MARKED_BLOCK:
 					case CellState.FREEZING_BLOCK:
