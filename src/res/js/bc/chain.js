@@ -229,6 +229,48 @@ var BC = (function(parent) {
 		return getCombinedChains();
 	};
 
+	my.makeManager = function() {
+		var CellState = BC.Cell.CellState;
+
+		var clearBlockQueue = [];
+
+		function update(board) {
+			var newChains = BC.Chain.find(board);
+			for (var i = 0; i < newChains.length; i++) {
+				var chain = newChains[i];
+				for (var j = 0; j < chain.length; j++) {
+					var cell = chain[j].cell;
+					cell.markBlock();
+					clearBlockQueue.push(cell);
+				}
+			}
+
+			if (clearBlockQueue.length > 0) {
+				var cell = clearBlockQueue[0];
+				switch (cell.state) {
+					case CellState.MARKED_BLOCK:
+					case CellState.FREEZING_BLOCK:
+						break;
+
+					case CellState.READY_TO_CLEAR_BLOCK:
+						cell.clearBlock();
+						break;
+
+					case CellState.CLEARING_BLOCK:
+						break;
+
+					default:
+						clearBlockQueue.shift();
+						break;
+				}
+			}
+		}
+
+		return {
+			update: update
+		};
+	};
+
 	return parent;
 
 }(BC || {}))

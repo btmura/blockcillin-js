@@ -21,11 +21,12 @@ var BC = (function(parent) {
 
 		var currentRing = 0;
 		var currentCell = metrics.numCells - 1;
-		var clearBlockQueue = [];
 		var rotation = [0, 0, 0];
 
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
+
+		var chainManager = BC.Chain.makeManager();
 
 		function move(direction) {
 			switch (direction) {
@@ -121,18 +122,8 @@ var BC = (function(parent) {
 				}
 			}
 
-			// 2nd pass - look for new matches.
-			var newChains = BC.Chain.find(board);
-			for (var i = 0; i < newChains.length; i++) {
-				var chain = newChains[i];
-				for (var j = 0; j < chain.length; j++) {
-					var cell = chain[j].cell;
-					if (cell.state !== CellState.MARKED_BLOCK) {
-						cell.markBlock();
-						clearBlockQueue.push(cell);
-					}
-				}
-			}
+			// 2nd pass - find new chains and update the board
+			chainManager.update(board);
 
 			// 3rd pass - look for dropping blocks.
 			var newBlockMatches = false;
@@ -141,9 +132,6 @@ var BC = (function(parent) {
 					updateBlockDrops(i, j);
 				}
 			}
-
-			// Clear one block at a time.
-			updateClearBlockQueue();
 
 			// Update selector which might have moved the board.
 			selector.update(watch);
@@ -175,28 +163,6 @@ var BC = (function(parent) {
 
 		function getCell(row, col) {
 			return board.rings[row].cells[col];
-		}
-
-		function updateClearBlockQueue() {
-			if (clearBlockQueue.length > 0) {
-				var cell = clearBlockQueue[0];
-				switch (cell.state) {
-					case CellState.MARKED_BLOCK:
-					case CellState.FREEZING_BLOCK:
-						break;
-
-					case CellState.READY_TO_CLEAR_BLOCK:
-						cell.clearBlock();
-						break;
-
-					case CellState.CLEARING_BLOCK:
-						break;
-
-					default:
-						clearBlockQueue.shift();
-						break;
-				}
-			}
 		}
 
 		function updateBoardMatrix() {
