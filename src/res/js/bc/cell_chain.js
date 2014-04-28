@@ -233,21 +233,23 @@ var BC = (function(parent) {
 	my.makeManager = function() {
 		var CellState = BC.Cell.CellState;
 
-		var clearBlockQueue = [];
+		var cellQueue = [];
+		var chainQueue = [];
 
 		function update(board) {
 			var newChains = BC.Cell.Chain.find(board);
 			for (var i = 0; i < newChains.length; i++) {
 				var chain = newChains[i];
+				chainQueue.push(chain);
 				for (var j = 0; j < chain.length; j++) {
 					var cell = chain[j].cell;
 					cell.markBlock();
-					clearBlockQueue.push(cell);
+					cellQueue.push(cell);
 				}
 			}
 
-			if (clearBlockQueue.length > 0) {
-				var cell = clearBlockQueue[0];
+			if (cellQueue.length > 0) {
+				var cell = cellQueue[0];
 				switch (cell.state) {
 					case CellState.MARKED_BLOCK:
 					case CellState.FREEZING_BLOCK:
@@ -261,8 +263,26 @@ var BC = (function(parent) {
 						break;
 
 					default:
-						clearBlockQueue.shift();
+						cellQueue.shift();
 						break;
+				}
+			}
+
+			if (chainQueue.length > 0) {
+				var chain = chainQueue[0];
+
+				var finished = true;
+				for (var i = 0; i < chain.length; i++) {
+					var cell = chain[i].cell;
+					finished &= cell.state === CellState.EMPTY_RESERVED;
+				}
+
+				if (finished) {
+					for (var i = 0; i < chain.length; i++) {
+						var cell = chain[i].cell;
+						cell.state = CellState.EMPTY;
+					}
+					chainQueue.shift();
 				}
 			}
 		}

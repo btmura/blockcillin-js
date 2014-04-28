@@ -7,7 +7,7 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
-		var DROP_DURATION = 0.1;
+		var DROP_DURATION = 0.05;
 
 		function update(board) {
 			for (var i = 0; i < metrics.numRings; i++) {

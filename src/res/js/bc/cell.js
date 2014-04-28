@@ -92,7 +92,7 @@ var BC = (function(parent) {
 					return false;
 				},
 				finishCallback: function() {
-					cell.state = CellState.EMPTY;
+					cell.state = CellState.EMPTY_RESERVED;
 					cell.alpha = 1;
 				}
 			});
