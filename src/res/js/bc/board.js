@@ -83,30 +83,36 @@ var BC = (function(parent) {
 		}
 
 		function swap() {
-			var ring = board.rings[currentRing];
-			var leftCell = ring.cells[currentCell];
-			var rightCell = ring.cells[(currentCell + 1) % ring.cells.length];
+			var leftCell = getCell(currentRing, currentCell);
+			var rightCell = getCell(currentRing, currentCell + 1);
+			BC.Util.log("swap: (" + leftCell.state + ", " + rightCell.state + ")");
 
 			var leftBlockStyle = leftCell.blockStyle;
 			var rightBlockStyle = rightCell.blockStyle;
 
-			BC.Util.log("swap: (" + leftCell.state + ", " + rightCell.state + ")");
+			function isEmpty(cell) {
+				return cell.state === CellState.EMPTY || cell.state === CellState.EMPTY_NO_DROP;
+			}
 
-			var moveLeft = leftCell.state === CellState.EMPTY && rightCell.state === CellState.BLOCK;
+			function isBlock(cell) {
+				return cell.state === CellState.BLOCK;
+			}
+
+			var moveLeft = isEmpty(leftCell) && isBlock(rightCell);
 			if (moveLeft) {
 				rightCell.sendBlock(SWAP_DURATION, Direction.LEFT);
 				leftCell.receiveBlock(SWAP_DURATION, Direction.RIGHT, rightBlockStyle);
 				return;
 			}
 
-			var moveRight = leftCell.state === CellState.BLOCK && rightCell.state === CellState.EMPTY;
+			var moveRight = isBlock(leftCell) && isEmpty(rightCell);
 			if (moveRight) {
 				leftCell.sendBlock(SWAP_DURATION, Direction.RIGHT);
 				rightCell.receiveBlock(SWAP_DURATION, Direction.LEFT, leftBlockStyle);
 				return;
 			}
 
-			var swap = leftCell.state === CellState.BLOCK && rightCell.state === CellState.BLOCK;
+			var swap = isBlock(leftCell) && isBlock(rightCell);
 			if (swap) {
 				leftCell.receiveBlock(SWAP_DURATION, Direction.RIGHT, rightBlockStyle);
 				rightCell.receiveBlock(SWAP_DURATION, Direction.LEFT, leftBlockStyle);
@@ -135,7 +141,7 @@ var BC = (function(parent) {
 		}
 
 		function getCell(row, col) {
-			return board.rings[row].cells[col];
+			return board.rings[row].cells[col % metrics.numCells];
 		}
 
 		function updateBoardMatrix() {

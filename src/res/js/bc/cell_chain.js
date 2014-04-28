@@ -274,13 +274,15 @@ var BC = (function(parent) {
 				var finished = true;
 				for (var i = 0; i < chain.length; i++) {
 					var cell = chain[i].cell;
-					finished &= cell.state === CellState.EMPTY_RESERVED;
+					finished &= !cell.isClearing();
 				}
 
 				if (finished) {
 					for (var i = 0; i < chain.length; i++) {
 						var cell = chain[i].cell;
-						cell.state = CellState.EMPTY;
+						if (cell.state === CellState.EMPTY_NO_DROP) {
+							cell.state = CellState.EMPTY;
+						}
 					}
 					chainQueue.shift();
 				}

@@ -4,15 +4,16 @@ var BC = (function(parent) {
 
 	my.CellState = {
 		EMPTY: 0,
-		EMPTY_RESERVED: 1,
+		EMPTY_NO_SWAP: 1,
+		EMPTY_NO_DROP: 2,
 
-		BLOCK: 2,
-		BLOCK_RECEIVING: 3,
+		BLOCK: 3,
+		BLOCK_RECEIVING: 4,
 
-		BLOCK_CLEARING_MARKED: 4,
-		BLOCK_CLEARING_PREPARING: 5,
-		BLOCK_CLEARING_READY: 6,
-		BLOCK_CLEARING_IN_PROGRESS: 7
+		BLOCK_CLEARING_MARKED: 5,
+		BLOCK_CLEARING_PREPARING: 6,
+		BLOCK_CLEARING_READY: 7,
+		BLOCK_CLEARING_IN_PROGRESS: 8
 	};
 
 	my.make = function(cellIndex, metrics) {
@@ -43,7 +44,8 @@ var BC = (function(parent) {
 			sendBlock: sendBlock,
 			receiveBlock: receiveBlock,
 
-			isEmpty: isEmpty,
+			isClearing: isClearing,
+			isDrawable : isDrawable,
 			isTransparent: isTransparent,
 			update: update
 		};
@@ -94,7 +96,7 @@ var BC = (function(parent) {
 					return false;
 				},
 				finishCallback: function() {
-					cell.state = CellState.EMPTY_RESERVED;
+					cell.state = CellState.EMPTY_NO_DROP;
 					cell.alpha = 1;
 				}
 			});
@@ -106,7 +108,7 @@ var BC = (function(parent) {
 			var blockStyle = cell.blockStyle;
 
 			cell.blockStyle = 0;
-			cell.state = CellState.EMPTY_RESERVED;
+			cell.state = CellState.EMPTY_NO_SWAP;
 
 			if (animations.length > 0) {
 				BC.Util.error("sendBlock: pending animations: " + animations.length);
@@ -176,8 +178,17 @@ var BC = (function(parent) {
 			}));
 		}
 
-		function isEmpty() {
-			return cell.state === CellState.EMPTY || cell.state === CellState.EMPTY_RESERVED;
+		function isClearing() {
+			return cell.state === CellState.BLOCK_CLEARING_MARKED
+					|| cell.state === CellState.BLOCK_CLEARING_PREPARING
+					|| cell.state === CellState.BLOCK_CLEARING_READY
+					|| cell.state === CellState.BLOCK_CLEARING_IN_PROGRESS
+		}
+
+		function isDrawable() {
+			return cell.state !== CellState.EMPTY
+					&& cell.state !== CellState.EMPTY_NO_SWAP
+					&& cell.state !== CellState.EMPTY_NO_DROP;
 		}
 
 		function isTransparent() {

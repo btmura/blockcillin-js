@@ -179,13 +179,13 @@ var BC = (function(parent) {
 		var count = indexArray.length;
 
 		function drawOpaque(cell, programLocations) {
-			if (!cell.isEmpty() && !cell.isTransparent()) {
+			if (cell.isDrawable() && !cell.isTransparent()) {
 				drawCell(cell, programLocations);
 			}
 		}
 
 		function drawTransparent(cell, programLocations) {
-			if (!cell.isEmpty() && cell.isTransparent()) {
+			if (cell.isDrawable() && cell.isTransparent()) {
 				gl.disable(gl.CULL_FACE);
 				drawCell(cell, programLocations);
 				gl.enable(gl.CULL_FACE);
