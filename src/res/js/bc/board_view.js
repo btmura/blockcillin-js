@@ -1,6 +1,7 @@
 var BC = (function(parent) {
 
-	var my = parent.BoardView = parent.BoardView || {}
+	var module = parent.Board = parent.Board || {}
+	var my = module.View = module.View || {}
 
 	my.make = function(board, gl, programLocations) {
 		var boardMatrixLocation = programLocations.boardMatrixLocation;
@@ -25,8 +26,8 @@ var BC = (function(parent) {
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
 
-		var cellView = BC.CellView.make(gl, board.metrics, blockTextureTiles);
-		var selectorView = BC.SelectorView.make(gl, board.metrics, selectorTextureTile);
+		var cellView = BC.Cell.View.make(gl, board.metrics, blockTextureTiles);
+		var selectorView = BC.Selector.View.make(gl, board.metrics, selectorTextureTile);
 
 		function draw() {
 			drawRings();

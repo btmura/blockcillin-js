@@ -25,8 +25,8 @@ var BC = (function(parent) {
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
 
-		var chainManager = BC.Chain.makeManager();
-		var dropManager = BC.Drop.makeManager(metrics);
+		var chainManager = BC.Cell.Chain.makeManager();
+		var dropManager = BC.Cell.Drop.makeManager(metrics);
 
 		function move(direction) {
 			switch (direction) {

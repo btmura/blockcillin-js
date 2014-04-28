@@ -1,6 +1,7 @@
 var BC = (function(parent) {
 
-	var my = parent.CellView = parent.CellView || {};
+	var module = parent.Cell = parent.Cell || {}
+	var my = module.View = module.View || {}
 
 	my.make = function(gl, metrics, tiles) {
 		var CellState = BC.Cell.CellState;

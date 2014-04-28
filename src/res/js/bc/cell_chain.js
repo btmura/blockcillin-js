@@ -1,6 +1,7 @@
 var BC = (function(parent) {
 
-	var my = parent.Chain = parent.Chain || {}
+	var module = parent.Cell = parent.Cell || {}
+	var my = module.Chain = module.Chain || {}
 
 	my.find = function(board) {
 		var CellState = BC.Cell.CellState;
@@ -235,7 +236,7 @@ var BC = (function(parent) {
 		var clearBlockQueue = [];
 
 		function update(board) {
-			var newChains = BC.Chain.find(board);
+			var newChains = BC.Cell.Chain.find(board);
 			for (var i = 0; i < newChains.length; i++) {
 				var chain = newChains[i];
 				for (var j = 0; j < chain.length; j++) {

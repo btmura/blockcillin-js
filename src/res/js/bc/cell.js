@@ -17,7 +17,7 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
-		var FLICKER_DURATION = 0.75;
+		var FLICKER_DURATION = 0.5;
 		var FREEZE_DURATION = 0.25;
 		var FADE_OUT_DURATION = 0.25;
 

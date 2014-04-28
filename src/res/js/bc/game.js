@@ -125,7 +125,7 @@ var BC = (function(parent) {
 
 		var board = BC.Board.make(metrics, rings);
 
-		var boardView = BC.BoardView.make(board, gl, programLocations);
+		var boardView = BC.Board.View.make(board, gl, programLocations);
 
 		var controller = BC.Controller.make(canvas);
 		controller.setMoveLeftListener(function() {
