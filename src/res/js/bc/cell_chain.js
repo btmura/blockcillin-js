@@ -251,15 +251,15 @@ var BC = (function(parent) {
 			if (cellQueue.length > 0) {
 				var cell = cellQueue[0];
 				switch (cell.state) {
-					case CellState.MARKED_BLOCK:
-					case CellState.FREEZING_BLOCK:
+					case CellState.BLOCK_CLEARING_MARKED:
+					case CellState.BLOCK_CLEARING_PREPARING:
 						break;
 
-					case CellState.READY_TO_CLEAR_BLOCK:
+					case CellState.BLOCK_CLEARING_READY:
 						cell.clearBlock();
 						break;
 
-					case CellState.CLEARING_BLOCK:
+					case CellState.BLOCK_CLEARING_IN_PROGRESS:
 						break;
 
 					default:

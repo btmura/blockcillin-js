@@ -5,12 +5,14 @@ var BC = (function(parent) {
 	my.CellState = {
 		EMPTY: 0,
 		EMPTY_RESERVED: 1,
+
 		BLOCK: 2,
 		BLOCK_RECEIVING: 3,
-		MARKED_BLOCK: 4,
-		FREEZING_BLOCK: 5,
-		READY_TO_CLEAR_BLOCK: 6,
-		CLEARING_BLOCK: 7
+
+		BLOCK_CLEARING_MARKED: 4,
+		BLOCK_CLEARING_PREPARING: 5,
+		BLOCK_CLEARING_READY: 6,
+		BLOCK_CLEARING_IN_PROGRESS: 7
 	};
 
 	my.make = function(cellIndex, metrics) {
@@ -47,7 +49,7 @@ var BC = (function(parent) {
 		};
 
 		function markBlock() {
-			cell.state = CellState.MARKED_BLOCK;
+			cell.state = CellState.BLOCK_CLEARING_MARKED;
 			if (animations.length > 0) {
 				BC.Util.error("markBlock: pending animations: " + animations.length);
 			}
@@ -55,7 +57,7 @@ var BC = (function(parent) {
 			var flicker = BC.Animation.make({
 				duration: FLICKER_DURATION,
 				startCallback: function() {
-					cell.state = CellState.FREEZING_BLOCK;
+					cell.state = CellState.BLOCK_CLEARING_PREPARING;
 				},
 				updateCallback: function(watch) {
 					cell.yellowBoost = Math.abs(Math.sin(50 * watch.now) / 2);
@@ -72,7 +74,7 @@ var BC = (function(parent) {
 					cell.blockStyle += metrics.numBlockTypes;
 				},
 				finishCallback: function() {
-					cell.state = CellState.READY_TO_CLEAR_BLOCK;
+					cell.state = CellState.BLOCK_CLEARING_READY;
 				}
 			});
 
@@ -80,7 +82,7 @@ var BC = (function(parent) {
 		}
 
 		function clearBlock() {
-			cell.state = CellState.CLEARING_BLOCK;
+			cell.state = CellState.BLOCK_CLEARING_IN_PROGRESS;
 			if (animations.length > 0) {
 				BC.Util.error("clearBlock: pending animations: " + animations.length);
 			}
@@ -179,7 +181,7 @@ var BC = (function(parent) {
 		}
 
 		function isTransparent() {
-			return cell.state === CellState.CLEARING_BLOCK;
+			return cell.state === CellState.BLOCK_CLEARING_IN_PROGRESS;
 		}
 
 		function update(watch) {
