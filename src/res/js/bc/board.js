@@ -3,10 +3,9 @@ var BC = (function(parent) {
 	var my = parent.Board = parent.Board || {}
 
 	my.make = function(metrics, rings) {
-		var Direction = BC.Constants.Direction;
 		var CellState = BC.Cell.CellState;
+		var Direction = BC.Constants.Direction;
 
-		var DROP_DURATION = 0.1;
 		var SWAP_DURATION = 0.1;
 
 		var board = {
@@ -27,6 +26,7 @@ var BC = (function(parent) {
 		board.selector = selector;
 
 		var chainManager = BC.Chain.makeManager();
+		var dropManager = BC.Drop.makeManager(metrics);
 
 		function move(direction) {
 			switch (direction) {
@@ -118,47 +118,20 @@ var BC = (function(parent) {
 			// 1st pass - update each cell's existing animations.
 			for (var i = 0; i < metrics.numRings; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
-					updateCell(watch, i, j);
+					var cell = getCell(i, j);
+					cell.update(watch);
 				}
 			}
 
 			// 2nd pass - find new chains and update the board
 			chainManager.update(board);
 
-			// 3rd pass - look for dropping blocks.
-			var newBlockMatches = false;
-			for (var i = 0; i < metrics.numRings; i++) {
-				for (var j = 0; j < metrics.numCells; j++) {
-					updateBlockDrops(i, j);
-				}
-			}
+			// 3rd pass - find new dropping blocks and update the board
+			dropManager.update(board);
 
 			// Update selector which might have moved the board.
 			selector.update(watch);
 			updateBoardMatrix();
-		}
-
-		function updateCell(watch, row, col) {
-			var cell = getCell(row, col);
-			cell.update(watch);
-		}
-
-		function updateBlockDrops(row, col) {
-			var cell = getCell(row, col);
-			if (cell.state !== CellState.BLOCK) {
-				return;
-			}
-
-			var downRow = row + 1;
-			if (downRow >= metrics.numRings) {
-				return;
-			}
-			var downCell = getCell(downRow, col);
-
-			if (cell.state === CellState.BLOCK && downCell.state == CellState.EMPTY) {
-				var blockStyle = cell.sendBlock(DROP_DURATION);
-				downCell.receiveBlock(DROP_DURATION, Direction.UP, blockStyle);
-			}
 		}
 
 		function getCell(row, col) {
