@@ -6,8 +6,9 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
+		var MAX_RISE_HEIGHT = 1.25;
+		var RISE_SPEED = 0.02;
 		var SWAP_DURATION = 0.1;
-		var RISING_SPEED = 0.02;
 
 		var board = {
 			metrics: metrics,
@@ -142,9 +143,10 @@ var BC = (function(parent) {
 			// 3rd pass - find new dropping blocks and update the board
 			dropManager.update(board);
 
-			// Update selector which might have roated the board.
+			// Update selector which might have rotated the board.
 			selector.update(watch);
 
+			// Update the board's matrices once the dust has cleared.
 			updateBoardRotation();
 			updateBoardTranslation(watch);
 		}
@@ -160,7 +162,11 @@ var BC = (function(parent) {
 		}
 
 		function updateBoardTranslation(watch) {
-			translation[1] += RISING_SPEED * watch.deltaTime;
+			translation[1] += RISE_SPEED * watch.deltaTime;
+			if (translation[1] >= MAX_RISE_HEIGHT) {
+				translation[1] = MAX_RISE_HEIGHT;
+			}
+
 			board.translationMatrix = BC.Matrix.makeTranslation(
 					translation[0],
 					translation[1],
