@@ -35,7 +35,7 @@ var BC = (function(parent) {
 		var currentCell = metrics.numCells - 1;
 
 		var rotation = [0, 0, 0];
-		var translation = [0, 0, 0];
+		var translation = [0, -totalHeight, 0];
 
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
@@ -190,7 +190,7 @@ var BC = (function(parent) {
 		function addNecessaryRings() {
 			var totalRingHeight = metrics.ringHeight * rings.length;
 			var gap = totalHeight - totalRingHeight;
-			var newRingCount = Math.round(gap / metrics.ringHeight);
+			var newRingCount = Math.ceil(gap / metrics.ringHeight);
 			for (var i = 0; i < newRingCount; i++) {
 				var newRing = BC.Ring.make(rings.length, metrics);
 				rings.push(newRing);

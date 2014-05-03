@@ -100,7 +100,7 @@ var BC = (function(parent) {
 
 		// Creates the view matrix.
 		function makeViewMatrix() {
-			var cameraPosition = [0, 0.5, 3];
+			var cameraPosition = [0, 0.1, 3];
 			var targetPosition = [0, 0, 0];
 			var up = [0, 1, 0];
 			var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
@@ -112,7 +112,7 @@ var BC = (function(parent) {
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
 		var metrics = {
-			numRings: 4,
+			numRings: 3,
 			numCells: 24,
 			numBlockTypes: 6,
 			ringInnerRadius: 0.75,
