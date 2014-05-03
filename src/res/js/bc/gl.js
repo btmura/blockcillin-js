@@ -53,7 +53,7 @@ var BC = (function(parent) {
 		var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
 		if (!linked) {
 			lastError = gl.getProgramInfoLog(program);
-			error("Error in program linking: " + lastError);
+			BC.Util.error("Error in program linking: " + lastError);
 
 			gl.deleteProgram(program);
 			return null;
