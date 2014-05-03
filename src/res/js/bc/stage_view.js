@@ -1,72 +1,56 @@
 var BC = (function(parent) {
 
-	var module = parent.Selector = parent.Selector || {};
+	var module = parent.Stage = parent.Stage || {};
 	var my = module.View = module.View || {};
 
 	my.make = function(gl, metrics, textureTile) {
-		var minY = -metrics.ringHeight / 2;
-		var maxY = -minY;
-		var outerRadius = metrics.ringOuterRadius + 0.01;
-		var outerCirclePoints = BC.Math.circlePoints(outerRadius, metrics.numCells, -Math.PI / 2);
-
-		var lp = outerCirclePoints.length - 2;
-		var mp = 0;
-		var rp = 2;
-
-		// Add padding to put selector in front of the blocks.
-		var padding = 0.001;
-
 		var points = [];
 		var i = 0;
 
-		// Left square - counter clockwise from lower left
+		// TOP FACE
+		points[i++] = -1.0;
+		points[i++] = 0.0;
+		points[i++] = 1.0;
 
-		points[i++] = outerCirclePoints[lp] + padding;
-		points[i++] = minY;
-		points[i++] = -outerCirclePoints[lp + 1] - padding;
+		points[i++] = 1.0;
+		points[i++] = 0.0;
+		points[i++] = 1.0;
 
-		points[i++] = outerCirclePoints[mp] + padding;
-		points[i++] = minY;
-		points[i++] = -outerCirclePoints[mp + 1] - padding;
+		points[i++] = 1.0;
+		points[i++] = 0.0;
+		points[i++] = -1.0;
 
-		points[i++] = outerCirclePoints[mp] + padding;
-		points[i++] = maxY;
-		points[i++] = -outerCirclePoints[mp + 1] - padding;
+		points[i++] = -1.0;
+		points[i++] = 0.0;
+		points[i++] = -1.0;
 
-		points[i++] = outerCirclePoints[lp] + padding;
-		points[i++] = maxY;
-		points[i++] = -outerCirclePoints[lp + 1] - padding;
+		// FRONT FACE
+		points[i++] = -1.0;
+		points[i++] = -1.0;
+		points[i++] = 1.0;
 
-		// Right square
+		points[i++] = 1.0;
+		points[i++] = -1.0;
+		points[i++] = 1.0;
 
-		points[i++] = outerCirclePoints[mp] + padding;
-		points[i++] = minY;
-		points[i++] = -outerCirclePoints[mp + 1] - padding;
+		points[i++] = 1.0;
+		points[i++] = 0.0;
+		points[i++] = 1.0;
 
-		points[i++] = outerCirclePoints[rp] + padding;
-		points[i++] = minY;
-		points[i++] = -outerCirclePoints[rp + 1] - padding;
-
-		points[i++] = outerCirclePoints[rp] + padding;
-		points[i++] = maxY;
-		points[i++] = -outerCirclePoints[rp + 1] - padding;
-
-		points[i++] = outerCirclePoints[mp] + padding;
-		points[i++] = maxY;
-		points[i++] = -outerCirclePoints[mp + 1] - padding;
+		points[i++] = -1.0;
+		points[i++] = 0.0;
+		points[i++] = 1.0;
 
 		var pointBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(points), gl.STATIC_DRAW);
 
-		// Map the four corners of the texture title.
 		var ll = textureTile.textureCoord(0, 0);
 		var lr = textureTile.textureCoord(1, 0);
 		var ur = textureTile.textureCoord(1, 1);
 		var ul = textureTile.textureCoord(0, 1);
 
 		var textureCoords = new Float32Array([].concat(ll, lr, ur, ul, ll, lr, ur, ul));
-
 		var textureCoordBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
 		gl.bufferData(gl.ARRAY_BUFFER, textureCoords, gl.STATIC_DRAW);
@@ -86,6 +70,7 @@ var BC = (function(parent) {
 		function draw(programLocations) {
 			var positionLocation = programLocations.positionLocation;
 			var textureCoordLocation = programLocations.textureCoordLocation;
+			var yellowBoostLocation = programLocations.yellowBoostLocation;
 			var alphaLocation = programLocations.alphaLocation;
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
@@ -96,6 +81,7 @@ var BC = (function(parent) {
 			gl.enableVertexAttribArray(textureCoordLocation);
 			gl.vertexAttribPointer(textureCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
+			gl.uniform1f(yellowBoostLocation, 0.0);
 			gl.uniform1f(alphaLocation, 1.0);
 
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -105,7 +91,7 @@ var BC = (function(parent) {
 		return {
 			draw: draw
 		};
-	}
+	};
 
 	return parent;
 

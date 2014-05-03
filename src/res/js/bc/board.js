@@ -6,7 +6,7 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
-		var MAX_RISE_HEIGHT = 1.25;
+		var MAX_RISE_HEIGHT = metrics.ringHeight * 5;
 		var RISE_SPEED = 0.02;
 		var SWAP_DURATION = 0.1;
 
@@ -35,10 +35,13 @@ var BC = (function(parent) {
 		var currentCell = metrics.numCells - 1;
 
 		var rotation = [0, 0, 0];
-		var translation = [0, -totalHeight, 0];
+		var translation = [0, 0, 0];
 
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
+
+		var stage = BC.Stage.make(metrics);
+		board.stage = stage;
 
 		var chainManager = BC.Cell.Chain.makeManager();
 		var dropManager = BC.Cell.Drop.makeManager(metrics);

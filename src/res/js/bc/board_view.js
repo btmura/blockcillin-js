@@ -27,12 +27,17 @@ var BC = (function(parent) {
 			tileSet.tile(3, 1)  // blue
 		];
 		var selectorTextureTile = tileSet.tile(1, 2);
+		var blackTextureTile = tileSet.tile(1, 3);
 
 		var cellView = BC.Cell.View.make(gl, board.metrics, blockTextureTiles);
 		var selectorView = BC.Selector.View.make(gl, board.metrics, selectorTextureTile);
+		var stageView = BC.Stage.View.make(gl, board.metrics, blackTextureTile);
 
 		function draw() {
 			drawRings();
+			drawStage();
+
+			// Draw selector last for alpha values.
 			drawSelector();
 		}
 
@@ -65,6 +70,15 @@ var BC = (function(parent) {
 			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Matrix.identity);
 			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Matrix.identity);
 			selectorView.draw(programLocations);
+		}
+
+		function drawStage() {
+			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.stage.matrix);
+			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Matrix.identity);
+			stageView.draw(programLocations);
 		}
 
 		return {
