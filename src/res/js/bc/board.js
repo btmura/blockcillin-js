@@ -7,6 +7,7 @@ var BC = (function(parent) {
 		var Direction = BC.Constants.Direction;
 
 		var SWAP_DURATION = 0.1;
+		var RISE_SPEED = 0.02;
 
 		var board = {
 			rings: rings,
@@ -20,7 +21,9 @@ var BC = (function(parent) {
 
 		var currentRing = 0;
 		var currentCell = metrics.numCells - 1;
+
 		var rotation = [0, 0, 0];
+		var translation = [0, 0, 0];
 
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
@@ -135,13 +138,16 @@ var BC = (function(parent) {
 			// 3rd pass - find new dropping blocks and update the board
 			dropManager.update(board);
 
-			// Update selector which might have moved the board.
+			// Update selector which might have roated the board.
 			selector.update(watch);
+
+			updateBoardTranslation(watch);
+
 			updateBoardMatrix();
 		}
 
-		function getCell(row, col) {
-			return board.rings[row].cells[col % metrics.numCells];
+		function updateBoardTranslation(watch) {
+			translation[1] += RISE_SPEED * watch.deltaTime;
 		}
 
 		function updateBoardMatrix() {
@@ -149,9 +155,19 @@ var BC = (function(parent) {
 			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 
+			var translationMatrix = BC.Matrix.makeTranslation(
+					translation[0],
+					translation[1],
+					translation[2]);
+
 			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, translationMatrix);
 			board.matrix = matrix;
+		}
+
+		function getCell(row, col) {
+			return board.rings[row].cells[col % metrics.numCells];
 		}
 
 		return board;
