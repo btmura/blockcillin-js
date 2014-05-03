@@ -2,13 +2,18 @@ var BC = (function(parent) {
 
 	var my = parent.Board = parent.Board || {}
 
-	my.make = function(metrics, rings) {
+	my.make = function(metrics) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
 		var MAX_RISE_HEIGHT = 1.25;
 		var RISE_SPEED = 0.02;
 		var SWAP_DURATION = 0.1;
+
+		var rings = [];
+		for (var i = 0; i < metrics.numRings; i++) {
+			rings[i] = BC.Ring.make(i, metrics);
+		}
 
 		var board = {
 			metrics: metrics,
@@ -176,7 +181,7 @@ var BC = (function(parent) {
 		}
 
 		function getCell(row, col) {
-			return board.rings[row].cells[col % metrics.numCells];
+			return rings[row].cells[col % metrics.numCells];
 		}
 
 		return board;

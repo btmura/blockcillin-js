@@ -120,13 +120,7 @@ var BC = (function(parent) {
 			ringHeight: 0.3
 		};
 
-		var rings = [];
-		for (var i = 0; i < metrics.numRings; i++) {
-			rings[i] = BC.Ring.make(i, metrics);
-		}
-
-		var board = BC.Board.make(metrics, rings);
-
+		var board = BC.Board.make(metrics);
 		var boardView = BC.Board.View.make(board, gl, programLocations);
 
 		var controller = BC.Controller.make(canvas);
