@@ -7,7 +7,6 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 
 		var NUM_COLS = board.rings[0].cells.length;
-		var NUM_ROWS = board.rings.length;
 		var NUM_REQUIRED_MATCHES = 3;
 
 		var chains = [];
@@ -50,6 +49,8 @@ var BC = (function(parent) {
 		}
 
 		function getHorizontalChains() {
+			var NUM_ROWS = board.rings.length;
+
 			var chains = [];
 
 			for (var row = 0; row < NUM_ROWS; row++) {
@@ -96,6 +97,8 @@ var BC = (function(parent) {
 		}
 
 		function getVerticalChains() {
+			var NUM_ROWS = board.rings.length;
+
 			var chains = [];
 
 			for (var col = 0; col < NUM_COLS; col++) {

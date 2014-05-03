@@ -10,7 +10,7 @@ var BC = (function(parent) {
 		var DROP_DURATION = 0.05;
 
 		function update(board) {
-			for (var i = 0; i < metrics.numRings; i++) {
+			for (var i = 0; i < board.rings.length; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
 					updateBlockDrops(board, i, j);
 				}
@@ -24,7 +24,7 @@ var BC = (function(parent) {
 			}
 
 			var downRow = row + 1;
-			if (downRow >= metrics.numRings) {
+			if (downRow >= board.rings.length) {
 				return;
 			}
 			var downCell = getCell(board, downRow, col);

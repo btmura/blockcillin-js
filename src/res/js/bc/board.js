@@ -15,6 +15,8 @@ var BC = (function(parent) {
 			rings[i] = BC.Ring.make(i, metrics);
 		}
 
+		var totalHeight = metrics.numRings * metrics.ringHeight;
+
 		var board = {
 			metrics: metrics,
 			rings: rings,
@@ -135,7 +137,7 @@ var BC = (function(parent) {
 
 		function update(watch) {
 			// 1st pass - update each cell's existing animations.
-			for (var i = 0; i < metrics.numRings; i++) {
+			for (var i = 0; i < rings.length; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
 					var cell = getCell(i, j);
 					cell.update(watch);
@@ -154,6 +156,8 @@ var BC = (function(parent) {
 			// Update the board's matrices once the dust has cleared.
 			updateBoardRotation();
 			updateBoardTranslation(watch);
+
+			addNecessaryRings();
 		}
 
 		function updateBoardRotation() {
@@ -168,16 +172,29 @@ var BC = (function(parent) {
 		}
 
 		function updateBoardTranslation(watch) {
-			translation[1] += RISE_SPEED * watch.deltaTime;
-			if (translation[1] >= MAX_RISE_HEIGHT) {
-				translation[1] = MAX_RISE_HEIGHT;
+			var translationDelta = RISE_SPEED * watch.deltaTime;
+			if (translation[1] + translationDelta > MAX_RISE_HEIGHT) {
+				translationDelta = MAX_RISE_HEIGHT - translation[1];
 			}
+
+			translation[1] += translationDelta;
+			totalHeight += translationDelta;
 
 			// TODO(btmura): consolidate to BC.Matrix.makeTranslation(array)
 			board.translationMatrix = BC.Matrix.makeTranslation(
 					translation[0],
 					translation[1],
 					translation[2]);
+		}
+
+		function addNecessaryRings() {
+			var totalRingHeight = metrics.ringHeight * rings.length;
+			var gap = totalHeight - totalRingHeight;
+			var newRingCount = Math.round(gap / metrics.ringHeight);
+			for (var i = 0; i < newRingCount; i++) {
+				var newRing = BC.Ring.make(rings.length, metrics);
+				rings.push(newRing);
+			}
 		}
 
 		function getCell(row, col) {
