@@ -152,6 +152,7 @@ var BC = (function(parent) {
 		}
 
 		function updateBoardRotation() {
+			// TODO(btmura): consolidate to BC.Matrix.makeRotation(...)
 			var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
 			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
@@ -167,6 +168,7 @@ var BC = (function(parent) {
 				translation[1] = MAX_RISE_HEIGHT;
 			}
 
+			// TODO(btmura): consolidate to BC.Matrix.makeTranslation(array)
 			board.translationMatrix = BC.Matrix.makeTranslation(
 					translation[0],
 					translation[1],
