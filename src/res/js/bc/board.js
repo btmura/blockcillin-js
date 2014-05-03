@@ -7,12 +7,16 @@ var BC = (function(parent) {
 		var Direction = BC.Constants.Direction;
 
 		var SWAP_DURATION = 0.1;
-		var RISE_SPEED = 0.02;
+		var RISING_SPEED = 0.02;
 
 		var board = {
-			rings: rings,
-			matrix: BC.Matrix.identity,
 			metrics: metrics,
+			rings: rings,
+
+			// Split rotation and translation to render the selector in a fixed position.
+			rotationMatrix: BC.Matrix.identity,
+			translationMatrix: BC.Matrix.identity,
+
 			move: move,
 			rotate: rotate,
 			swap: swap,
@@ -141,29 +145,26 @@ var BC = (function(parent) {
 			// Update selector which might have roated the board.
 			selector.update(watch);
 
+			updateBoardRotation();
 			updateBoardTranslation(watch);
-
-			updateBoardMatrix();
 		}
 
-		function updateBoardTranslation(watch) {
-			translation[1] += RISE_SPEED * watch.deltaTime;
-		}
-
-		function updateBoardMatrix() {
+		function updateBoardRotation() {
 			var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
 			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
 			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
 
-			var translationMatrix = BC.Matrix.makeTranslation(
+			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
+			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
+			board.rotationMatrix = matrix;
+		}
+
+		function updateBoardTranslation(watch) {
+			translation[1] += RISING_SPEED * watch.deltaTime;
+			board.translationMatrix = BC.Matrix.makeTranslation(
 					translation[0],
 					translation[1],
 					translation[2]);
-
-			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, translationMatrix);
-			board.matrix = matrix;
 		}
 
 		function getCell(row, col) {

@@ -57,7 +57,9 @@ var BC = (function(parent) {
 			projectionMatrixLocation: getUniform("u_projectionMatrix"),
 			viewMatrixLocation: getUniform("u_viewMatrix"),
 
-			boardMatrixLocation: getUniform("u_boardMatrix"),
+			boardRotationMatrixLocation: getUniform("u_boardRotationMatrix"),
+			boardTranslationMatrixLocation: getUniform("u_boardTranslationMatrix"),
+			selectorMatrixLocation: getUniform("u_selectorMatrix"),
 			ringMatrixLocation: getUniform("u_ringMatrix"),
 			cellMatrixLocation: getUniform("u_cellMatrix"),
 

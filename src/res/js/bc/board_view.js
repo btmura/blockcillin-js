@@ -4,7 +4,9 @@ var BC = (function(parent) {
 	var my = module.View = module.View || {}
 
 	my.make = function(board, gl, programLocations) {
-		var boardMatrixLocation = programLocations.boardMatrixLocation;
+		var boardRotationMatrixLocation = programLocations.boardRotationMatrixLocation;
+		var boardTranslationMatrixLocation = programLocations.boardTranslationMatrixLocation;
+		var selectorMatrixLocation = programLocations.selectorMatrixLocation;
 		var ringMatrixLocation = programLocations.ringMatrixLocation;
 		var cellMatrixLocation = programLocations.cellMatrixLocation;
 
@@ -35,7 +37,9 @@ var BC = (function(parent) {
 		}
 
 		function drawRings() {
-			gl.uniformMatrix4fv(boardMatrixLocation, false, board.matrix);
+			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, board.rotationMatrix);
+			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.translationMatrix);
+			gl.uniformMatrix4fv(selectorMatrixLocation, false, BC.Matrix.identity);
 			var rings = board.rings;
 			for (var i = 0; i < 2; i++) {
 				for (var j = 0; j < rings.length; j++) {
@@ -54,7 +58,10 @@ var BC = (function(parent) {
 		}
 
 		function drawSelector() {
-			gl.uniformMatrix4fv(boardMatrixLocation, false, board.selector.matrix);
+			// Don't rotate the board since the selector stays centered.
+			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.translationMatrix);
+			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.selector.matrix);
 			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Matrix.identity);
 			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Matrix.identity);
 			selectorView.draw(programLocations);

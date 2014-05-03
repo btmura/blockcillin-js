@@ -6,7 +6,9 @@
 		uniform mat4 u_projectionMatrix;
 		uniform mat4 u_viewMatrix;
 
-		uniform mat4 u_boardMatrix;
+		uniform mat4 u_boardRotationMatrix;
+		uniform mat4 u_boardTranslationMatrix;
+		uniform mat4 u_selectorMatrix;
 		uniform mat4 u_ringMatrix;
 		uniform mat4 u_cellMatrix;
 
@@ -16,7 +18,9 @@
 			// Multiply the position by all matrices.
 			gl_Position = u_projectionMatrix
 					* u_viewMatrix
-					* u_boardMatrix
+					* u_boardRotationMatrix
+					* u_boardTranslationMatrix
+					* u_selectorMatrix
 					* u_ringMatrix
 					* u_cellMatrix
 					* a_position;
