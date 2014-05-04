@@ -11,9 +11,20 @@ var BC = (function(parent) {
 		var translationY = -ringIndex * metrics.ringHeight;
 		var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
 
+		function isEmpty() {
+			for (var i = 0; i < cells.length; i++) {
+				if (cells[i].state !== BC.Cell.CellState.EMPTY) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		return {
+			matrix: matrix,
 			cells: cells,
-			matrix: matrix
+			isEmpty: isEmpty
 		};
 	};
 

@@ -12,8 +12,8 @@ var BC = (function(parent) {
 		var SWAP_DURATION = 0.1;
 
 		var rings = [];
-		for (var i = 0; i < metrics.numRings; i++) {
-			rings[i] = BC.Ring.make(i, metrics);
+		for (var ringIndex = 0; ringIndex < metrics.numRings; ringIndex++) {
+			rings[ringIndex] = BC.Ring.make(ringIndex, metrics);
 		}
 
 		var board = {
@@ -171,6 +171,7 @@ var BC = (function(parent) {
 			updateBoardRotation();
 			updateBoardTranslation(watch);
 
+			clearEmptyRings();
 			addNecessaryRings();
 		}
 
@@ -201,12 +202,19 @@ var BC = (function(parent) {
 					translation[2]);
 		}
 
+		function clearEmptyRings() {
+			while (rings.length > 0 && rings[0].isEmpty()) {
+				rings.shift();
+				currentRing--;
+			}
+		}
+
 		function addNecessaryRings() {
 			var totalRingHeight = metrics.ringHeight * rings.length;
 			var gap = riseTranslationY - totalRingHeight;
 			var newRingCount = Math.ceil(gap / metrics.ringHeight);
 			for (var i = 0; i < newRingCount; i++) {
-				var newRing = BC.Ring.make(rings.length, metrics);
+				var newRing = BC.Ring.make(ringIndex++, metrics);
 				rings.push(newRing);
 			}
 		}
