@@ -11,8 +11,15 @@ var BC = (function(parent) {
 		var RISE_SPEED = 0.02;
 		var SWAP_DURATION = 0.1;
 
+		// Keep track of the selector to know what cells to swap.
+		var currentRing = 0;
+		var currentCell = metrics.numCells - 1;
+
 		// Rings of cells on the board that are added and removed throughout the game.
 		var rings = [];
+
+		// Y-axis translations of the rings to check whether the game is over.
+		var ringTranslations = [];
 
 		// Increasing counter used to translate each new ring relative to the board.
 		var ringIndex = 0;
@@ -20,9 +27,19 @@ var BC = (function(parent) {
 		// Adds a new ring and increments the ring index counter.
 		function addRing() {
 			var translationY = -metrics.ringHeight * ringIndex;
+			ringTranslations.push(translationY);
+
 			var newRing = BC.Ring.make(metrics, translationY);
 			rings.push(newRing);
+
 			ringIndex++;
+		}
+
+		// Removes the topmost ring. We don't decrement the index counter.
+		function removeRing() {
+			rings.shift();
+			ringTranslations.shift();
+			currentRing--;
 		}
 
 		// Add the initial rings.
@@ -67,9 +84,6 @@ var BC = (function(parent) {
 
 		var chainManager = BC.Cell.Chain.makeManager();
 		var dropManager = BC.Cell.Drop.makeManager(metrics);
-
-		var currentRing = 0;
-		var currentCell = metrics.numCells - 1;
 
 		function move(direction) {
 			switch (direction) {
@@ -218,8 +232,7 @@ var BC = (function(parent) {
 
 		function clearEmptyRings() {
 			while (rings.length > 0 && rings[0].isEmpty()) {
-				rings.shift();
-				currentRing--;
+				removeRing();
 			}
 		}
 
