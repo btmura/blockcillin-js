@@ -2,15 +2,11 @@ var BC = (function(parent) {
 
 	var my = parent.Stage = parent.Stage || {}
 
-	my.make = function(metrics) {
-		var translation = [0, 0, 0];
-		translation[1] -= metrics.numRings * metrics.ringHeight;
-		translation[1] += metrics.ringHeight / 2;
+	my.make = function(metrics, translationY) {
+		// Translate the stage up to the top of the ring.
+		translationY += metrics.ringHeight / 2;
 
-		var matrix = BC.Matrix.makeTranslation(
-				translation[0],
-				translation[1],
-				translation[2]);
+		var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
 
 		return {
 			matrix: matrix

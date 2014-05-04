@@ -6,7 +6,8 @@ var BC = (function(parent) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
-		var MAX_RISE_HEIGHT = metrics.ringHeight * 5;
+		var RING_CAPACITY = 11;
+		var MAX_RISE_HEIGHT = RING_CAPACITY * metrics.ringHeight;
 		var RISE_SPEED = 0.02;
 		var SWAP_DURATION = 0.1;
 
@@ -14,8 +15,6 @@ var BC = (function(parent) {
 		for (var i = 0; i < metrics.numRings; i++) {
 			rings[i] = BC.Ring.make(i, metrics);
 		}
-
-		var totalHeight = metrics.numRings * metrics.ringHeight;
 
 		var board = {
 			metrics: metrics,
@@ -34,13 +33,25 @@ var BC = (function(parent) {
 		var currentRing = 0;
 		var currentCell = metrics.numCells - 1;
 
+		// How much to go down before hitting the stage where new rings appear.
+		var stageTranslationY = RING_CAPACITY / 2 * -metrics.ringHeight - metrics.ringHeight / 2;
+
+		// How much to initially rise to show the starting rings.
+		var riseTranslationY = metrics.ringHeight * metrics.numRings;
+
+		// Set the initial board translation to show the starting rings.
+		var translationY = stageTranslationY + riseTranslationY;
+
+		// Translation of the board. Y is increased over time.
+		var translation = [0, translationY, 0];
+
+		// Rotation of the board. Rotated on te z-axi- by the selector.
 		var rotation = [0, 0, 0];
-		var translation = [0, 0, 0];
 
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
 
-		var stage = BC.Stage.make(metrics);
+		var stage = BC.Stage.make(metrics, stageTranslationY);
 		board.stage = stage;
 
 		var chainManager = BC.Cell.Chain.makeManager();
@@ -176,12 +187,12 @@ var BC = (function(parent) {
 
 		function updateBoardTranslation(watch) {
 			var translationDelta = RISE_SPEED * watch.deltaTime;
-			if (translation[1] + translationDelta > MAX_RISE_HEIGHT) {
-				translationDelta = MAX_RISE_HEIGHT - translation[1];
+			if (riseTranslationY + translationDelta > MAX_RISE_HEIGHT) {
+				translationDelta = MAX_RISE_HEIGHT - riseTranslationY;
 			}
 
+			riseTranslationY += translationDelta;
 			translation[1] += translationDelta;
-			totalHeight += translationDelta;
 
 			// TODO(btmura): consolidate to BC.Matrix.makeTranslation(array)
 			board.translationMatrix = BC.Matrix.makeTranslation(
@@ -192,7 +203,7 @@ var BC = (function(parent) {
 
 		function addNecessaryRings() {
 			var totalRingHeight = metrics.ringHeight * rings.length;
-			var gap = totalHeight - totalRingHeight;
+			var gap = riseTranslationY - totalRingHeight;
 			var newRingCount = Math.ceil(gap / metrics.ringHeight);
 			for (var i = 0; i < newRingCount; i++) {
 				var newRing = BC.Ring.make(rings.length, metrics);
