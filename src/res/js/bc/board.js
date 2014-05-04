@@ -11,27 +11,24 @@ var BC = (function(parent) {
 		var RISE_SPEED = 0.02;
 		var SWAP_DURATION = 0.1;
 
+		// Rings of cells on the board that are added and removed throughout the game.
 		var rings = [];
-		for (var ringIndex = 0; ringIndex < metrics.numRings; ringIndex++) {
-			rings[ringIndex] = BC.Ring.make(ringIndex, metrics);
+
+		// Increasing counter used to translate each new ring relative to the board.
+		var ringIndex = 0;
+
+		// Adds a new ring and increments the ring index counter.
+		function addRing() {
+			var translationY = -metrics.ringHeight * ringIndex;
+			var newRing = BC.Ring.make(metrics, translationY);
+			rings.push(newRing);
+			ringIndex++;
 		}
 
-		var board = {
-			metrics: metrics,
-			rings: rings,
-
-			// Split rotation and translation to render the selector in a fixed position.
-			rotationMatrix: BC.Matrix.identity,
-			translationMatrix: BC.Matrix.identity,
-
-			move: move,
-			rotate: rotate,
-			swap: swap,
-			update: update
-		};
-
-		var currentRing = 0;
-		var currentCell = metrics.numCells - 1;
+		// Add the initial rings.
+		for (var i = 0; i < metrics.numRings; i++) {
+			addRing();
+		}
 
 		// How much to go down before hitting the stage where new rings appear.
 		var stageTranslationY = RING_CAPACITY / 2 * -metrics.ringHeight - metrics.ringHeight / 2;
@@ -48,6 +45,20 @@ var BC = (function(parent) {
 		// Rotation of the board. Rotated on te z-axi- by the selector.
 		var rotation = [0, 0, 0];
 
+		var board = {
+			metrics: metrics,
+			rings: rings,
+
+			// Split rotation and translation to render the selector in a fixed position.
+			rotationMatrix: BC.Matrix.identity,
+			translationMatrix: BC.Matrix.identity,
+
+			move: move,
+			rotate: rotate,
+			swap: swap,
+			update: update
+		};
+
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
 
@@ -56,6 +67,9 @@ var BC = (function(parent) {
 
 		var chainManager = BC.Cell.Chain.makeManager();
 		var dropManager = BC.Cell.Drop.makeManager(metrics);
+
+		var currentRing = 0;
+		var currentCell = metrics.numCells - 1;
 
 		function move(direction) {
 			switch (direction) {
@@ -214,8 +228,7 @@ var BC = (function(parent) {
 			var gap = riseTranslationY - totalRingHeight;
 			var newRingCount = Math.ceil(gap / metrics.ringHeight);
 			for (var i = 0; i < newRingCount; i++) {
-				var newRing = BC.Ring.make(ringIndex++, metrics);
-				rings.push(newRing);
+				addRing();
 			}
 		}
 
