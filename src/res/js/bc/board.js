@@ -15,6 +15,21 @@ var BC = (function(parent) {
 		var currentRing = 0;
 		var currentCell = metrics.numCells - 1;
 
+		// How much to go down before hitting the stage where new rings appear.
+		var stageTranslationY = RING_CAPACITY / 2 * -metrics.ringHeight - metrics.ringHeight / 2;
+
+		// How much the topmost ring has risen. Can't exceed the MAX_RISE_HEIGHT or game is over.
+		var riseHeight = metrics.ringHeight * metrics.numRings;
+
+		// Set the initial board translation to show the starting rings.
+		var translationY = stageTranslationY + riseHeight;
+
+		// Translation of the board. Y is increased over time.
+		var translation = [0, translationY, 0];
+
+		// Rotation of the board. Rotated on te z-axi- by the selector.
+		var rotation = [0, 0, 0];
+
 		// Rings of cells on the board that are added and removed throughout the game.
 		var rings = [];
 
@@ -39,6 +54,7 @@ var BC = (function(parent) {
 		function removeRing() {
 			rings.shift();
 			ringTranslations.shift();
+			riseHeight -= metrics.ringHeight;
 			currentRing--;
 		}
 
@@ -46,21 +62,6 @@ var BC = (function(parent) {
 		for (var i = 0; i < metrics.numRings; i++) {
 			addRing();
 		}
-
-		// How much to go down before hitting the stage where new rings appear.
-		var stageTranslationY = RING_CAPACITY / 2 * -metrics.ringHeight - metrics.ringHeight / 2;
-
-		// How much to initially rise to show the starting rings.
-		var riseTranslationY = metrics.ringHeight * metrics.numRings;
-
-		// Set the initial board translation to show the starting rings.
-		var translationY = stageTranslationY + riseTranslationY;
-
-		// Translation of the board. Y is increased over time.
-		var translation = [0, translationY, 0];
-
-		// Rotation of the board. Rotated on te z-axi- by the selector.
-		var rotation = [0, 0, 0];
 
 		var board = {
 			metrics: metrics,
@@ -201,6 +202,7 @@ var BC = (function(parent) {
 
 			clearEmptyRings();
 			addNecessaryRings();
+			checkForGameOver();
 		}
 
 		function updateBoardRotation() {
@@ -216,11 +218,11 @@ var BC = (function(parent) {
 
 		function updateBoardTranslation(watch) {
 			var translationDelta = RISE_SPEED * watch.deltaTime;
-			if (riseTranslationY + translationDelta > MAX_RISE_HEIGHT) {
-				translationDelta = MAX_RISE_HEIGHT - riseTranslationY;
+			if (riseHeight + translationDelta > MAX_RISE_HEIGHT) {
+				translationDelta = MAX_RISE_HEIGHT - riseHeight;
 			}
 
-			riseTranslationY += translationDelta;
+			riseHeight += translationDelta;
 			translation[1] += translationDelta;
 
 			// TODO(btmura): consolidate to BC.Matrix.makeTranslation(array)
@@ -238,10 +240,16 @@ var BC = (function(parent) {
 
 		function addNecessaryRings() {
 			var totalRingHeight = metrics.ringHeight * rings.length;
-			var gap = riseTranslationY - totalRingHeight;
+			var gap = riseHeight - totalRingHeight;
 			var newRingCount = Math.ceil(gap / metrics.ringHeight);
 			for (var i = 0; i < newRingCount; i++) {
 				addRing();
+			}
+		}
+
+		function checkForGameOver() {
+			if (riseHeight >= MAX_RISE_HEIGHT) {
+				BC.Util.log("GAME OVER");
 			}
 		}
 
