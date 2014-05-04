@@ -16,19 +16,19 @@ var BC = (function(parent) {
 		BLOCK_CLEARING_IN_PROGRESS: 8
 	};
 
-	my.make = function(cellIndex, metrics) {
+	my.make = function(metrics, rotationY) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
 		var FLICKER_DURATION = 0.5;
 		var FREEZE_DURATION = 0.25;
 		var FADE_OUT_DURATION = 0.25;
+		var ROTATION_Y_DELTA = BC.Math.sliceRadians(metrics.numCells);
 
 		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
 		var animations = [];
 
-		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
-		var rotation = [0, cellIndex * ringRotationY, 0];
+		var rotation = [0, rotationY, 0];
 		var translation = [0, 0, 0];
 		var matrix = BC.Matrix.makeYRotation(rotation[1]);
 
@@ -129,11 +129,11 @@ var BC = (function(parent) {
 
 			switch (direction) {
 				case Direction.LEFT:
-					rotation[1] -= ringRotationY;
+					rotation[1] -= ROTATION_Y_DELTA;
 					break;
 
 				case Direction.RIGHT:
-					rotation[1] += ringRotationY;
+					rotation[1] += ROTATION_Y_DELTA;
 					break;
 
 				case Direction.UP:
@@ -153,7 +153,7 @@ var BC = (function(parent) {
 			animations.push(BC.Animation.make({
 				duration: duration,
 				updateCallback: function(watch) {
-					var rotationDelta = ringRotationY * watch.deltaPercent;
+					var rotationDelta = ROTATION_Y_DELTA * watch.deltaPercent;
 					var translationDelta = metrics.ringHeight * watch.deltaPercent;
 					switch (direction) {
 						case Direction.LEFT:
