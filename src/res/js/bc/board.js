@@ -77,6 +77,8 @@ var BC = (function(parent) {
 			update: update
 		};
 
+		updateBoardMatrices();
+
 		var selector = BC.Selector.make(metrics, board);
 		board.selector = selector;
 
@@ -187,22 +189,51 @@ var BC = (function(parent) {
 				}
 			}
 
+			// Whether to raise the board.
+			var stopRising = false;
+
 			// 2nd pass - find new chains and update the board
-			chainManager.update(board);
+			stopRising |= chainManager.update(board);
 
 			// 3rd pass - find new dropping blocks and update the board
-			dropManager.update(board);
+			stopRising |= dropManager.update(board);
+
+			if (!stopRising) {
+				raiseBoard(watch);
+			}
 
 			// Update selector which might have rotated the board.
 			selector.update(watch);
 
-			// Update the board's matrices once the dust has cleared.
-			updateBoardRotation();
-			updateBoardTranslation(watch);
+			// Update the board matrices.
+			updateBoardMatrices();
 
 			clearEmptyRings();
 			addNecessaryRings();
 			checkForGameOver();
+		}
+
+		function raiseBoard(watch, rise) {
+			var translationDelta = RISE_SPEED * watch.deltaTime;
+			if (riseHeight + translationDelta > MAX_RISE_HEIGHT) {
+				translationDelta = MAX_RISE_HEIGHT - riseHeight;
+			}
+
+			riseHeight += translationDelta;
+			translation[1] += translationDelta;
+		}
+
+		function updateBoardMatrices() {
+			updateBoardTranslation();
+			updateBoardRotation();
+		}
+
+		function updateBoardTranslation() {
+			// TODO(btmura): consolidate to BC.Matrix.makeTranslation(array)
+			board.translationMatrix = BC.Matrix.makeTranslation(
+					translation[0],
+					translation[1],
+					translation[2]);
 		}
 
 		function updateBoardRotation() {
@@ -214,22 +245,6 @@ var BC = (function(parent) {
 			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
 			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
 			board.rotationMatrix = matrix;
-		}
-
-		function updateBoardTranslation(watch) {
-			var translationDelta = RISE_SPEED * watch.deltaTime;
-			if (riseHeight + translationDelta > MAX_RISE_HEIGHT) {
-				translationDelta = MAX_RISE_HEIGHT - riseHeight;
-			}
-
-			riseHeight += translationDelta;
-			translation[1] += translationDelta;
-
-			// TODO(btmura): consolidate to BC.Matrix.makeTranslation(array)
-			board.translationMatrix = BC.Matrix.makeTranslation(
-					translation[0],
-					translation[1],
-					translation[2]);
 		}
 
 		function clearEmptyRings() {

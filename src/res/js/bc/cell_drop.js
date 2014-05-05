@@ -15,6 +15,9 @@ var BC = (function(parent) {
 					updateBlockDrops(board, i, j);
 				}
 			}
+
+			// TODO(btmura): return true when there are blocks dropping
+			return false;
 		}
 
 		function updateBlockDrops(board, row, col) {

@@ -290,6 +290,8 @@ var BC = (function(parent) {
 					chainQueue.shift();
 				}
 			}
+
+			return chainQueue.length > 0;
 		}
 
 		return {
