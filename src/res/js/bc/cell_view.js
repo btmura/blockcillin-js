@@ -6,6 +6,8 @@ var BC = (function(parent) {
 	my.make = function(gl, metrics, tiles) {
 		var CellState = BC.Cell.CellState;
 
+		var NUM_FACES = 6;
+
 		var numSlices = metrics.numCells;
 		var innerRadius = metrics.ringInnerRadius;
 		var outerRadius = metrics.ringOuterRadius;
@@ -15,9 +17,6 @@ var BC = (function(parent) {
 		var offset = -Math.PI / 2;
 		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices, offset);
 		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices, offset);
-
-		// Number of cube faces that will be drawn. No bottom cause nobody sees it.
-		var numFaces = 5;
 
 		var i = 0;
 		var p = 0;
@@ -41,6 +40,24 @@ var BC = (function(parent) {
 		points[i++] = innerCirclePoints[np];
 		points[i++] = maxY;
 		points[i++] = -innerCirclePoints[np + 1];
+
+		// BOTTOM FACE
+
+		points[i++] = outerCirclePoints[p];
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[p + 1];
+
+		points[i++] = innerCirclePoints[p];
+		points[i++] = minY;
+		points[i++] = -innerCirclePoints[p + 1];
+
+		points[i++] = innerCirclePoints[np];
+		points[i++] = minY;
+		points[i++] = -innerCirclePoints[np + 1];
+
+		points[i++] = outerCirclePoints[np];
+		points[i++] = minY;
+		points[i++] = -outerCirclePoints[np + 1];
 
 		// LEFT FACE
 
@@ -123,19 +140,23 @@ var BC = (function(parent) {
 		for (var i = 0; i < tiles.length; i++) {
 			var tile = tiles[i];
 			textureCoords[i] = [];
-			for (var j = 0, k = 0; j < numFaces; j++) {
+			for (var j = 0, k = 0; j < NUM_FACES; j++) {
+				// UPPER LEFT
 				var tc = tile.textureCoord(0, 0);
 				textureCoords[i][k++] = tc[0];
 				textureCoords[i][k++] = tc[1];
 
+				// LOWER LEFT
 				tc = tile.textureCoord(0, 1);
 				textureCoords[i][k++] = tc[0];
 				textureCoords[i][k++] = tc[1];
 
+				// LOWER RIGHT
 				tc = tile.textureCoord(1, 1);
 				textureCoords[i][k++] = tc[0];
 				textureCoords[i][k++] = tc[1];
 
+				// UPPER RIGHT
 				tc = tile.textureCoord(1, 0);
 				textureCoords[i][k++] = tc[0];
 				textureCoords[i][k++] = tc[1];
@@ -154,21 +175,25 @@ var BC = (function(parent) {
 			0, 1, 2,
 			0, 2, 3,
 
-			// LEFT FACE
+			// BOTTOM FACE
 			4, 5, 6,
 			4, 6, 7,
 
-			// RIGHT FACE
+			// LEFT FACE
 			8, 9, 10,
 			8, 10, 11,
 
-			// OUTER RADIUS FACE
+			// RIGHT FACE
 			12, 13, 14,
 			12, 14, 15,
 
-			// INNER RADIUS FACE
+			// OUTER RADIUS FACE
 			16, 17, 18,
-			16, 18, 19
+			16, 18, 19,
+
+			// INNER RADIUS FACE
+			20, 21, 22,
+			20, 22, 23
 
 		]);
 
