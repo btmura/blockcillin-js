@@ -3,35 +3,21 @@ var BC = (function(parent) {
 	var module = parent.Board = parent.Board || {}
 	var my = module.View = module.View || {}
 
-	my.make = function(board, gl, programLocations) {
+	my.make = function(args) {
+		var board = args.board;
+		var gl = args.gl;
+		var programLocations = args.programLocations;
+		var resources = args.resources;
+
 		var boardRotationMatrixLocation = programLocations.boardRotationMatrixLocation;
 		var boardTranslationMatrixLocation = programLocations.boardTranslationMatrixLocation;
 		var selectorMatrixLocation = programLocations.selectorMatrixLocation;
 		var ringMatrixLocation = programLocations.ringMatrixLocation;
 		var cellMatrixLocation = programLocations.cellMatrixLocation;
 
-		var tileSet = BC.GL.textureTileSet(8, 8, 0.002);
-		var blockTextureTiles = [
-			tileSet.tile(0, 0), // red
-			tileSet.tile(0, 1), // green
-			tileSet.tile(0, 2), // cyan
-			tileSet.tile(0, 3), // magenta
-			tileSet.tile(0, 4), // yellow
-			tileSet.tile(0, 5), // blue
-
-			tileSet.tile(2, 0), // red
-			tileSet.tile(2, 1), // green
-			tileSet.tile(2, 2), // cyan
-			tileSet.tile(2, 3), // magenta
-			tileSet.tile(2, 4), // yellow
-			tileSet.tile(2, 5)  // blue
-		];
-		var selectorTextureTile = tileSet.tile(4, 0);
-		var blackTextureTile = tileSet.tile(4, 1);
-
-		var cellView = BC.Cell.View.make(gl, board.metrics, blockTextureTiles);
-		var selectorView = BC.Selector.View.make(gl, board.metrics, selectorTextureTile);
-		var stageView = BC.Stage.View.make(gl, board.metrics, blackTextureTile);
+		var cellView = BC.Cell.View.make(gl, board.metrics, resources.blockTextureTiles);
+		var selectorView = BC.Selector.View.make(gl, board.metrics, resources.selectorTextureTile);
+		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
 
 		function draw() {
 			drawRings();

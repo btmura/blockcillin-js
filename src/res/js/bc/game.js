@@ -120,8 +120,15 @@ var BC = (function(parent) {
 			ringHeight: 0.3
 		};
 
+		var resources = BC.Resources.make();
+
 		var board = BC.Board.make(metrics);
-		var boardView = BC.Board.View.make(board, gl, programLocations);
+		var boardView = BC.Board.View.make({
+			board: board,
+			gl: gl,
+			programLocations: programLocations,
+			resources: resources
+		});
 
 		var controller = BC.Controller.make(canvas);
 		controller.setMoveLeftListener(function() {
