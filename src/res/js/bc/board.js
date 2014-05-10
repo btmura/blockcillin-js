@@ -192,11 +192,11 @@ var BC = (function(parent) {
 			// Whether to raise the board.
 			var stopRising = false;
 
-			// 2nd pass - find new chains and update the board
-			stopRising |= chainManager.update(board);
-
-			// 3rd pass - find new dropping blocks and update the board
+			// 2nd pass - find new dropping blocks and update the board
 			stopRising |= dropManager.update(board);
+
+			// 3rd pass - find new chains and update the board
+			stopRising |= chainManager.update(board);
 
 			if (!stopRising) {
 				raiseBoard(watch);
