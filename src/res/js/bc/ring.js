@@ -2,7 +2,11 @@ var BC = (function(parent) {
 
 	var my = parent.Ring = parent.Ring || {}
 
-	my.make = function(metrics, translationY) {
+	my.make = function(args) {
+		var metrics = args.metrics;
+		var translationY = args.translationY;
+		var selectable = args.selectable;
+
 		// How much to rotate each cell by to form a ring of cells.
 		var RING_ROTATION_Y_DELTA = BC.Math.sliceRadians(metrics.numCells);
 
@@ -24,10 +28,20 @@ var BC = (function(parent) {
 			return true;
 		}
 
+		function setSelectable(newSelectable) {
+			selectable = newSelectable;
+		}
+
+		function isSelectable() {
+			return selectable;
+		}
+
 		return {
 			matrix: matrix,
 			cells: cells,
-			isEmpty: isEmpty
+			isEmpty: isEmpty,
+			setSelectable: setSelectable,
+			isSelectable: isSelectable
 		};
 	};
 

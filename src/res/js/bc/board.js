@@ -40,11 +40,15 @@ var BC = (function(parent) {
 		var ringIndex = 0;
 
 		// Adds a new ring and increments the ring index counter.
-		function addRing() {
+		function addRing(selectable) {
 			var translationY = -metrics.ringHeight * ringIndex;
 			ringTranslations.push(translationY);
 
-			var newRing = BC.Ring.make(metrics, translationY);
+			var newRing = BC.Ring.make({
+				metrics: metrics,
+				translationY: translationY,
+				selectable: selectable
+			});
 			rings.push(newRing);
 
 			ringIndex++;
@@ -60,7 +64,7 @@ var BC = (function(parent) {
 
 		// Add the initial rings.
 		for (var i = 0; i < metrics.numRings; i++) {
-			addRing();
+			addRing(true);
 		}
 
 		var board = {
@@ -133,7 +137,9 @@ var BC = (function(parent) {
 		}
 
 		function moveSelectorDown() {
-			if (currentRing + 1 < board.rings.length && selector.move(Direction.DOWN)) {
+			if (currentRing + 1 < board.rings.length
+					&& rings[currentRing + 1].isSelectable()
+					&& selector.move(Direction.DOWN)) {
 				currentRing++;
 			}
 		}
@@ -257,8 +263,24 @@ var BC = (function(parent) {
 			var totalRingHeight = metrics.ringHeight * rings.length;
 			var gap = riseHeight - totalRingHeight;
 			var newRingCount = Math.ceil(gap / metrics.ringHeight);
+
+			// Mark prior rings selectable since they are all visible.
+			if (newRingCount > 0) {
+				for (var i = rings.length - 1; i >= 0; i--) {
+					if (!rings[i].isSelectable()) {
+						rings[i].setSelectable(true);
+					} else {
+						// No need to check previously selectable rings.
+						break;
+					}
+				}
+			}
+
+			// Now add the new rings. If visible, mark them selectable.
 			for (var i = 0; i < newRingCount; i++) {
-				addRing();
+				gap -= metrics.ringHeight;
+				var selectable = gap >= 0;
+				addRing(selectable);
 			}
 		}
 
