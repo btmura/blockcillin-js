@@ -10,7 +10,7 @@ var BC = (function(parent) {
 		var ringMatrixLocation = programLocations.ringMatrixLocation;
 		var cellMatrixLocation = programLocations.cellMatrixLocation;
 
-		var tileSet = BC.GL.textureTileSet(4, 4, 0.002);
+		var tileSet = BC.GL.textureTileSet(8, 8, 0.002);
 		var blockTextureTiles = [
 			tileSet.tile(0, 0), // red
 			tileSet.tile(0, 1), // green
