@@ -10,6 +10,8 @@ var BC = (function(parent) {
 		var MAX_RISE_HEIGHT = RING_CAPACITY * metrics.ringHeight;
 		var RISE_SPEED = 0.02;
 		var SWAP_DURATION = 0.1;
+		var NUM_SPARE_RINGS = 2;
+		var SPARE_RING_HEIGHT = NUM_SPARE_RINGS * metrics.ringHeight;
 
 		// Keep track of the selector to know what cells to swap.
 		var currentRing = 0;
@@ -33,17 +35,12 @@ var BC = (function(parent) {
 		// Rings of cells on the board that are added and removed throughout the game.
 		var rings = [];
 
-		// Y-axis translations of the rings to check whether the game is over.
-		var ringTranslations = [];
-
 		// Increasing counter used to translate each new ring relative to the board.
 		var ringIndex = 0;
 
 		// Adds a new ring and increments the ring index counter.
 		function addRing(selectable) {
 			var translationY = -metrics.ringHeight * ringIndex;
-			ringTranslations.push(translationY);
-
 			var newRing = BC.Ring.make({
 				metrics: metrics,
 				translationY: translationY,
@@ -57,7 +54,6 @@ var BC = (function(parent) {
 		// Removes the topmost ring. We don't decrement the index counter.
 		function removeRing() {
 			rings.shift();
-			ringTranslations.shift();
 			riseHeight -= metrics.ringHeight;
 			currentRing--;
 		}
@@ -65,6 +61,11 @@ var BC = (function(parent) {
 		// Add the initial rings.
 		for (var i = 0; i < metrics.numRings; i++) {
 			addRing(true);
+		}
+
+		// Add the spare rings.
+		for (var i = 0; i < NUM_SPARE_RINGS; i++) {
+			addRing(false);
 		}
 
 		var board = {
@@ -214,8 +215,9 @@ var BC = (function(parent) {
 			// Update the board matrices.
 			updateBoardMatrices();
 
-			clearEmptyRings();
-			addNecessaryRings();
+			// Update
+			updateBoardRings();
+
 			checkForGameOver();
 		}
 
@@ -253,34 +255,32 @@ var BC = (function(parent) {
 			board.rotationMatrix = matrix;
 		}
 
-		function clearEmptyRings() {
+		function updateBoardRings() {
+			// Remove any rings at the top that are now empty.
 			while (rings.length > 0 && rings[0].isEmpty()) {
 				removeRing();
 			}
-		}
 
-		function addNecessaryRings() {
+			// Add rings till we hit hit the ground and then add some spare rings.
 			var totalRingHeight = metrics.ringHeight * rings.length;
 			var gap = riseHeight - totalRingHeight;
-			var newRingCount = Math.ceil(gap / metrics.ringHeight);
-
-			// Mark prior rings selectable since they are all visible.
-			if (gap >= 0) {
-				for (var i = rings.length - 1; i >= 0; i--) {
-					if (!rings[i].isSelectable()) {
-						rings[i].setSelectable(true);
-					} else {
-						// No need to check previously selectable rings.
-						break;
-					}
-				}
+			while (gap > -SPARE_RING_HEIGHT) {
+				addRing(false); // We will update the selectability later.
+				gap -= metrics.ringHeight;
 			}
 
-			// Now add the new rings. If visible, mark them selectable.
-			for (var i = 0; i < newRingCount; i++) {
-				gap -= metrics.ringHeight;
-				var selectable = gap >= 0;
-				addRing(selectable);
+			// Update ring selectability.
+			for (var i = rings.length - 1; i >= 0; i--) {
+				// Quit since everything above should already be selectable.
+				if (rings[i].isSelectable()) {
+					break;
+				}
+
+				// Make rings selectable if they are above the ground (== 0).
+				var bottom = riseHeight - metrics.ringHeight * (i + 1);
+				if (bottom >= 0) {
+					rings[i].setSelectable(true);
+				}
 			}
 		}
 
