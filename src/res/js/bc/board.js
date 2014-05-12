@@ -265,7 +265,7 @@ var BC = (function(parent) {
 			var newRingCount = Math.ceil(gap / metrics.ringHeight);
 
 			// Mark prior rings selectable since they are all visible.
-			if (newRingCount > 0) {
+			if (gap >= 0) {
 				for (var i = rings.length - 1; i >= 0; i--) {
 					if (!rings[i].isSelectable()) {
 						rings[i].setSelectable(true);

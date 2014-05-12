@@ -8,24 +8,29 @@ var BC = (function(parent) {
 		EMPTY_NO_DROP: 2,
 
 		BLOCK: 3,
-		BLOCK_RECEIVING: 4,
+		BLOCK_INCOMING: 4,
+		BLOCK_RECEIVING: 5,
 
-		BLOCK_CLEARING_MARKED: 5,
-		BLOCK_CLEARING_PREPARING: 6,
-		BLOCK_CLEARING_READY: 7,
-		BLOCK_CLEARING_IN_PROGRESS: 8
+		BLOCK_CLEARING_MARKED: 6,
+		BLOCK_CLEARING_PREPARING: 7,
+		BLOCK_CLEARING_READY: 8,
+		BLOCK_CLEARING_IN_PROGRESS: 9
 	};
 
-	my.make = function(metrics, rotationY) {
+	my.make = function(args) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
+
+		var metrics = args.metrics;
+		var rotationY = args.rotationY;
+		var state = args.state;
+		var blockStyle = args.blockStyle;
 
 		var FLICKER_DURATION = 0.5;
 		var FREEZE_DURATION = 0.25;
 		var FADE_OUT_DURATION = 0.25;
 		var ROTATION_Y_DELTA = BC.Math.sliceRadians(metrics.numCells);
 
-		var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
 		var animations = [];
 
 		var rotation = [0, rotationY, 0];
@@ -34,7 +39,7 @@ var BC = (function(parent) {
 
 		var cell = {
 			matrix: matrix,
-			state: CellState.BLOCK,
+			state: state,
 			blockStyle: blockStyle,
 			yellowBoost: 0,
 			alpha: 1,
