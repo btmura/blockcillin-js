@@ -32,6 +32,7 @@ var BC = (function(parent) {
 		var ROTATION_Y_DELTA = BC.Math.sliceRadians(metrics.numCells);
 
 		var animations = [];
+		var droppingBlock = false;
 
 		var rotation = [0, rotationY, 0];
 		var translation = [0, 0, 0];
@@ -52,6 +53,7 @@ var BC = (function(parent) {
 			isClearing: isClearing,
 			isDrawable : isDrawable,
 			isTransparent: isTransparent,
+			hasDroppingBlock: hasDroppingBlock,
 			update: update
 		};
 
@@ -143,6 +145,8 @@ var BC = (function(parent) {
 
 				case Direction.UP:
 					translation[1] = metrics.ringHeight;
+					// TODO(btmura): add a specific method to handle drops
+					droppingBlock = true;
 					break;
 
 				default:
@@ -179,6 +183,7 @@ var BC = (function(parent) {
 				},
 				finishCallback: function() {
 					cell.state = CellState.BLOCK;
+					droppingBlock = false;
 				}
 			}));
 		}
@@ -198,6 +203,10 @@ var BC = (function(parent) {
 
 		function isTransparent() {
 			return cell.state === CellState.BLOCK_CLEARING_IN_PROGRESS;
+		}
+
+		function hasDroppingBlock() {
+			return droppingBlock;
 		}
 
 		function update(watch) {
