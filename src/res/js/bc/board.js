@@ -218,7 +218,7 @@ var BC = (function(parent) {
 			// Update
 			updateBoardRings();
 
-			checkForGameOver();
+			return isGameOver();
 		}
 
 		function raiseBoard(watch, rise) {
@@ -284,10 +284,8 @@ var BC = (function(parent) {
 			}
 		}
 
-		function checkForGameOver() {
-			if (riseHeight >= MAX_RISE_HEIGHT) {
-				BC.Util.log("GAME OVER");
-			}
+		function isGameOver() {
+			return riseHeight >= MAX_RISE_HEIGHT;
 		}
 
 		function getCell(row, col) {

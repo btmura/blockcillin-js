@@ -5,12 +5,14 @@ var BC = (function(parent) {
 	my.run = function() {
 		var MAIN_MENU_GAME_TITLE = "blockcillin";
 		var MAIN_MENU_PAUSED_TITLE = "PAUSED";
+		var MAIN_MENU_GAME_OVER_TITLE = "GAME OVER";
 		var MENU_DURATION = "fast";
 
 		var Direction = BC.Constants.Direction;
 
 		var started = false;
 		var paused = false;
+		var gameOver = false;
 
 		var mainMenu = $("#main-menu");
 		var mainMenuTitle = $("#main-menu-title");
@@ -166,6 +168,7 @@ var BC = (function(parent) {
 
 		function startGame() {
 			started = true;
+			gameOver = false;
 
 			board = BC.Board.make(metrics);
 			boardView = BC.Board.View.make({
@@ -213,23 +216,39 @@ var BC = (function(parent) {
 
 			watch.tick();
 
-			board.update(watch);
+			gameOver = board.update(watch);
 			boardView.draw();
 
-			if (!paused) {
+			if (!paused && !gameOver) {
 				requestAnimationFrame(drawFrame);
+			}
+
+			if (gameOver) {
+				started = false;
+				paushed = false;
+				showMainMenu(true);
 			}
 		}
 
 		function showMainMenu(show) {
 			if (show) {
-				mainMenuTitle.text(started ? MAIN_MENU_PAUSED_TITLE : MAIN_MENU_GAME_TITLE);
+				mainMenuTitle.text(getMainMenuTitle());
 				setVisible(continueGameButton, started);
 				mainMenu.fadeIn(MENU_DURATION);
 				gameMenu.fadeOut(MENU_DURATION);
 			} else {
 				mainMenu.fadeOut(MENU_DURATION);
 				gameMenu.fadeIn(MENU_DURATION);
+			}
+		}
+
+		function getMainMenuTitle() {
+			if (gameOver) {
+				return MAIN_MENU_GAME_OVER_TITLE;
+			} else if (paused) {
+				return MAIN_MENU_PAUSED_TITLE;
+			} else {
+				return MAIN_MENU_GAME_TITLE;
 			}
 		}
 
