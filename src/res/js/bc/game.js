@@ -120,6 +120,12 @@ var BC = (function(parent) {
 			startGame();
 		});
 
+		var continueGameButton = $("#continue-game-button");
+		continueGameButton.hide();
+		continueGameButton.click(function() {
+			resumeGame();
+		});
+
 		var controller = BC.Controller.make(canvas);
 		controller.setMenuActionListener(function() {
 			if (!paused) {
@@ -135,6 +141,8 @@ var BC = (function(parent) {
 		var boardView;
 
 		function startGame() {
+			continueGameButton.show();
+
 			var metrics = {
 				numRings: 3,
 				numCells: 24,
