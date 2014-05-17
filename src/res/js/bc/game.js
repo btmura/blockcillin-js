@@ -3,12 +3,26 @@ var BC = (function(parent) {
 	var my = parent.Game = parent.Game || {}
 
 	my.run = function() {
+		var MENU_DURATION = "fast";
+
 		var Direction = BC.Constants.Direction;
+
+		var started = false;
+		var paused = false;
+
+		var gameMenu = $("#game-menu");
+		var newGameButton = $("#new-game-button");
+		var continueGameButton = $("#continue-game-button");
+
+		var board;
+		var boardView;
 
 		var canvas = document.getElementById("canvas");
 		if (!canvas) {
 			return;
 		}
+
+		var controller = BC.Controller.make(canvas);
 
 		var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 		if (!gl) {
@@ -37,8 +51,8 @@ var BC = (function(parent) {
 		gl.enable(gl.BLEND);
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-		var vertexShader = BC.GL.loadShader(gl, 'vertex-shader', gl.VERTEX_SHADER);
-		var fragmentShader = BC.GL.loadShader(gl, 'fragment-shader', gl.FRAGMENT_SHADER);
+		var vertexShader = BC.GL.loadShader(gl, "vertex-shader", gl.VERTEX_SHADER);
+		var fragmentShader = BC.GL.loadShader(gl, "fragment-shader", gl.FRAGMENT_SHADER);
 		var program = BC.GL.createProgram(gl, [vertexShader, fragmentShader]);
 		gl.useProgram(program);
 
@@ -111,22 +125,14 @@ var BC = (function(parent) {
 		var viewMatrix = makeViewMatrix();
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
-		var gameMenu = $("#game-menu");
-		var canvasElement = $("#canvas");
-
-		var newGameButton = $("#new-game-button");
 		newGameButton.click(function() {
-			gameMenu.hide();
 			startGame();
 		});
 
-		var continueGameButton = $("#continue-game-button");
-		continueGameButton.hide();
 		continueGameButton.click(function() {
 			resumeGame();
 		});
 
-		var controller = BC.Controller.make(canvas);
 		controller.setMenuActionListener(function() {
 			if (!paused) {
 				pauseGame();
@@ -135,13 +141,10 @@ var BC = (function(parent) {
 			}
 		});
 
-		var paused = false;
-
-		var board;
-		var boardView;
+		showMainMenu(true);
 
 		function startGame() {
-			continueGameButton.show();
+			started = true;
 
 			var metrics = {
 				numRings: 3,
@@ -183,12 +186,12 @@ var BC = (function(parent) {
 
 		function pauseGame() {
 			paused = true;
-			gameMenu.show();
+			showMainMenu(true);
 		}
 
 		function resumeGame() {
 			paused = false;
-			gameMenu.hide();
+			showMainMenu(false);
 
 			var watch = BC.StopWatch.make();
 			function drawScene() {
@@ -207,6 +210,23 @@ var BC = (function(parent) {
 			}
 
 			drawScene();
+		}
+
+		function showMainMenu(show) {
+			if (show) {
+				setVisible(continueGameButton, started);
+				gameMenu.fadeIn(MENU_DURATION);
+			} else {
+				gameMenu.fadeOut(MENU_DURATION);
+			}
+		}
+
+		function setVisible(element, show) {
+			if (show) {
+				element.show();
+			} else {
+				element.hide();
+			}
 		}
 	}
 
