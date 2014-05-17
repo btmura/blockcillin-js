@@ -6,8 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="css/game.css">
 	</head>
 	<body>
-		{{template "menu" .}}
-		{{template "game-menu"}}
+		{{template "game-menu" .}}
 		<canvas id="canvas"></canvas>
 		{{if .Compiled}}
 			{{template "bc-compiled"}}
