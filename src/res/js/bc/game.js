@@ -14,6 +14,9 @@ var BC = (function(parent) {
 		var newGameButton = $("#new-game-button");
 		var continueGameButton = $("#continue-game-button");
 
+		var gameMenu = $("#game-menu");
+		var menuButton = $("#menu-button");
+
 		var metrics = {
 			numRings: 3,
 			numCells: 24,
@@ -136,12 +139,18 @@ var BC = (function(parent) {
 		var viewMatrix = makeViewMatrix();
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
+		showMainMenu(true);
+
 		newGameButton.click(function() {
 			startGame();
 		});
 
 		continueGameButton.click(function() {
 			resumeGame();
+		});
+
+		menuButton.click(function() {
+			pauseGame();
 		});
 
 		controller.setMenuActionListener(function() {
@@ -151,8 +160,6 @@ var BC = (function(parent) {
 				resumeGame();
 			}
 		});
-
-		showMainMenu(true);
 
 		function startGame() {
 			started = true;
@@ -215,8 +222,10 @@ var BC = (function(parent) {
 			if (show) {
 				setVisible(continueGameButton, started);
 				mainMenu.fadeIn(MENU_DURATION);
+				gameMenu.fadeOut(MENU_DURATION);
 			} else {
 				mainMenu.fadeOut(MENU_DURATION);
+				gameMenu.fadeIn(MENU_DURATION);
 			}
 		}
 
