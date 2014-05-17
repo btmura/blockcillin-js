@@ -4,7 +4,7 @@ body {
 }
 
 #main-menu {
-	background: rgba(20, 20, 20, 0.75);
+	background: rgba(0, 0, 0, 0.75);
 	height: 100%;
 }
 
@@ -43,10 +43,13 @@ body {
 	white-space: nowrap;
 }
 
-.menu ul {
+#main-menu ul {
 	background: rgba(0, 0, 0, 0.5);
 	border: 1px solid rgb(100, 0, 0);
-	border-radius: 5px;
+	border-radius: 10px;
+}
+
+.menu ul {
 	list-style: none;
 	margin: 10px;
 	padding: 0px;
@@ -54,10 +57,10 @@ body {
 
 .menu li {
 	background: rgb(50, 50, 50);
-	border-radius: 5px;
+	border-radius: 10px;
 	cursor: pointer;
-	margin: 5px;
-	padding: 5px;
+	margin: 10px;
+	padding: 10px;
 }
 
 .menu li:hover {
@@ -66,6 +69,7 @@ body {
 
 .menu #links {
 	font-size: 0.75em;
+	margin-top: 20px;
 }
 
 #canvas {
