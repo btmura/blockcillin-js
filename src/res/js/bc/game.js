@@ -10,7 +10,7 @@ var BC = (function(parent) {
 		var started = false;
 		var paused = false;
 
-		var gameMenu = $("#game-menu");
+		var mainMenu = $("#main-menu");
 		var newGameButton = $("#new-game-button");
 		var continueGameButton = $("#continue-game-button");
 
@@ -214,9 +214,9 @@ var BC = (function(parent) {
 		function showMainMenu(show) {
 			if (show) {
 				setVisible(continueGameButton, started);
-				gameMenu.fadeIn(MENU_DURATION);
+				mainMenu.fadeIn(MENU_DURATION);
 			} else {
-				gameMenu.fadeOut(MENU_DURATION);
+				mainMenu.fadeOut(MENU_DURATION);
 			}
 		}
 
