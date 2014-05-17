@@ -3,6 +3,8 @@ var BC = (function(parent) {
 	var my = parent.Game = parent.Game || {}
 
 	my.run = function() {
+		var MAIN_MENU_GAME_TITLE = "blockcillin";
+		var MAIN_MENU_PAUSED_TITLE = "PAUSED";
 		var MENU_DURATION = "fast";
 
 		var Direction = BC.Constants.Direction;
@@ -11,6 +13,7 @@ var BC = (function(parent) {
 		var paused = false;
 
 		var mainMenu = $("#main-menu");
+		var mainMenuTitle = $("#main-menu-title");
 		var newGameButton = $("#new-game-button");
 		var continueGameButton = $("#continue-game-button");
 
@@ -220,6 +223,7 @@ var BC = (function(parent) {
 
 		function showMainMenu(show) {
 			if (show) {
+				mainMenuTitle.text(started ? MAIN_MENU_PAUSED_TITLE : MAIN_MENU_GAME_TITLE);
 				setVisible(continueGameButton, started);
 				mainMenu.fadeIn(MENU_DURATION);
 				gameMenu.fadeOut(MENU_DURATION);
