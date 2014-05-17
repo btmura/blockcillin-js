@@ -117,15 +117,22 @@ var BC = (function(parent) {
 		var newGameButton = $("#new-game-button");
 		newGameButton.click(function() {
 			gameMenu.hide();
-			canvasElement.show();
 			startGame();
 		});
 
 		var controller = BC.Controller.make(canvas);
 		controller.setMenuActionListener(function() {
-			gameMenu.show();
-			canvasElement.hide();
+			if (!paused) {
+				pauseGame();
+			} else {
+				resumeGame();
+			}
 		});
+
+		var paused = false;
+
+		var board;
+		var boardView;
 
 		function startGame() {
 			var metrics = {
@@ -139,8 +146,8 @@ var BC = (function(parent) {
 
 			var resources = BC.Resources.make();
 
-			var board = BC.Board.make(metrics);
-			var boardView = BC.Board.View.make({
+			board = BC.Board.make(metrics);
+			boardView = BC.Board.View.make({
 				board: board,
 				gl: gl,
 				programLocations: programLocations,
@@ -163,8 +170,19 @@ var BC = (function(parent) {
 				board.swap();
 			});
 
-			var watch = BC.StopWatch.make();
+			resumeGame();
+		}
 
+		function pauseGame() {
+			paused = true;
+			gameMenu.show();
+		}
+
+		function resumeGame() {
+			paused = false;
+			gameMenu.hide();
+
+			var watch = BC.StopWatch.make();
 			function drawScene() {
 				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 				gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -175,7 +193,9 @@ var BC = (function(parent) {
 				board.update(watch);
 				boardView.draw();
 
-				requestAnimationFrame(drawScene);
+				if (!paused) {
+					requestAnimationFrame(drawScene);
+				}
 			}
 
 			drawScene();
