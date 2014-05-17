@@ -8,6 +8,7 @@ var BC = (function(parent) {
 		var moveUpCallback = function() {};
 		var moveDownCallback = function() {};
 		var primaryActionCallback = function() {};
+		var menuActionCallback = function() {};
 
 		function setMoveLeft(callback) {
 			moveLeftCallback = callback;
@@ -29,12 +30,12 @@ var BC = (function(parent) {
 			primaryActionCallback = callback;
 		}
 
+		function setMenuAction(callback) {
+			menuActionCallback = callback;
+		}
+
 		$(document).keydown(function(event) {
 			switch (event.keyCode) {
-				case 32: // space
-					primaryActionCallback.call();
-					break;
-
 				case 37: // left
 					moveLeftCallback.call();
 					break;
@@ -49,6 +50,18 @@ var BC = (function(parent) {
 
 				case 40: // down
 					moveDownCallback.call();
+					break;
+
+				case 32: // space
+					primaryActionCallback.call();
+					break;
+
+				case 27: // esc
+					menuActionCallback.call();
+					break;
+
+				default:
+					console.log(event.keyCode);
 					break;
 			}
 			return false;
@@ -91,7 +104,8 @@ var BC = (function(parent) {
 			setMoveRightListener: setMoveRight,
 			setMoveUpListener: setMoveUp,
 			setMoveDownListener: setMoveDown,
-			setPrimaryActionListener: setPrimaryAction
+			setPrimaryActionListener: setPrimaryAction,
+			setMenuActionListener: setMenuAction
 		};
 	};
 

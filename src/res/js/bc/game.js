@@ -111,10 +111,20 @@ var BC = (function(parent) {
 		var viewMatrix = makeViewMatrix();
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
+		var gameMenu = $("#game-menu");
+		var canvasElement = $("#canvas");
+
 		var newGameButton = $("#new-game-button");
 		newGameButton.click(function() {
-			newGameButton.hide();
+			gameMenu.hide();
+			canvasElement.show();
 			startGame();
+		});
+
+		var controller = BC.Controller.make(canvas);
+		controller.setMenuActionListener(function() {
+			gameMenu.show();
+			canvasElement.hide();
 		});
 
 		function startGame() {
@@ -137,7 +147,6 @@ var BC = (function(parent) {
 				resources: resources
 			});
 
-			var controller = BC.Controller.make(canvas);
 			controller.setMoveLeftListener(function() {
 				board.move(Direction.LEFT);
 			});
