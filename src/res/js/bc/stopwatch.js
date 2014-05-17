@@ -8,9 +8,13 @@ var BC = (function(parent) {
 		}
 
 		var watch = {
-			then: getTimeInSeconds(),
+			reset: reset,
 			tick: tick
 		};
+
+		function reset() {
+			watch.then = getTimeInSeconds();
+		}
 
 		function tick() {
 			watch.now = getTimeInSeconds();
@@ -18,6 +22,7 @@ var BC = (function(parent) {
 			watch.then = watch.now;
 		}
 
+		reset();
 		return watch;
 	};
 

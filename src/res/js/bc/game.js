@@ -14,6 +14,7 @@ var BC = (function(parent) {
 		var newGameButton = $("#new-game-button");
 		var continueGameButton = $("#continue-game-button");
 
+		var watch = BC.StopWatch.make();
 		var board;
 		var boardView;
 
@@ -192,24 +193,23 @@ var BC = (function(parent) {
 		function resumeGame() {
 			paused = false;
 			showMainMenu(false);
+			watch.reset();
+			drawFrame();
+		}
 
-			var watch = BC.StopWatch.make();
-			function drawScene() {
-				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-				gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-				gl.uniformMatrix4fv(programLocations.projectionMatrixLocation, false, projectionMatrix);
+		function drawFrame() {
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+			gl.uniformMatrix4fv(programLocations.projectionMatrixLocation, false, projectionMatrix);
 
-				watch.tick();
+			watch.tick();
 
-				board.update(watch);
-				boardView.draw();
+			board.update(watch);
+			boardView.draw();
 
-				if (!paused) {
-					requestAnimationFrame(drawScene);
-				}
+			if (!paused) {
+				requestAnimationFrame(drawFrame);
 			}
-
-			drawScene();
 		}
 
 		function showMainMenu(show) {
