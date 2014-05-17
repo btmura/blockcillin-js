@@ -3,6 +3,11 @@ var BC = (function(parent) {
 	var my = parent.Controller = parent.Controller || {}
 
 	my.make = function(canvas) {
+		var TOUCH_THRESHOLD = 20;
+
+		var touchStartX = 0;
+		var touchStartY = 0;
+
 		var moveLeftCallback = function() {};
 		var moveRightCallback = function() {};
 		var moveUpCallback = function() {};
@@ -67,10 +72,6 @@ var BC = (function(parent) {
 			return false;
 		});
 
-		var touchThreshold = 50;
-		var touchStartX = 0;
-		var touchStartY = 0;
-
 		$(canvas).on("touchstart touchmove touchend", function(event) {
 			var touch = event.originalEvent.changedTouches[0];
 			switch (event.type) {
@@ -83,17 +84,44 @@ var BC = (function(parent) {
 					var deltaX = touch.pageX - touchStartX;
 					var deltaY = touch.pageY - touchStartY;
 
-					if (deltaX > touchThreshold) {
-						moveLeftCallback.call();
-					} else if (deltaX < -touchThreshold) {
-						moveRightCallback.call();
-					} else if (deltaY > touchThreshold) {
-						moveDownCallback.call();
-					} else if (deltaY < -touchThreshold) {
-						moveUpCallback.call();
-					} else {
-						primaryActionCallback.call();
+					var absDeltaX = Math.abs(deltaX);
+					var absDeltaY = Math.abs(deltaY);
+
+					function tryVerticalMove() {
+						if (absDeltaY > TOUCH_THRESHOLD) {
+							if (deltaY > 0) {
+								moveDownCallback.call();
+							} else {
+								moveUpCallback.call();
+							}
+							return true;
+						}
+						return false;
 					}
+
+					function tryHorizontalMove() {
+						if (absDeltaX > TOUCH_THRESHOLD) {
+							if (deltaX > 0) {
+								moveLeftCallback.call();
+							} else {
+								moveRightCallback.call();
+							}
+							return true;
+						}
+						return false;
+					}
+
+					if (absDeltaX > absDeltaY) {
+						if (tryHorizontalMove() || tryVerticalMove()) {
+							return false;
+						}
+					} else {
+						if (tryVerticalMove() || tryHorizontalMove()) {
+							return false;
+						}
+					}
+
+					primaryActionCallback.call();
 					break;
 			}
 			return false;
