@@ -10,11 +10,15 @@
 
 {{define "game-menu"}}
 	<div id="game-menu">
-		{{template "menu" .}}
-		<h1>b l o c k c i l l i n</h1>
-		<ul>
-			<li id="continue-game-button">Continue Game</li>
-			<li id="new-game-button">New Game</li>
-		</ul>
+		<table>
+			<td>
+				<h1>b l o c k c i l l i n</h1>
+				<ul>
+					<li id="continue-game-button">Continue Game</li>
+					<li id="new-game-button">New Game</li>
+				</ul>
+				{{template "menu" .}}
+			</td>
+		</table>
 	</div>
 {{end}}
