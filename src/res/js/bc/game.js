@@ -128,6 +128,7 @@ var BC = (function(parent) {
 		$(window).resize(function() {
 			if (resizeCanvas()) {
 				projectionMatrix = makeProjectionMatrix();
+				drawFrame();
 			}
 		});
 
@@ -209,23 +210,38 @@ var BC = (function(parent) {
 			drawFrame();
 		}
 
+		// Update the game's state if there is an active game.
+		// Always draws the game board for when the window is resized.
 		function drawFrame() {
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 			gl.uniformMatrix4fv(programLocations.projectionMatrixLocation, false, projectionMatrix);
 
-			watch.tick();
+			// Check whether there is a game in progress.
+			var activeGame = !paused && !gameOver && board;
 
-			gameOver = board.update(watch);
-			boardView.draw();
+			// Update the game's state only if theres an active game.
+			if (activeGame) {
+				watch.tick();
+				gameOver = board.update(watch);
+			}
 
-			if (!paused && !gameOver) {
+			// Always draw the board since this may be just a resize event.
+			if (boardView) {
+				boardView.draw();
+			}
+
+			// Request another frame if there is an active game.
+			// Repeated requests shouldn't be an issue.
+			if (activeGame) {
 				requestAnimationFrame(drawFrame);
 			}
 
+			// Show the menu when the game is over.
+			// Showing the main menu if it is already visible should be OK.
 			if (gameOver) {
 				started = false;
-				paushed = false;
+				paused = false;
 				showMainMenu(true);
 			}
 		}
