@@ -167,6 +167,12 @@ var BC = (function(parent) {
 			}
 		});
 
+		document.addEventListener("visibilitychange", function() {
+			if (document.hidden) {
+				pauseGame();
+			}
+		});
+
 		function startGame() {
 			started = true;
 			gameOver = false;
