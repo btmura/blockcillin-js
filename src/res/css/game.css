@@ -19,6 +19,12 @@ body {
 	}
 }
 
+#main-menu ul {
+	background: rgba(0, 0, 0, 0.5);
+	border: 1px solid rgb(100, 0, 0);
+	border-radius: 10px;
+}
+
 .menu {
 	display: none;
 	text-align: center;
@@ -41,12 +47,6 @@ body {
 
 .menu h1 {
 	white-space: nowrap;
-}
-
-#main-menu ul {
-	background: rgba(0, 0, 0, 0.5);
-	border: 1px solid rgb(100, 0, 0);
-	border-radius: 10px;
 }
 
 .menu ul {
