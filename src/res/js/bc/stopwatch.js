@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.StopWatch = parent.StopWatch || {};
+	var me = root.StopWatch = root.StopWatch || {};
 
-	my.make = function() {
+	me.make = function() {
 		function getTimeInSeconds() {
 			return Date.now() * 0.001;
 		}
@@ -26,6 +26,6 @@ var BC = (function(parent) {
 		return watch;
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

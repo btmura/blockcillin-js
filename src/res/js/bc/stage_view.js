@@ -1,9 +1,9 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var module = parent.Stage = parent.Stage || {};
-	var my = module.View = module.View || {};
+	var parent = root.Stage = root.Stage || {};
+	var me = parent.View = parent.View || {};
 
-	my.make = function(gl, metrics, textureTile) {
+	me.make = function(gl, metrics, textureTile) {
 		var points = [];
 		var i = 0;
 
@@ -93,6 +93,6 @@ var BC = (function(parent) {
 		};
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

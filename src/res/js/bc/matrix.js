@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Matrix = parent.Matrix || {};
+	var me = root.Matrix = root.Matrix || {};
 
-	my.makeLookAt = function(cameraPosition, target, up) {
+	me.makeLookAt = function(cameraPosition, target, up) {
 		var zAxis = BC.Math.normalize(BC.Math.subtractVectors(cameraPosition, target));
 		var xAxis = BC.Math.cross(up, zAxis);
 		var yAxis = BC.Math.cross(zAxis, xAxis);
@@ -14,7 +14,7 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.makePerspective = function(fieldOfViewInRadians, aspect, near, far) {
+	me.makePerspective = function(fieldOfViewInRadians, aspect, near, far) {
 		var f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
 		var rangeInv = 1.0 / (near - far);
 		return [
@@ -25,7 +25,7 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.makeTranslation = function(tx, ty, tz) {
+	me.makeTranslation = function(tx, ty, tz) {
 		return [
 			1, 0, 0, 0,
 			0, 1, 0, 0,
@@ -34,7 +34,7 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.makeXRotation = function(angleInRadians) {
+	me.makeXRotation = function(angleInRadians) {
 		var c = Math.cos(angleInRadians);
 		var s = Math.sin(angleInRadians);
 		return [
@@ -45,7 +45,7 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.makeYRotation = function(angleInRadians) {
+	me.makeYRotation = function(angleInRadians) {
 		var c = Math.cos(angleInRadians);
 		var s = Math.sin(angleInRadians);
 		return [
@@ -56,7 +56,7 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.makeZRotation = function(angleInRadians) {
+	me.makeZRotation = function(angleInRadians) {
 		var c = Math.cos(angleInRadians);
 		var s = Math.sin(angleInRadians);
 		return [
@@ -67,7 +67,7 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.makeScale = function(sx, sy, sz) {
+	me.makeScale = function(sx, sy, sz) {
 		return [
 			sx, 0, 0, 0,
 			0, sy, 0, 0,
@@ -76,9 +76,9 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.identity = my.makeScale(1, 1, 1);
+	me.identity = me.makeScale(1, 1, 1);
 
-	my.makeInverse = function(m) {
+	me.makeInverse = function(m) {
 		var m00 = m[0 * 4 + 0];
 		var m01 = m[0 * 4 + 1];
 		var m02 = m[0 * 4 + 2];
@@ -163,7 +163,7 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.matrixMultiply = function(m, n) {
+	me.matrixMultiply = function(m, n) {
 		return [
 			m[0]*n[0] + m[1]*n[4] + m[2]*n[8] + m[3]*n[12],
 			m[0]*n[1] + m[1]*n[5] + m[2]*n[9] + m[3]*n[13],
@@ -188,6 +188,6 @@ var BC = (function(parent) {
 		];
 	}
 
-	return parent;
+	return root;
 
 }(BC || {}))

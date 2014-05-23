@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Game = parent.Game || {};
+	var me = root.Game = root.Game || {};
 
-	my.run = function() {
+	me.run = function() {
 		var MAIN_MENU_GAME_TITLE = "b l o c k c i l l i n";
 		var MAIN_MENU_PAUSED_TITLE = "P A U S E D";
 		var MAIN_MENU_GAME_OVER_TITLE = "G A M E  O V E R";
@@ -283,7 +283,7 @@ var BC = (function(parent) {
 		}
 	}
 
-	return parent;
+	return root;
 
 }(BC || {}))
 

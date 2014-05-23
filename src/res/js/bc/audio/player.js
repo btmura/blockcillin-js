@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var myParent = parent.Audio = parent.Audio || {};
-	var my = myParent.Player = myParent.Player || {};
+	var parent = root.Audio = root.Audio || {};
+	var me = parent.Player = parent.Player || {};
 
-	return parent;
+	return root;
 
 }(BC || {}))

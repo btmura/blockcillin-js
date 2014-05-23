@@ -1,6 +1,6 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.GL = parent.GL || {};
+	var me = root.GL = root.GL || {};
 
 	/**
 	 * Loads a shader from a script tag.
@@ -11,7 +11,7 @@ var BC = (function(parent) {
 	 * @param {function(string): void} opt_errorCallback - callback for errors
 	 * @return {WebGLShader} the created shader
 	 */
-	my.loadShader = function(gl, scriptId, shaderType, opt_errorCallback) {
+	me.loadShader = function(gl, scriptId, shaderType, opt_errorCallback) {
 		var errFn = opt_errorCallback || BC.Util.error;
 		var shaderScript = document.getElementById(scriptId);
 		if (!shaderScript) {
@@ -35,7 +35,7 @@ var BC = (function(parent) {
 		return shader;
 	};
 
-	my.createProgram = function(gl, shaders, opt_attribs, opt_locations) {
+	me.createProgram = function(gl, shaders, opt_attribs, opt_locations) {
 		var program = gl.createProgram();
 		for (var i = 0; i < shaders.length; i++) {
 			gl.attachShader(program, shaders[i]);
@@ -69,7 +69,7 @@ var BC = (function(parent) {
 	 * @param {number} inset - amount to inset from 0 to 1
 	 * @return {Object} the tile map to query for tiles
 	 */
-	my.textureTileSet = function(numRows, numCols, inset) {
+	me.textureTileSet = function(numRows, numCols, inset) {
 		var tw = 1.0 / numRows;
 		var th = 1.0 / numCols;
 		return {
@@ -103,6 +103,6 @@ var BC = (function(parent) {
 		};
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Util = parent.Util || {};
+	var me = root.Util = root.Util || {};
 
-	my.log = function(msg) {
+	me.log = function(msg) {
 		if (window.console) {
 			if (window.console.log) {
 				window.console.log(msg);
@@ -10,7 +10,7 @@ var BC = (function(parent) {
 		}
 	};
 
-	my.error = function(msg) {
+	me.error = function(msg) {
 		if (window.console) {
 			if (window.console.error) {
 				window.console.error(msg);
@@ -20,6 +20,6 @@ var BC = (function(parent) {
 		}
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

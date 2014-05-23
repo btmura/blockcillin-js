@@ -1,9 +1,9 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var module = parent.Selector = parent.Selector || {};
-	var my = module.View = module.View || {};
+	var parent = root.Selector = root.Selector || {};
+	var me = parent.View = parent.View || {};
 
-	my.make = function(gl, metrics, textureTile) {
+	me.make = function(gl, metrics, textureTile) {
 		var minY = -metrics.ringHeight / 2;
 		var maxY = -minY;
 		var outerRadius = metrics.ringOuterRadius + 0.01;
@@ -107,6 +107,6 @@ var BC = (function(parent) {
 		};
 	}
 
-	return parent;
+	return root;
 
 }(BC || {}))

@@ -1,9 +1,9 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var module = parent.Board = parent.Board || {};
-	var my = module.View = module.View || {};
+	var parent = root.Board = root.Board || {};
+	var me = parent.View = parent.View || {};
 
-	my.make = function(args) {
+	me.make = function(args) {
 		var board = args.board;
 		var gl = args.gl;
 		var programLocations = args.programLocations;
@@ -73,6 +73,6 @@ var BC = (function(parent) {
 	};
 
 
-	return parent;
+	return root;
 
 }(BC || {}))

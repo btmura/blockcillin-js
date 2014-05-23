@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Board = parent.Board || {};
+	var me = root.Board = root.Board || {};
 
-	my.make = function(metrics) {
+	me.make = function(metrics) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
@@ -295,6 +295,6 @@ var BC = (function(parent) {
 		return board;
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Ring = parent.Ring || {};
+	var me = root.Ring = root.Ring || {};
 
-	my.make = function(args) {
+	me.make = function(args) {
 		var CellState = BC.Cell.CellState;
 
 		var metrics = args.metrics;
@@ -70,6 +70,6 @@ var BC = (function(parent) {
 		};
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

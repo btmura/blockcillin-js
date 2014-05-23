@@ -1,6 +1,6 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Math = parent.Math || {};
+	var me = root.Math = root.Math || {};
 
 	/**
 	 * Converts degrees into radians.
@@ -8,11 +8,11 @@ var BC = (function(parent) {
 	 * @param {Number} degrees - degrees to convert to radians
 	 * @returns {@number} equivalent radians
 	 */
-	my.radians = function(degrees) {
+	me.radians = function(degrees) {
 		return  degrees * Math.PI / 180;
 	}
 
-	my.sliceRadians = function(numSlices) {
+	me.sliceRadians = function(numSlices) {
 		return 2 * Math.PI / numSlices;
 	}
 
@@ -21,7 +21,7 @@ var BC = (function(parent) {
 	 *
 	 * @param {Number} max - the max exclusive upper bound
 	 */
-	my.randomInt = function(max) {
+	me.randomInt = function(max) {
 		return Math.floor(Math.random() * max);
 	}
 
@@ -33,7 +33,7 @@ var BC = (function(parent) {
 	 * @param {Number} offset - starting radian offset
 	 * @returns {Array} array with x and y values
 	 */
-	my.circlePoints = function(radius, count, offset) {
+	me.circlePoints = function(radius, count, offset) {
 		offset = offset || 0;
 		var theta = 2 * Math.PI / count;
 		var points = [];
@@ -44,7 +44,7 @@ var BC = (function(parent) {
 		return points;
 	}
 
-	my.cross = function(a, b) {
+	me.cross = function(a, b) {
 		return [
 			a[1] * b[2] - a[2] * b[1],
 			a[2] * b[0] - a[0] * b[2],
@@ -52,7 +52,7 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.subtractVectors = function(a, b) {
+	me.subtractVectors = function(a, b) {
 		return [
 			a[0] - b[0],
 			a[1] - b[1],
@@ -60,7 +60,7 @@ var BC = (function(parent) {
 		];
 	}
 
-	my.normalize = function(v) {
+	me.normalize = function(v) {
 		var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 		// make sure we don't divide by 0.
 		if (length > 0.00001) {
@@ -74,6 +74,6 @@ var BC = (function(parent) {
 		}
 	}
 
-	return parent;
+	return root;
 
 }(BC || {}))

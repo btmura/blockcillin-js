@@ -1,9 +1,9 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var module = parent.Cell = parent.Cell || {};
-	var my = module.Drop = module.Drop || {};
+	var parent = root.Cell = root.Cell || {};
+	var me = parent.Drop = parent.Drop || {};
 
-	my.makeManager = function(metrics) {
+	me.makeManager = function(metrics) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
@@ -59,6 +59,6 @@ var BC = (function(parent) {
 		};
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Constants = parent.Constants || {};
+	var me = root.Constants = root.Constants || {};
 
-	my.Direction = {
+	me.Direction = {
 		NONE : 0,
 		UP : 1,
 		DOWN: 2,
@@ -10,6 +10,6 @@ var BC = (function(parent) {
 		RIGHT: 4
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

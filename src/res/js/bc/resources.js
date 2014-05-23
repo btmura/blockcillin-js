@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Resources = parent.Resources || {};
+	var me = root.Resources = root.Resources || {};
 
-	my.make = function() {
+	me.make = function() {
 		var BLOCK = 0;
 		var BLOCK_INCOMING = 1;
 		var BLOCK_CLEARING = 2;
@@ -48,6 +48,6 @@ var BC = (function(parent) {
 		};
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

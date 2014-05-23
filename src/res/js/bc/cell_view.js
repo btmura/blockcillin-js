@@ -1,9 +1,9 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var module = parent.Cell = parent.Cell || {};
-	var my = module.View = module.View || {};
+	var parent = root.Cell = root.Cell || {};
+	var me = parent.View = parent.View || {};
 
-	my.make = function(gl, metrics, tiles) {
+	me.make = function(gl, metrics, tiles) {
 		var CellState = BC.Cell.CellState;
 
 		var NUM_FACES = 6;
@@ -245,6 +245,6 @@ var BC = (function(parent) {
 		};
 	}
 
-	return parent;
+	return root;
 
 }(BC || {}))

@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Cell = parent.Cell || {};
+	var me = root.Cell = root.Cell || {};
 
-	my.CellState = {
+	me.CellState = {
 		EMPTY: 0,
 		EMPTY_NO_SWAP: 1,
 		EMPTY_NO_DROP: 2,
@@ -17,7 +17,7 @@ var BC = (function(parent) {
 		BLOCK_CLEARING_IN_PROGRESS: 9
 	};
 
-	my.make = function(args) {
+	me.make = function(args) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
@@ -228,6 +228,6 @@ var BC = (function(parent) {
 		return cell;
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

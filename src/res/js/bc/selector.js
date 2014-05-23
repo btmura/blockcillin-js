@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Selector = parent.Selector || {};
+	var me = root.Selector = root.Selector || {};
 
-	my.make = function(metrics, board) {
+	me.make = function(metrics, board) {
 		var Direction = BC.Constants.Direction;
 
 		var MOVEMENT_DURATION = 0.025;
@@ -131,6 +131,6 @@ var BC = (function(parent) {
 		return selector;
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

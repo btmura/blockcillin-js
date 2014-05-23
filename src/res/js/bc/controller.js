@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Controller = parent.Controller || {};
+	var me = root.Controller = root.Controller || {};
 
-	my.make = function(canvas) {
+	me.make = function(canvas) {
 		var TOUCH_THRESHOLD = 20;
 
 		var touchStartX = 0;
@@ -137,6 +137,6 @@ var BC = (function(parent) {
 		};
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

@@ -1,9 +1,9 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var module = parent.Cell = parent.Cell || {};
-	var my = module.Chain = module.Chain || {};
+	var parent = root.Cell = root.Cell || {};
+	var me = parent.Chain = parent.Chain || {};
 
-	my.find = function(board) {
+	me.find = function(board) {
 		var CellState = BC.Cell.CellState;
 
 		var NUM_COLS = board.rings[0].cells.length;
@@ -233,7 +233,7 @@ var BC = (function(parent) {
 		return getCombinedChains();
 	};
 
-	my.makeManager = function() {
+	me.makeManager = function() {
 		var CellState = BC.Cell.CellState;
 
 		var cellQueue = [];
@@ -299,6 +299,6 @@ var BC = (function(parent) {
 		};
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

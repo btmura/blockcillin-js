@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Animation = parent.Animation || {};
+	var me = root.Animation = root.Animation || {};
 
-	my.make = function(args) {
+	me.make = function(args) {
 		var duration = args.duration;
 		var startCallback = args.startCallback || function() {};
 		var updateCallback = args.updateCallback || function() {return false;};
@@ -49,7 +49,7 @@ var BC = (function(parent) {
 		};
 	};
 
-	my.process = function(animations, watch) {
+	me.process = function(animations, watch) {
 		var changed = false;
 		if (animations.length > 0) {
 			var currentAnimation = animations[0];
@@ -61,6 +61,6 @@ var BC = (function(parent) {
 		return changed;
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))

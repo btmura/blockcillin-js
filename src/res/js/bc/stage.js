@@ -1,8 +1,8 @@
-var BC = (function(parent) {
+var BC = (function(root) {
 
-	var my = parent.Stage = parent.Stage || {};
+	var me = root.Stage = root.Stage || {};
 
-	my.make = function(metrics, translationY) {
+	me.make = function(metrics, translationY) {
 		// Translate the stage up to the top of the ring.
 		translationY += metrics.ringHeight / 2 - 0.01;
 
@@ -13,6 +13,6 @@ var BC = (function(parent) {
 		};
 	};
 
-	return parent;
+	return root;
 
 }(BC || {}))
