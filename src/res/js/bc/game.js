@@ -20,7 +20,7 @@ var BC = (function(root) {
 		var continueGameButton = $("#continue-game-button");
 
 		var gameMenu = $("#game-menu");
-		var menuButton = $("#menu-button");
+		var pauseButton = $("#pause-button");
 
 		var metrics = {
 			numRings: 3,
@@ -155,7 +155,7 @@ var BC = (function(root) {
 			resumeGame();
 		});
 
-		menuButton.click(function() {
+		pauseButton.click(function() {
 			pauseGame();
 		});
 
