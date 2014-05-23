@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Cell = parent.Cell || {}
+	var my = parent.Cell = parent.Cell || {};
 
 	my.CellState = {
 		EMPTY: 0,

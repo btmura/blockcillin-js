@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Selector = parent.Selector || {}
+	var my = parent.Selector = parent.Selector || {};
 
 	my.make = function(metrics, board) {
 		var Direction = BC.Constants.Direction;

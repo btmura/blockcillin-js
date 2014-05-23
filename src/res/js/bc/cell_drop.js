@@ -1,7 +1,7 @@
 var BC = (function(parent) {
 
-	var module = parent.Cell = parent.Cell || {}
-	var my = module.Drop = module.Drop || {}
+	var module = parent.Cell = parent.Cell || {};
+	var my = module.Drop = module.Drop || {};
 
 	my.makeManager = function(metrics) {
 		var CellState = BC.Cell.CellState;

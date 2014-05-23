@@ -1,7 +1,7 @@
 var BC = (function(parent) {
 
-	var module = parent.Board = parent.Board || {}
-	var my = module.View = module.View || {}
+	var module = parent.Board = parent.Board || {};
+	var my = module.View = module.View || {};
 
 	my.make = function(args) {
 		var board = args.board;

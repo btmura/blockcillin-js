@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Ring = parent.Ring || {}
+	var my = parent.Ring = parent.Ring || {};
 
 	my.make = function(args) {
 		var CellState = BC.Cell.CellState;

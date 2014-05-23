@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Util = parent.Util || {}
+	var my = parent.Util = parent.Util || {};
 
 	my.log = function(msg) {
 		if (window.console) {

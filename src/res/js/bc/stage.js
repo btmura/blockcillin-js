@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Stage = parent.Stage || {}
+	var my = parent.Stage = parent.Stage || {};
 
 	my.make = function(metrics, translationY) {
 		// Translate the stage up to the top of the ring.

@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Game = parent.Game || {}
+	var my = parent.Game = parent.Game || {};
 
 	my.run = function() {
 		var MAIN_MENU_GAME_TITLE = "b l o c k c i l l i n";

@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.StopWatch = parent.StopWatch || {}
+	var my = parent.StopWatch = parent.StopWatch || {};
 
 	my.make = function() {
 		function getTimeInSeconds() {

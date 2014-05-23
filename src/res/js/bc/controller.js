@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Controller = parent.Controller || {}
+	var my = parent.Controller = parent.Controller || {};
 
 	my.make = function(canvas) {
 		var TOUCH_THRESHOLD = 20;

@@ -1,6 +1,6 @@
 var BC = (function(parent) {
 
-	var my = parent.Board = parent.Board || {}
+	var my = parent.Board = parent.Board || {};
 
 	my.make = function(metrics) {
 		var CellState = BC.Cell.CellState;

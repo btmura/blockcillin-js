@@ -1,7 +1,7 @@
 var BC = (function(parent) {
 
-	var module = parent.Cell = parent.Cell || {}
-	var my = module.Chain = module.Chain || {}
+	var module = parent.Cell = parent.Cell || {};
+	var my = module.Chain = module.Chain || {};
 
 	my.find = function(board) {
 		var CellState = BC.Cell.CellState;
