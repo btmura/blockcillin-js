@@ -19,16 +19,10 @@ body, a {
 	height: 100%;
 }
 
-@media (min-width: 500px) {
+@media (min-width: 450px) {
 	#main-menu table {
-		width: 500px;
+		width: 450px;
 	}
-}
-
-#main-menu ul {
-	background: rgba(0, 0, 0, 0.5);
-	border: 1px solid rgb(100, 0, 0);
-	border-radius: 10px;
 }
 
 .menu {
@@ -62,7 +56,7 @@ body, a {
 }
 
 .menu li {
-	background: rgb(50, 50, 50);
+	background: rgba(50, 50, 50, 0.9);
 	border-radius: 10px;
 	cursor: pointer;
 	margin: 10px;
@@ -70,17 +64,13 @@ body, a {
 }
 
 .menu li:hover {
-	background: rgb(75, 75, 75);
-}
-
-.menu #links {
-	font-size: 0.75em;
-	margin-top: 20px;
+	background: rgba(75, 75, 75, 0.9);
 }
 
 #links {
-	text-align: center;
-	white-space: nowrap;
+	color: #999999;
+	font-size: 0.75em;
+	margin-top: 20px;
 }
 
 #canvas {
