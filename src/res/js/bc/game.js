@@ -32,6 +32,7 @@ var BC = (function(root) {
 		};
 		var resources = BC.Resources.make();
 		var watch = BC.StopWatch.make();
+		var audioPlayer = BC.Audio.Player.make();
 
 		var board;
 		var boardView;
@@ -177,7 +178,10 @@ var BC = (function(root) {
 			started = true;
 			gameOver = false;
 
-			board = BC.Board.make(metrics);
+			board = BC.Board.make({
+				metrics: metrics,
+				audioPlayer: audioPlayer
+			});
 			boardView = BC.Board.View.make({
 				board: board,
 				gl: gl,

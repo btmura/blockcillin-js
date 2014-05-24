@@ -2,8 +2,13 @@ var BC = (function(root) {
 
 	var me = root.Selector = root.Selector || {};
 
-	me.make = function(metrics, board) {
+	me.make = function(args) {
+		var metrics = args.metrics;
+		var board = args.board;
+		var audioPlayer = args.audioPlayer;
+
 		var Direction = BC.Constants.Direction;
+		var Sound = BC.Audio.Player.Sound;
 
 		var MOVEMENT_DURATION = 0.025;
 
@@ -82,6 +87,9 @@ var BC = (function(root) {
 
 			animations.push(BC.Animation.make({
 				duration: MOVEMENT_DURATION,
+				startCallback: function() {
+					audioPlayer.play(Sound.SELECTOR_MOVEMENT);
+				},
 				updateCallback: function(watch) {
 					var translationDelta = metrics.ringHeight * watch.deltaPercent;
 					var rotationDelta = ringRotationY * watch.deltaPercent;

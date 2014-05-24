@@ -2,7 +2,10 @@ var BC = (function(root) {
 
 	var me = root.Board = root.Board || {};
 
-	me.make = function(metrics) {
+	me.make = function(args) {
+		var metrics = args.metrics;
+		var audioPlayer = args.audioPlayer;
+
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 
@@ -84,7 +87,11 @@ var BC = (function(root) {
 
 		updateBoardMatrices();
 
-		var selector = BC.Selector.make(metrics, board);
+		var selector = BC.Selector.make({
+			metrics: metrics,
+			board: board,
+			audioPlayer: audioPlayer
+		});
 		board.selector = selector;
 
 		var stage = BC.Stage.make(metrics, stageTranslationY);

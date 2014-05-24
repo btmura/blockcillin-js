@@ -4,6 +4,9 @@ runtime: go
 api_version: go1
 
 handlers:
+- url: /audio
+  static_dir: res/audio
+
 - url: /css
   static_dir: res/css
 
