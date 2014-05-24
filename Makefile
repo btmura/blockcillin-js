@@ -1,5 +1,5 @@
 COMPILED_JS = src/res/js/bc-compiled/bc.js
-JS_SOURCES = $(wildcard src/res/js/bc/*.js)
+JS_SOURCES = $(shell find src/res/js/bc -type f -name *.js)
 JS_FLAGS = $(addprefix --js ,$(JS_SOURCES))
 
 all:
