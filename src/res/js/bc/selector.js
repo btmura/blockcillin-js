@@ -87,9 +87,6 @@ var BC = (function(root) {
 
 			animations.push(BC.Animation.make({
 				duration: MOVEMENT_DURATION,
-				startCallback: function() {
-					audioPlayer.play(Sound.SELECTOR_MOVEMENT);
-				},
 				updateCallback: function(watch) {
 					var translationDelta = metrics.ringHeight * watch.deltaPercent;
 					var rotationDelta = ringRotationY * watch.deltaPercent;
@@ -117,6 +114,7 @@ var BC = (function(root) {
 				},
 				finishCallback: function() {
 					direction = Direction.NONE;
+					audioPlayer.play(Sound.SELECTOR_MOVEMENT);
 				}
 			}));
 		}
