@@ -1,6 +1,12 @@
 body {
+	background-color: #000000;
 	margin: 0;
 	padding: 0;
+}
+
+body, a {
+	color: #ffffff;
+	font-family: monospace;
 }
 
 #main-menu {
@@ -70,6 +76,11 @@ body {
 .menu #links {
 	font-size: 0.75em;
 	margin-top: 20px;
+}
+
+#links {
+	text-align: center;
+	white-space: nowrap;
 }
 
 #canvas {
