@@ -150,7 +150,6 @@ var BC = (function(root) {
 		showMainMenu(true);
 
 		function playButtonClickSound() {
-			console.log(Sound);
 			audioPlayer.play(Sound.BUTTON_CLICK);
 		}
 
