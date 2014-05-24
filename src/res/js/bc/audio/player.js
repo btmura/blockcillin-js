@@ -10,21 +10,18 @@ var BC = (function(root) {
 		window.AudioContext = window.AudioContext || window.webkitAudioContext;
 		var context = new AudioContext();
 
-		var buffers = {};
+		var buffer;
 
-		loadSound(Sound.BUTTON_CLICK, "audio/button_click.ogg");
-		loadSound(Sound.SELECTOR_MOVEMENT, "audio/selector.ogg");
-		loadSound(Sound.CELL_SWAP, "audio/cell_swap.ogg");
-		loadSound(Sound.CELL_CLEAR, "audio/cell_clear.ogg");
+		loadFile("audio/sounds.ogg");
 
-		function loadSound(sound, url) {
+		function loadFile(url) {
 			var request = new XMLHttpRequest();
 			request.open("GET", url, true);
 			request.responseType = "arraybuffer";
 
 			request.onload = function() {
-				function onDecodeSuccess(buffer) {
-					buffers[sound] = buffer;
+				function onDecodeSuccess(newBuffer) {
+					buffer = newBuffer;
 				}
 
 				function onDecodeError() {
@@ -37,17 +34,17 @@ var BC = (function(root) {
 			request.send();
 		}
 
-		function playSound(buffer) {
+		function playSound(buffer, when, offset, duration) {
 			var source = context.createBufferSource();
 			source.buffer = buffer;
 			source.connect(context.destination);
-			source.start(0);
+			source.start(when, offset, duration);
 		}
 
 		function play(sound) {
-			var buffer = buffers[sound];
+			// Play sounds only if the buffer is ready.
 			if (buffer) {
-				playSound(buffer);
+				playSound(buffer, 0, sound.offset, sound.duration);
 			}
 		}
 

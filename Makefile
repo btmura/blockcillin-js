@@ -5,5 +5,8 @@ JS_FLAGS = $(addprefix --js ,$(JS_SOURCES))
 all:
 	java -jar compiler.jar $(JS_FLAGS) --js_output_file $(COMPILED_JS)
 
+ogg:
+	oggenc src/res/audio/*.wav
+
 todo:
 	@grep --line-number --recursive --with-filename TODO src
