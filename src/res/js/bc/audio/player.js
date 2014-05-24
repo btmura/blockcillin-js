@@ -3,15 +3,8 @@ var BC = (function(root) {
 	var parent = root.Audio = root.Audio || {};
 	var me = parent.Player = parent.Player || {};
 
-	me.Sound = {
-		BUTTON_CLICK: 0,
-		SELECTOR_MOVEMENT: 1,
-		CELL_SWAP: 2,
-		CELL_CLEAR: 3
-	};
-
 	me.make = function() {
-		var Sound = me.Sound;
+		var Sound = BC.Audio.Sound;
 
 		// Fix up prefixing of AudioContext.
 		window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -45,16 +38,17 @@ var BC = (function(root) {
 		}
 
 		function playSound(buffer) {
-			if (buffer) {
-				var source = context.createBufferSource();
-				source.buffer = buffer;
-				source.connect(context.destination);
-				source.start(0);
-			}
+			var source = context.createBufferSource();
+			source.buffer = buffer;
+			source.connect(context.destination);
+			source.start(0);
 		}
 
 		function play(sound) {
-			playSound(buffers[sound]);
+			var buffer = buffers[sound];
+			if (buffer) {
+				playSound(buffer);
+			}
 		}
 
 		return {

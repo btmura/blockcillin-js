@@ -9,6 +9,7 @@ var BC = (function(root) {
 		var MENU_DURATION = "fast";
 
 		var Direction = BC.Constants.Direction;
+		var Sound = BC.Audio.Sound;
 
 		var started = false;
 		var paused = false;
@@ -149,7 +150,8 @@ var BC = (function(root) {
 		showMainMenu(true);
 
 		function playButtonClickSound() {
-			audioPlayer.play(BC.Audio.Player.Sound.BUTTON_CLICK);
+			console.log(Sound);
+			audioPlayer.play(Sound.BUTTON_CLICK);
 		}
 
 		newGameButton.click(function() {

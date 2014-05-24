@@ -8,7 +8,7 @@ var BC = (function(root) {
 
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
-		var Sound = BC.Audio.Player.Sound;
+		var Sound = BC.Audio.Sound;
 
 		var RING_CAPACITY = 11;
 		var MAX_RISE_HEIGHT = RING_CAPACITY * metrics.ringHeight;

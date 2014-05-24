@@ -8,7 +8,7 @@ var BC = (function(root) {
 		var audioPlayer = args.audioPlayer;
 
 		var Direction = BC.Constants.Direction;
-		var Sound = BC.Audio.Player.Sound;
+		var Sound = BC.Audio.Sound;
 
 		var MOVEMENT_DURATION = 0.025;
 
