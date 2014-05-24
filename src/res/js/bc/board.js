@@ -8,6 +8,7 @@ var BC = (function(root) {
 
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
+		var Sound = BC.Audio.Player.Sound;
 
 		var RING_CAPACITY = 11;
 		var MAX_RISE_HEIGHT = RING_CAPACITY * metrics.ringHeight;
@@ -176,6 +177,7 @@ var BC = (function(root) {
 			if (moveLeft) {
 				rightCell.sendBlock(SWAP_DURATION, Direction.LEFT);
 				leftCell.receiveBlock(SWAP_DURATION, Direction.RIGHT, rightBlockStyle);
+				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
 
@@ -183,6 +185,7 @@ var BC = (function(root) {
 			if (moveRight) {
 				leftCell.sendBlock(SWAP_DURATION, Direction.RIGHT);
 				rightCell.receiveBlock(SWAP_DURATION, Direction.LEFT, leftBlockStyle);
+				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
 
@@ -190,6 +193,7 @@ var BC = (function(root) {
 			if (swap) {
 				leftCell.receiveBlock(SWAP_DURATION, Direction.RIGHT, rightBlockStyle);
 				rightCell.receiveBlock(SWAP_DURATION, Direction.LEFT, leftBlockStyle);
+				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
 		}

@@ -4,7 +4,8 @@ var BC = (function(root) {
 	var me = parent.Player = parent.Player || {};
 
 	me.Sound = {
-		SELECTOR_MOVEMENT: 0
+		SELECTOR_MOVEMENT: 0,
+		CELL_SWAP: 1
 	};
 
 	me.make = function() {
@@ -17,6 +18,7 @@ var BC = (function(root) {
 		var buffers = {};
 
 		loadSound(Sound.SELECTOR_MOVEMENT, "audio/selector.ogg");
+		loadSound(Sound.CELL_SWAP, "audio/cell_swap.ogg");
 
 		function loadSound(sound, url) {
 			var request = new XMLHttpRequest();
