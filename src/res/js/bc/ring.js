@@ -8,6 +8,7 @@ var BC = (function(root) {
 		var metrics = args.metrics;
 		var translationY = args.translationY;
 		var selectable = args.selectable;
+		var audioPlayer = args.audioPlayer;
 
 		// How much to rotate each cell by to form a ring of cells.
 		var RING_ROTATION_Y_DELTA = BC.Math.sliceRadians(metrics.numCells);
@@ -29,7 +30,8 @@ var BC = (function(root) {
 				metrics: metrics,
 				rotationY: rotationY,
 				state: state,
-				blockStyle: blockStyle
+				blockStyle: blockStyle,
+				audioPlayer: audioPlayer
 			});
 		}
 

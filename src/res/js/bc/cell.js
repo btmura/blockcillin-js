@@ -20,11 +20,13 @@ var BC = (function(root) {
 	me.make = function(args) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
+		var Sound = BC.Audio.Player.Sound;
 
 		var metrics = args.metrics;
 		var rotationY = args.rotationY;
 		var state = args.state;
 		var blockStyle = args.blockStyle;
+		var audioPlayer = args.audioPlayer;
 
 		var FLICKER_DURATION = 0.5;
 		var FREEZE_DURATION = 0.25;
@@ -98,6 +100,9 @@ var BC = (function(root) {
 
 			var fadeOut = BC.Animation.make({
 				duration: FADE_OUT_DURATION,
+				startCallback: function() {
+					audioPlayer.play(Sound.CELL_CLEAR);
+				},
 				updateCallback: function(watch) {
 					cell.alpha = 1.0 - watch.elapsedPercent;
 					return false;

@@ -48,7 +48,8 @@ var BC = (function(root) {
 			var newRing = BC.Ring.make({
 				metrics: metrics,
 				translationY: translationY,
-				selectable: selectable
+				selectable: selectable,
+				audioPlayer: audioPlayer
 			});
 			rings.push(newRing);
 

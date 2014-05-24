@@ -5,7 +5,8 @@ var BC = (function(root) {
 
 	me.Sound = {
 		SELECTOR_MOVEMENT: 0,
-		CELL_SWAP: 1
+		CELL_SWAP: 1,
+		CELL_CLEAR: 2
 	};
 
 	me.make = function() {
@@ -19,6 +20,7 @@ var BC = (function(root) {
 
 		loadSound(Sound.SELECTOR_MOVEMENT, "audio/selector.ogg");
 		loadSound(Sound.CELL_SWAP, "audio/cell_swap.ogg");
+		loadSound(Sound.CELL_CLEAR, "audio/cell_clear.ogg");
 
 		function loadSound(sound, url) {
 			var request = new XMLHttpRequest();
