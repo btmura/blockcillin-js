@@ -7,6 +7,7 @@ var BC = (function(root) {
 		var MAIN_MENU_PAUSED_TITLE = "P A U S E D";
 		var MAIN_MENU_GAME_OVER_TITLE = "G A M E  O V E R";
 		var MENU_DURATION = "fast";
+		var FLICKER_DURATION = 25;
 
 		var Direction = BC.Constants.Direction;
 		var Sound = BC.Audio.Sound;
@@ -154,16 +155,19 @@ var BC = (function(root) {
 		}
 
 		newGameButton.click(function() {
+			flicker(newGameButton);
 			playButtonClickSound();
 			startGame();
 		});
 
 		continueGameButton.click(function() {
+			flicker(continueGameButton);
 			playButtonClickSound();
 			resumeGame();
 		});
 
 		pauseButton.click(function() {
+			flicker(pauseButton);
 			playButtonClickSound();
 			pauseGame();
 		});
@@ -284,6 +288,12 @@ var BC = (function(root) {
 			} else {
 				return MAIN_MENU_GAME_TITLE;
 			}
+		}
+
+		function flicker(element) {
+			element.fadeIn(FLICKER_DURATION)
+				.fadeOut(FLICKER_DURATION)
+				.fadeIn(FLICKER_DURATION);
 		}
 
 		function setVisible(element, show) {
