@@ -148,15 +148,22 @@ var BC = (function(root) {
 
 		showMainMenu(true);
 
+		function playButtonClickSound() {
+			audioPlayer.play(BC.Audio.Player.Sound.BUTTON_CLICK);
+		}
+
 		newGameButton.click(function() {
+			playButtonClickSound();
 			startGame();
 		});
 
 		continueGameButton.click(function() {
+			playButtonClickSound();
 			resumeGame();
 		});
 
 		pauseButton.click(function() {
+			playButtonClickSound();
 			pauseGame();
 		});
 

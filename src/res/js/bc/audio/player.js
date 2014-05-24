@@ -4,9 +4,10 @@ var BC = (function(root) {
 	var me = parent.Player = parent.Player || {};
 
 	me.Sound = {
-		SELECTOR_MOVEMENT: 0,
-		CELL_SWAP: 1,
-		CELL_CLEAR: 2
+		BUTTON_CLICK: 0,
+		SELECTOR_MOVEMENT: 1,
+		CELL_SWAP: 2,
+		CELL_CLEAR: 3
 	};
 
 	me.make = function() {
@@ -18,6 +19,7 @@ var BC = (function(root) {
 
 		var buffers = {};
 
+		loadSound(Sound.BUTTON_CLICK, "audio/button_click.ogg");
 		loadSound(Sound.SELECTOR_MOVEMENT, "audio/selector.ogg");
 		loadSound(Sound.CELL_SWAP, "audio/cell_swap.ogg");
 		loadSound(Sound.CELL_CLEAR, "audio/cell_clear.ogg");
