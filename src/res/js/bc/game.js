@@ -6,8 +6,8 @@ var BC = (function(root) {
 		var MAIN_MENU_GAME_TITLE = "b l o c k c i l l i n";
 		var MAIN_MENU_PAUSED_TITLE = "P A U S E D";
 		var MAIN_MENU_GAME_OVER_TITLE = "G A M E  O V E R";
-		var MENU_DURATION = "fast";
-		var FLICKER_DURATION = 25;
+		var MENU_DURATION = "slow";
+		var FLICKER_DURATION = 20;
 
 		var Direction = BC.Constants.Direction;
 		var Sound = BC.Audio.Sound;
@@ -292,6 +292,8 @@ var BC = (function(root) {
 
 		function flicker(element) {
 			element.fadeIn(FLICKER_DURATION)
+				.fadeOut(FLICKER_DURATION)
+				.fadeIn(FLICKER_DURATION)
 				.fadeOut(FLICKER_DURATION)
 				.fadeIn(FLICKER_DURATION);
 		}
