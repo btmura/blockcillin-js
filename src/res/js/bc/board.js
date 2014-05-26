@@ -10,9 +10,9 @@ var BC = (function(root) {
 		var Direction = BC.Constants.Direction;
 		var Sound = BC.Audio.Sound;
 
-		var RING_CAPACITY = 15;
+		var RING_CAPACITY = 11;
 		var MAX_RISE_HEIGHT = RING_CAPACITY * metrics.ringHeight;
-		var RISE_SPEED = 0.05;
+		var RISE_SPEED = 0.02;
 		var SWAP_DURATION = 0.1;
 		var NUM_SPARE_RINGS = 2;
 		var SPARE_RING_HEIGHT = NUM_SPARE_RINGS * metrics.ringHeight;
