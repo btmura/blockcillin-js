@@ -26,11 +26,11 @@ var BC = (function(root) {
 
 		var metrics = {
 			numRings: 3,
-			numCells: 24,
+			numCells: 32,
 			numBlockTypes: 6,
-			ringInnerRadius: 0.75,
+			ringInnerRadius: 0.8,
 			ringOuterRadius: 1,
-			ringHeight: 0.3
+			ringHeight: 0.2
 		};
 		var resources = BC.Resources.make();
 		var watch = BC.StopWatch.make();
