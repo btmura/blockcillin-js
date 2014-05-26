@@ -61,7 +61,7 @@ body, a {
 		rgba(40, 40, 40, 0.9),
 		rgba(70, 70, 70, 0.9)
 	);
-	box-shadow: 1px 1px 1px 1px #000000;
+	box-shadow: inset 0px 0px 2px #555555;
 	text-shadow: 1px 1px 1px #333333;
 	border-radius: 20px;
 	cursor: pointer;
