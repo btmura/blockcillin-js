@@ -150,6 +150,16 @@ var BC = (function(root) {
 
 		showMainMenu(true);
 
+		function addButtonHoverSound(button) {
+			button.mouseenter(function() {
+				audioPlayer.play(Sound.BUTTON_HOVER);
+			});
+		}
+
+		addButtonHoverSound(newGameButton);
+		addButtonHoverSound(continueGameButton);
+		addButtonHoverSound(pauseButton);
+
 		function playButtonClickSound() {
 			audioPlayer.play(Sound.BUTTON_CLICK);
 		}

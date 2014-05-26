@@ -10,6 +10,7 @@ var BC = (function(root) {
 	}
 
 	me.Sound = {
+		BUTTON_HOVER: newSound(1, 0.5),
 		BUTTON_CLICK: newSound(0, 0.75),
 		SELECTOR_MOVEMENT: newSound(1, 0.5),
 		CELL_SWAP: newSound(2, 0.5),
