@@ -215,10 +215,10 @@ var BC = (function(root) {
 			var stopRising = false;
 
 			// 2nd pass - find new dropping blocks and update the board
-			stopRising |= dropManager.update(board);
+			stopRising |= updateCellDrops();
 
 			// 3rd pass - find new chains and update the board
-			stopRising |= chainManager.update(board);
+			stopRising |= updateCellChains();
 
 			if (!stopRising) {
 				raiseBoard(watch);
@@ -234,6 +234,19 @@ var BC = (function(root) {
 			updateBoardRings();
 
 			return isGameOver();
+		}
+
+		function updateCellDrops() {
+			return dropManager.update(board);
+		}
+
+		function updateCellChains() {
+			var result = chainManager.update(board);
+			for (var i = 0; i < result.newChains.length; i++) {
+				var chain = result.newChains[i];
+				score.score += 100 * chain.length;
+			}
+			return result.pendingChainCount > 0;
 		}
 
 		function raiseBoard(watch, rise) {

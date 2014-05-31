@@ -291,7 +291,10 @@ var BC = (function(root) {
 				}
 			}
 
-			return chainQueue.length > 0;
+			return {
+				newChains: newChains,
+				pendingChainCount: chainQueue.length
+			}
 		}
 
 		return {

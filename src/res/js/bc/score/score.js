@@ -4,7 +4,7 @@ var BC = (function(root) {
 
 	me.make = function() {
 		return {
-			score: 1337
+			score: 0
 		};
 	};
 
