@@ -1,11 +1,11 @@
 {{define "main-menu"}}
-	<div id="main-menu" class="menu">
+	<div id="main-menu" class="menu-container">
 		<table>
 			<td>
 				<h1 id="main-menu-title">b l o c k c i l l i n</h1>
-				<ul>
-					<li id="continue-game-button">C O N T I N U E &nbsp;G A M E</li>
-					<li id="new-game-button">N E W &nbsp;G A M E</li>
+				<ul class="vertical-menu">
+					<li id="continue-game-button" class="button">C O N T I N U E &nbsp;G A M E</li>
+					<li id="new-game-button" class="button">N E W &nbsp;G A M E</li>
 				</ul>
 				{{template "links" .}}
 			</td>
@@ -14,11 +14,13 @@
 {{end}}
 
 {{define "game-menu"}}
-	<div id="game-menu" class="menu">
+	<div id="game-menu" class="menu-container">
 		<table>
 			<td>
-				<ul>
-					<li id="pause-button">PAUSE</li>
+				<ul class="horizontal-menu">
+					<li>Score</li>
+					<li id="pause-button" class="button">PAUSE</li>
+					<li>Best</li>
 				</ul>
 			</td>
 		</table>
