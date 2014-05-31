@@ -19,12 +19,20 @@ var BC = (function(root) {
 		var selectorView = BC.Selector.View.make(gl, board.metrics, resources.selectorTextureTile);
 		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
 
+		var scoreView = BC.Score.View.make();
+
 		function draw() {
+			drawScore();
+
 			drawRings();
 			drawStage();
 
 			// Draw selector last for alpha values.
 			drawSelector();
+		}
+
+		function drawScore() {
+			scoreView.draw(board.score);
 		}
 
 		function drawRings() {

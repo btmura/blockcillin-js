@@ -102,6 +102,9 @@ var BC = (function(root) {
 		var chainManager = BC.Cell.Chain.makeManager();
 		var dropManager = BC.Cell.Drop.makeManager(metrics);
 
+		var score = BC.Score.make();
+		board.score = score;
+
 		function move(direction) {
 			switch (direction) {
 				case Direction.LEFT:
@@ -227,7 +230,7 @@ var BC = (function(root) {
 			// Update the board matrices.
 			updateBoardMatrices();
 
-			// Update
+			// Add or remove rings.
 			updateBoardRings();
 
 			return isGameOver();

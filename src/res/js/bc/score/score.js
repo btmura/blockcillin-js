@@ -3,7 +3,9 @@ var BC = (function(root) {
 	var me = root.Score = root.Score || {};
 
 	me.make = function() {
-		return {};
+		return {
+			score: 1337
+		};
 	};
 
 	return root;
