@@ -102,7 +102,10 @@ var BC = (function(root) {
 		var chainManager = BC.Cell.Chain.makeManager();
 		var dropManager = BC.Cell.Drop.makeManager(metrics);
 
-		var score = BC.Score.make();
+		var speed = BC.Stat.make(1);
+		board.speed = speed;
+
+		var score = BC.Stat.make(0);
 		board.score = score;
 
 		function move(direction) {

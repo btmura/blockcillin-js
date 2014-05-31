@@ -19,10 +19,11 @@ var BC = (function(root) {
 		var selectorView = BC.Selector.View.make(gl, board.metrics, resources.selectorTextureTile);
 		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
 
-		var scoreView = BC.Score.View.make();
+		var speedView = BC.Stat.View.make("#speed-stat");
+		var scoreView = BC.Stat.View.make("#score-stat");
 
 		function draw() {
-			drawScore();
+			drawStats();
 
 			drawRings();
 			drawStage();
@@ -31,7 +32,8 @@ var BC = (function(root) {
 			drawSelector();
 		}
 
-		function drawScore() {
+		function drawStats() {
+			speedView.draw(board.speed);
 			scoreView.draw(board.score);
 		}
 
