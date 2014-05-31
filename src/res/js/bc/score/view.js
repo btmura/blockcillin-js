@@ -7,7 +7,7 @@ var BC = (function(root) {
 		var scoreText = $("#score-text");
 
 		function draw(score) {
-			scoreText.text(score.score);
+			scoreText.text(score.value);
 		}
 
 		return {

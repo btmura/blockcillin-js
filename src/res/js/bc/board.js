@@ -244,7 +244,7 @@ var BC = (function(root) {
 			var result = chainManager.update(board);
 			for (var i = 0; i < result.newChains.length; i++) {
 				var chain = result.newChains[i];
-				score.score += 100 * chain.length;
+				score.value += 100 * chain.length;
 			}
 			return result.pendingChainCount > 0;
 		}
