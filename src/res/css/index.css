@@ -60,7 +60,8 @@ body, a {
 }
 
 .horizontal-menu li {
-	display: inline;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 .button {
@@ -83,6 +84,17 @@ body, a {
 		rgba(70, 0, 0, 0.9),
 		rgba(140, 0, 0, 0.9)
 	);
+}
+
+.stat {
+	padding: 5px;
+}
+
+.stat h2, .stat p {
+	font-size: 0.75em;
+	margin: 0px;
+	padding: 0px;
+	white-space: nowrap;
 }
 
 #links {

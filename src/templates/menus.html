@@ -4,8 +4,8 @@
 			<td>
 				<h1 id="main-menu-title">b l o c k c i l l i n</h1>
 				<ul class="vertical-menu">
-					<li id="continue-game-button" class="button">C O N T I N U E &nbsp;G A M E</li>
-					<li id="new-game-button" class="button">N E W &nbsp;G A M E</li>
+					<li class="button" id="continue-game-button">C O N T I N U E &nbsp;G A M E</li>
+					<li class="button" id="new-game-button">N E W &nbsp;G A M E</li>
 				</ul>
 				{{template "links" .}}
 			</td>
@@ -18,9 +18,9 @@
 		<table>
 			<td>
 				<ul class="horizontal-menu">
-					<li>Score</li>
-					<li id="pause-button" class="button">PAUSE</li>
-					<li>Best</li>
+					<li class="stat"><h2>SPEED</h2><p>1</p></li>
+					<li class="button" id="pause-button">PAUSE</li>
+					<li class="stat"><h2>SCORE</h2><p>0</p></li>
 				</ul>
 			</td>
 		</table>
