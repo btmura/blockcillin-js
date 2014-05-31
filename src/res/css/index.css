@@ -55,10 +55,6 @@ body, a {
 	padding: 0px;
 }
 
-.horizontal-menu {
-	padding-top: 10px;
-}
-
 .horizontal-menu li {
 	display: inline-block;
 	vertical-align: middle;
@@ -95,12 +91,6 @@ body, a {
 	margin: 0px;
 	padding: 0px;
 	white-space: nowrap;
-}
-
-#links {
-	color: #999999;
-	font-size: 0.75em;
-	margin-top: 20px;
 }
 
 #canvas {
