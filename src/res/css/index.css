@@ -29,7 +29,7 @@ table {
 }
 
 @media (min-width: 400px) {
-	#main-menu > table {
+	#main-menu table {
 		width: 400px;
 	}
 }
