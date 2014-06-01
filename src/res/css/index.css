@@ -86,7 +86,7 @@ body, a {
 	padding: 5px;
 }
 
-.stat h2, .stat p {
+.button h2, .button p, .stat h2, .stat p {
 	font-size: 0.75em;
 	margin: 0px;
 	padding: 0px;

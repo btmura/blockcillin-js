@@ -20,6 +20,7 @@ var BC = (function(root) {
 		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
 
 		var speedView = BC.Stat.View.make("#speed-stat");
+		var timeView = BC.Stat.View.make("#time-stat");
 		var scoreView = BC.Stat.View.make("#score-stat");
 
 		function draw() {
@@ -33,7 +34,9 @@ var BC = (function(root) {
 		}
 
 		function drawStats() {
+			// TODO(btmura): consider reusing one view for all stats
 			speedView.draw(board.speed);
+			timeView.draw(board.time);
 			scoreView.draw(board.score);
 		}
 

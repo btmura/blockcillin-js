@@ -102,10 +102,22 @@ var BC = (function(root) {
 		var chainManager = BC.Cell.Chain.makeManager();
 		var dropManager = BC.Cell.Drop.makeManager(metrics);
 
-		var speed = BC.Stat.make(1);
+		var speed = BC.Stat.make({
+			value: 1,
+			unit: BC.Stat.Unit.INTEGER
+		});
 		board.speed = speed;
 
-		var score = BC.Stat.make(0);
+		var time = BC.Stat.make({
+			value: 0,
+			unit: BC.Stat.Unit.SECONDS
+		});
+		board.time = time;
+
+		var score = BC.Stat.make({
+			value: 0,
+			unit: BC.Stat.Unit.INTEGER
+		});
 		board.score = score;
 
 		function move(direction) {
@@ -226,6 +238,9 @@ var BC = (function(root) {
 			if (!stopRising) {
 				raiseBoard(watch);
 			}
+
+			// Update the time stat.
+			time.value += watch.deltaTime;
 
 			// Update selector which might have rotated the board.
 			selector.update(watch);
