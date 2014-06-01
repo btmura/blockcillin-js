@@ -20,8 +20,10 @@ var BC = (function(root) {
 		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
 
 		var speedLevelView = BC.Stat.View.make("#speed-level-stat");
-		var elapsedTimeView = BC.Stat.View.make("#time-stat");
+		var elapsedTimeView = BC.Stat.View.make("#elapsed-time-stat");
 		var scoreView = BC.Stat.View.make("#score-stat");
+		var mainMenuElapsedTimeView = BC.Stat.View.make("#main-menu-elapsed-time-stat");
+		var mainMenuScoreView = BC.Stat.View.make("#main-menu-score-stat");
 
 		function draw() {
 			drawStats();
@@ -38,6 +40,8 @@ var BC = (function(root) {
 			speedLevelView.draw(board.speedLevel);
 			elapsedTimeView.draw(board.elapsedTime);
 			scoreView.draw(board.score);
+			mainMenuElapsedTimeView.draw(board.elapsedTime);
+			mainMenuScoreView.draw(board.score);
 		}
 
 		function drawRings() {

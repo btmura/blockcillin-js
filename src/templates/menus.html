@@ -1,8 +1,12 @@
 {{define "main-menu"}}
 	<div id="main-menu" class="menu-container">
-		<table>
+		<table class="menu-container-table">
 			<td>
 				<h1 id="main-menu-title">b l o c k c i l l i n</h1>
+				<div id="main-menu-stats">
+					<p>Time: <span id="main-menu-elapsed-time-stat"></span></p>
+					<p>Score: <span id="main-menu-score-stat"></span></p>
+				</div>
 				<ul class="vertical-menu">
 					<li class="button" id="continue-game-button">C O N T I N U E &nbsp;G A M E</li>
 					<li class="button" id="new-game-button">N E W &nbsp;G A M E</li>
@@ -14,7 +18,7 @@
 
 {{define "game-menu"}}
 	<div id="game-menu" class="menu-container">
-		<table>
+		<table class="menu-container-table">
 			<td>
 				<ul class="horizontal-menu">
 					<li class="stat">
@@ -23,7 +27,7 @@
 					</li>
 					<li class="button" id="pause-button">
 						<h2>TIME</h2>
-						<p id="time-stat"></p>
+						<p id="elapsed-time-stat"></p>
 					</li>
 					<li class="stat">
 						<h2>SCORE</h2>

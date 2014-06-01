@@ -18,6 +18,7 @@ var BC = (function(root) {
 
 		var mainMenu = $("#main-menu");
 		var mainMenuTitle = $("#main-menu-title");
+		var mainMenuStats = $("#main-menu-stats");
 		var newGameButton = $("#new-game-button");
 		var continueGameButton = $("#continue-game-button");
 
@@ -281,6 +282,7 @@ var BC = (function(root) {
 		function showMainMenu(show) {
 			if (show) {
 				mainMenuTitle.text(getMainMenuTitle());
+				setVisible(mainMenuStats, started);
 				setVisible(continueGameButton, started);
 				mainMenu.fadeIn(MENU_DURATION);
 				gameMenu.fadeOut(MENU_DURATION);
@@ -293,7 +295,7 @@ var BC = (function(root) {
 		function getMainMenuTitle() {
 			if (gameOver) {
 				return MAIN_MENU_GAME_OVER_TITLE;
-			} else if (paused) {
+			} else if (started && paused) {
 				return MAIN_MENU_PAUSED_TITLE;
 			} else {
 				return MAIN_MENU_GAME_TITLE;

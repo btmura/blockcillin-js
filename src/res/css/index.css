@@ -9,6 +9,15 @@ body, a {
 	font-family: monospace;
 }
 
+h1, h2, p {
+	text-align: center;
+	white-space: nowrap;
+}
+
+table {
+	margin: auto;
+}
+
 #main-menu {
 	background: rgba(0, 0, 0, 0.75);
 	height: 100%;
@@ -20,33 +29,18 @@ body, a {
 }
 
 @media (min-width: 400px) {
-	#main-menu table {
+	#main-menu > table {
 		width: 400px;
 	}
 }
 
 .menu-container {
 	display: none;
-	text-align: center;
-
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	z-index: 2;
-}
-
-.menu-container table {
-	margin: auto;
-}
-
-.menu-container td {
-	text-align: center;
-	vertical-align: middle;
-}
-
-.menu-container h1 {
-	white-space: nowrap;
 }
 
 .vertical-menu, .horizontal-menu {
@@ -66,13 +60,14 @@ body, a {
 		rgba(40, 40, 40, 0.9),
 		rgba(70, 70, 70, 0.9)
 	);
+	border-radius: 20px;
 	box-shadow: inset 0px 0px 2px #555555;
 	text-shadow: 1px 1px 1px #333333;
-	border-radius: 20px;
 	cursor: pointer;
+	text-align: center;
+	white-space: nowrap;
 	margin: 10px;
 	padding: 10px;
-	white-space: nowrap;
 }
 
 .button:hover {
@@ -85,7 +80,6 @@ body, a {
 
 .stat {
 	padding: 5px;
-	white-space: nowrap;
 }
 
 .button h2, .button p, .stat h2, .stat p {
