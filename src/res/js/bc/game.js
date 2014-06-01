@@ -282,7 +282,7 @@ var BC = (function(root) {
 		function showMainMenu(show) {
 			if (show) {
 				mainMenuTitle.text(getMainMenuTitle());
-				setVisible(mainMenuStats, started);
+				setVisible(mainMenuStats, started || gameOver);
 				setVisible(continueGameButton, started);
 				mainMenu.fadeIn(MENU_DURATION);
 				gameMenu.fadeOut(MENU_DURATION);
