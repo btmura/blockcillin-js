@@ -37,6 +37,9 @@ var BC = (function(root) {
 		var watch = BC.StopWatch.make();
 		var audioPlayer = BC.Audio.Player.make();
 
+		var mainMenuElapsedTimeView = BC.Stat.View.make("#main-menu-elapsed-time-stat");
+		var mainMenuScoreView = BC.Stat.View.make("#main-menu-score-stat");
+
 		var board;
 		var boardView;
 
@@ -282,7 +285,7 @@ var BC = (function(root) {
 		function showMainMenu(show) {
 			if (show) {
 				mainMenuTitle.text(getMainMenuTitle());
-				setVisible(mainMenuStats, started || gameOver);
+				showMainMenuStats(started || gameOver);
 				setVisible(continueGameButton, started);
 				mainMenu.fadeIn(MENU_DURATION);
 				gameMenu.fadeOut(MENU_DURATION);
@@ -300,6 +303,15 @@ var BC = (function(root) {
 			} else {
 				return MAIN_MENU_GAME_TITLE;
 			}
+		}
+
+		function showMainMenuStats(show) {
+			// Update stats only on display and leave them the same as the menu fades out.
+			if (show) {
+				mainMenuScoreView.draw(board.score);
+				mainMenuElapsedTimeView.draw(board.elapsedTime);
+			}
+			setVisible(mainMenuStats, show);
 		}
 
 		function flicker(element) {
