@@ -72,6 +72,7 @@ body, a {
 	cursor: pointer;
 	margin: 10px;
 	padding: 10px;
+	white-space: nowrap;
 }
 
 .button:hover {
@@ -84,13 +85,13 @@ body, a {
 
 .stat {
 	padding: 5px;
+	white-space: nowrap;
 }
 
 .button h2, .button p, .stat h2, .stat p {
 	font-size: 0.75em;
 	margin: 0px;
 	padding: 0px;
-	white-space: nowrap;
 }
 
 #canvas {
