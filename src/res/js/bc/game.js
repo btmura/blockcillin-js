@@ -37,6 +37,7 @@ var BC = (function(root) {
 		var watch = BC.StopWatch.make();
 		var audioPlayer = BC.Audio.Player.make();
 
+		var mainMenuSpeedLevelView = BC.Stat.View.make("#main-menu-speed-level-stat");
 		var mainMenuElapsedTimeView = BC.Stat.View.make("#main-menu-elapsed-time-stat");
 		var mainMenuScoreView = BC.Stat.View.make("#main-menu-score-stat");
 
@@ -308,6 +309,7 @@ var BC = (function(root) {
 		function showMainMenuStats(show) {
 			// Update stats only on display and leave them the same as the menu fades out.
 			if (show) {
+				mainMenuSpeedLevelView.draw(board.speedLevel);
 				mainMenuScoreView.draw(board.score);
 				mainMenuElapsedTimeView.draw(board.elapsedTime);
 			}
