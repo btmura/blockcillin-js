@@ -12,10 +12,15 @@ var BC = (function(root) {
 
 		var RING_CAPACITY = 11;
 		var MAX_RISE_HEIGHT = RING_CAPACITY * metrics.ringHeight;
-		var RISE_SPEED = 0.02;
-		var SWAP_DURATION = 0.1;
+
 		var NUM_SPARE_RINGS = 2;
 		var SPARE_RING_HEIGHT = NUM_SPARE_RINGS * metrics.ringHeight;
+
+		var SPEED_LEVEL_DURATION = 30;
+		var INITIAL_RISE_SPEED = 0.02;
+		var RISE_SPEED_DELTA = 0.01;
+
+		var SWAP_DURATION = 0.1;
 
 		// Keep track of the selector to know what cells to swap.
 		var currentRing = 0;
@@ -102,17 +107,17 @@ var BC = (function(root) {
 		var chainManager = BC.Cell.Chain.makeManager();
 		var dropManager = BC.Cell.Drop.makeManager(metrics);
 
-		var speed = BC.Stat.make({
+		var speedLevel = BC.Stat.make({
 			value: 1,
 			unit: BC.Stat.Unit.INTEGER
 		});
-		board.speed = speed;
+		board.speedLevel = speedLevel;
 
-		var time = BC.Stat.make({
+		var elapsedTime = BC.Stat.make({
 			value: 0,
 			unit: BC.Stat.Unit.SECONDS
 		});
-		board.time = time;
+		board.elapsedTime = elapsedTime;
 
 		var score = BC.Stat.make({
 			value: 0,
@@ -239,8 +244,8 @@ var BC = (function(root) {
 				raiseBoard(watch);
 			}
 
-			// Update the time stat.
-			time.value += watch.deltaTime;
+			// Update the time-related stats.
+			updateTimeStats(watch);
 
 			// Update selector which might have rotated the board.
 			selector.update(watch);
@@ -252,6 +257,11 @@ var BC = (function(root) {
 			updateBoardRings();
 
 			return isGameOver();
+		}
+
+		function updateTimeStats(watch) {
+			elapsedTime.value += watch.deltaTime;
+			speedLevel.value = 1 + Math.floor(elapsedTime.value / SPEED_LEVEL_DURATION);
 		}
 
 		function updateCellDrops() {
@@ -268,7 +278,8 @@ var BC = (function(root) {
 		}
 
 		function raiseBoard(watch, rise) {
-			var translationDelta = RISE_SPEED * watch.deltaTime;
+			var riseSpeed = INITIAL_RISE_SPEED + (speedLevel.value - 1) * RISE_SPEED_DELTA;
+			var translationDelta = riseSpeed * watch.deltaTime;
 			if (riseHeight + translationDelta > MAX_RISE_HEIGHT) {
 				translationDelta = MAX_RISE_HEIGHT - riseHeight;
 			}
