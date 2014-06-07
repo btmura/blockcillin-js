@@ -18,18 +18,18 @@ table {
 	margin: auto;
 }
 
-#main-menu {
+#main-menu, #options-menu {
 	background: rgba(0, 0, 0, 0.75);
 	height: 100%;
 }
 
-#main-menu table {
+#main-menu table, #options-menu table {
 	width: 100%;
 	height: 100%;
 }
 
 @media (min-width: 400px) {
-	#main-menu table {
+	#main-menu table, #options-menu table {
 		width: 400px;
 	}
 }

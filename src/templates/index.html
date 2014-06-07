@@ -5,8 +5,9 @@
 		<link rel="stylesheet" type="text/css" href="css/index.css">
 	</head>
 	<body>
-		{{template "main-menu" .}}
-		{{template "game-menu" .}}
+		{{template "main-menu"}}
+		{{template "game-menu"}}
+		{{template "options-menu"}}
 		<canvas id="canvas"></canvas>
 		{{if .Compiled}}
 			{{template "bc-compiled"}}

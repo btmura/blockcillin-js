@@ -19,8 +19,10 @@ var BC = (function(root) {
 		var mainMenu = $("#main-menu");
 		var mainMenuTitle = $("#main-menu-title");
 		var mainMenuStats = $("#main-menu-stats");
-		var newGameButton = $("#new-game-button");
+
 		var continueGameButton = $("#continue-game-button");
+		var newGameButton = $("#new-game-button");
+		var optionsButton = $("#options-button");
 
 		var gameMenu = $("#game-menu");
 		var pauseButton = $("#pause-button");
@@ -42,6 +44,8 @@ var BC = (function(root) {
 		var mainMenuSpeedLevelView = BC.Stat.View.make("#main-menu-speed-level-stat");
 		var mainMenuElapsedTimeView = BC.Stat.View.make("#main-menu-elapsed-time-stat");
 		var mainMenuScoreView = BC.Stat.View.make("#main-menu-score-stat");
+
+		var optionsMenu = BC.Menu.Options.make();
 
 		var board;
 		var boardView;
@@ -178,6 +182,11 @@ var BC = (function(root) {
 		pauseButton.click(function() {
 			flicker(pauseButton);
 			pauseGame();
+		});
+
+		optionsButton.click(function() {
+			flicker(optionsButton);
+			setVisible(optionsMenu, true);
 		});
 
 		controller.setMenuActionListener(function() {
