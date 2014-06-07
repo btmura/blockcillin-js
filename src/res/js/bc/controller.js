@@ -2,8 +2,19 @@ var BC = (function(root) {
 
 	var me = root.Controller = root.Controller || {};
 
+	me.Key = {
+		UP: 0,
+		DOWN: 1,
+		LEFT: 2,
+		RIGHT: 3,
+		PRIMARY_ACTION: 4,
+		MENU_ACTION: 5
+	};
+
 	me.make = function(canvas) {
 		var TOUCH_THRESHOLD = 20;
+
+		var Key = BC.Controller.Key;
 
 		var touchStartX = 0;
 		var touchStartY = 0;
@@ -14,6 +25,14 @@ var BC = (function(root) {
 		var moveDownCallback = function() {};
 		var primaryActionCallback = function() {};
 		var menuActionCallback = function() {};
+
+		var keyCodeMap = {};
+		keyCodeMap[Key.UP] = 38;
+		keyCodeMap[Key.DOWN] = 40;
+		keyCodeMap[Key.LEFT] = 37;
+		keyCodeMap[Key.RIGHT] = 39;
+		keyCodeMap[Key.PRIMARY_ACTION] = 32;
+		keyCodeMap[Key.MENU_ACTION] = 27;
 
 		function setMoveLeft(callback) {
 			moveLeftCallback = callback;
@@ -41,27 +60,27 @@ var BC = (function(root) {
 
 		$(document).keydown(function(event) {
 			switch (event.keyCode) {
-				case 37: // left
+				case keyCodeMap[Key.LEFT]:
 					moveLeftCallback.call();
 					break;
 
-				case 39: // right
+				case keyCodeMap[Key.RIGHT]:
 					moveRightCallback.call();
 					break;
 
-				case 38: // up
+				case keyCodeMap[Key.UP]:
 					moveUpCallback.call();
 					break;
 
-				case 40: // down
+				case keyCodeMap[Key.DOWN]:
 					moveDownCallback.call();
 					break;
 
-				case 32: // space
+				case keyCodeMap[Key.PRIMARY_ACTION]:
 					primaryActionCallback.call();
 					break;
 
-				case 27: // esc
+				case keyCodeMap[Key.MENU_ACTION]:
 					menuActionCallback.call();
 					break;
 

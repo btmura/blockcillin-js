@@ -45,8 +45,6 @@ var BC = (function(root) {
 		var mainMenuElapsedTimeView = BC.Stat.View.make("#main-menu-elapsed-time-stat");
 		var mainMenuScoreView = BC.Stat.View.make("#main-menu-score-stat");
 
-		var optionsMenu = BC.Menu.Options.make();
-
 		var board;
 		var boardView;
 
@@ -56,6 +54,9 @@ var BC = (function(root) {
 		}
 
 		var controller = BC.Controller.make(canvas);
+		var optionsMenu = BC.Menu.Options.make({
+			controller: controller
+		});
 
 		var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 		if (!gl) {

@@ -3,10 +3,18 @@ var BC = (function(root) {
 	var parent = root.Menu = root.Menu || {};
 	var me = parent.Options = parent.Options || {};
 
-	me.make = function() {
-		var menu = $("#options-menu");
+	me.make = function(args) {
+		var controller = args.controller;
 
-		$("#close-button", menu).click(function() {
+		var menu = $("#options-menu");
+		var upButton = $("#up-button", menu);
+		var closeButton = $("#close-button", menu);
+
+		upButton.click(function() {
+			upButton.text("");
+		});
+
+		closeButton.click(function() {
 			hide();
 		});
 
