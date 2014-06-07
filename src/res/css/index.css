@@ -20,16 +20,28 @@ table {
 
 #main-menu, #options-menu {
 	background: rgba(0, 0, 0, 0.75);
+}
+
+.centered-menu-container, .menu-container {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 2;
+}
+
+.centered-menu-container {
 	height: 100%;
 }
 
-#main-menu table, #options-menu table {
+.centered-menu-container table {
 	width: 100%;
 	height: 100%;
 }
 
 @media (min-width: 400px) {
-	#main-menu table, #options-menu table {
+	.centered-menu-container table {
 		width: 400px;
 	}
 }
@@ -39,15 +51,6 @@ table {
 	text-align: center;
 	margin: 20px;
 	padding: 0px;
-}
-
-.menu-container {
-	display: none;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 2;
 }
 
 .vertical-menu, .horizontal-menu {
