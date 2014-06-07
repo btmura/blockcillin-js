@@ -10,14 +10,27 @@ var BC = (function(root) {
 
 		var menu = $("#options-menu");
 		var upButton = $("#up-button", menu);
+		var downButton = $("#down-button", menu);
+		var leftButton = $("#left-button", menu);
+		var rightButton = $("#right-button", menu);
+		var swapButton = $("#swap-button", menu);
 		var closeButton = $("#close-button", menu);
 
-		upButton.click(function() {
-			upButton.text("");
-			controller.assign(Key.UP, function(keyCode) {
-				upButton.text(keyCode);
+		function setupButton(button, key) {
+			button.text(controller.getKeyCode(key));
+			button.click(function() {
+				button.text(" ");
+				controller.assign(key, function(keyCode) {
+					button.text(keyCode);
+				});
 			});
-		});
+		}
+
+		setupButton(upButton, Key.UP);
+		setupButton(downButton, Key.DOWN);
+		setupButton(leftButton, Key.LEFT);
+		setupButton(rightButton, Key.RIGHT);
+		setupButton(swapButton, Key.PRIMARY_ACTION);
 
 		closeButton.click(function() {
 			hide();

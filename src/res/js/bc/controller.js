@@ -161,6 +161,10 @@ var BC = (function(root) {
 			assignCallback = callback;
 		}
 
+		function getKeyCode(key) {
+			return keyCodeMap[key];
+		}
+
 		return {
 			setMoveLeftListener: setMoveLeft,
 			setMoveRightListener: setMoveRight,
@@ -168,7 +172,8 @@ var BC = (function(root) {
 			setMoveDownListener: setMoveDown,
 			setPrimaryActionListener: setPrimaryAction,
 			setMenuActionListener: setMenuAction,
-			assign: assign
+			assign: assign,
+			getKeyCode: getKeyCode
 		};
 	};
 
