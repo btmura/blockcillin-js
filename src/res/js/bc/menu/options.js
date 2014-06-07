@@ -4,6 +4,8 @@ var BC = (function(root) {
 	var me = parent.Options = parent.Options || {};
 
 	me.make = function(args) {
+		var Key = BC.Controller.Key;
+
 		var controller = args.controller;
 
 		var menu = $("#options-menu");
@@ -12,6 +14,9 @@ var BC = (function(root) {
 
 		upButton.click(function() {
 			upButton.text("");
+			controller.assign(Key.UP, function(keyCode) {
+				upButton.text(keyCode);
+			});
 		});
 
 		closeButton.click(function() {

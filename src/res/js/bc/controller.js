@@ -16,9 +16,6 @@ var BC = (function(root) {
 
 		var Key = BC.Controller.Key;
 
-		var touchStartX = 0;
-		var touchStartY = 0;
-
 		var moveLeftCallback = function() {};
 		var moveRightCallback = function() {};
 		var moveUpCallback = function() {};
@@ -33,6 +30,12 @@ var BC = (function(root) {
 		keyCodeMap[Key.RIGHT] = 39;
 		keyCodeMap[Key.PRIMARY_ACTION] = 32;
 		keyCodeMap[Key.MENU_ACTION] = 27;
+
+		var assignKey;
+		var assignCallback;
+
+		var touchStartX = 0;
+		var touchStartY = 0;
 
 		function setMoveLeft(callback) {
 			moveLeftCallback = callback;
@@ -59,6 +62,13 @@ var BC = (function(root) {
 		}
 
 		$(document).keydown(function(event) {
+			if (assignKey != null) {
+				keyCodeMap[assignKey] = event.keyCode;
+				assignKey = null;
+				assignCallback.call(null, event.keyCode);
+				return false;
+			}
+
 			switch (event.keyCode) {
 				case keyCodeMap[Key.LEFT]:
 					moveLeftCallback.call();
@@ -146,13 +156,19 @@ var BC = (function(root) {
 			return false;
 		});
 
+		function assign(key, callback) {
+			assignKey = key;
+			assignCallback = callback;
+		}
+
 		return {
 			setMoveLeftListener: setMoveLeft,
 			setMoveRightListener: setMoveRight,
 			setMoveUpListener: setMoveUp,
 			setMoveDownListener: setMoveDown,
 			setPrimaryActionListener: setPrimaryAction,
-			setMenuActionListener: setMenuAction
+			setMenuActionListener: setMenuAction,
+			assign: assign
 		};
 	};
 
