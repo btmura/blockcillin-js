@@ -6,6 +6,10 @@ var BC = (function(root) {
 	me.make = function() {
 		var menu = $("#options-menu");
 
+		$("#close-button", menu).click(function() {
+			hide();
+		});
+
 		function show() {
 			menu.show();
 		}
