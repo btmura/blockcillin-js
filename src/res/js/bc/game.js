@@ -25,6 +25,8 @@ var BC = (function(root) {
 		var gameMenu = $("#game-menu");
 		var pauseButton = $("#pause-button");
 
+		var buttons = $(".button");
+
 		var metrics = {
 			numRings: 3,
 			numCells: 24,
@@ -153,37 +155,28 @@ var BC = (function(root) {
 		var viewMatrix = makeViewMatrix();
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
-		showMainMenu(true);
-
-		function addButtonHoverSound(button) {
-			button.mouseenter(function() {
-				audioPlayer.play(Sound.BUTTON_HOVER);
-			});
-		}
-
-		addButtonHoverSound(newGameButton);
-		addButtonHoverSound(continueGameButton);
-		addButtonHoverSound(pauseButton);
-
-		function playButtonClickSound() {
+		buttons.click(function() {
 			audioPlayer.play(Sound.BUTTON_CLICK);
-		}
+		});
+
+		buttons.mouseenter(function() {
+			audioPlayer.play(Sound.BUTTON_HOVER);
+		});
+
+		showMainMenu(true);
 
 		newGameButton.click(function() {
 			flicker(newGameButton);
-			playButtonClickSound();
 			startGame();
 		});
 
 		continueGameButton.click(function() {
 			flicker(continueGameButton);
-			playButtonClickSound();
 			resumeGame();
 		});
 
 		pauseButton.click(function() {
 			flicker(pauseButton);
-			playButtonClickSound();
 			pauseGame();
 		});
 
