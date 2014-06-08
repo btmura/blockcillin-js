@@ -35,7 +35,7 @@ var BC = (function(root) {
 
 		function initKey(key, storageKey, defaultKeyCode) {
 			storageKeyMap[key] = storageKey;
-			keyCodeMap[key] = storage[storageKey] || defaultKeyCode;
+			keyCodeMap[key] = parseInt(storage[storageKey], 10) || defaultKeyCode;
 		}
 
 		initKey(Key.UP, "up", 38);
@@ -104,6 +104,7 @@ var BC = (function(root) {
 					break;
 
 				default:
+					console.log(keyCodeMap);
 					console.log(event.keyCode);
 					break;
 			}
