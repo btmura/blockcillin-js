@@ -6,13 +6,17 @@ var BC = (function(root) {
 	me.make = function() {
 		var Sound = BC.Audio.Sound;
 
-		// Fix up prefixing of AudioContext.
-		window.AudioContext = window.AudioContext || window.webkitAudioContext;
-		var context = new AudioContext();
-
+		var context;
 		var buffer;
 
-		loadFile("audio/sounds.ogg");
+		// Fix up prefixing of AudioContext.
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
+		// Create context and load sounds if the constructor is available.
+		if (window.AudioContext) {
+			context = new AudioContext();
+			loadFile("audio/sounds.ogg");
+		}
 
 		function loadFile(url) {
 			var request = new XMLHttpRequest();
