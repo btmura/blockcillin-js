@@ -6,7 +6,6 @@ var BC = (function(root) {
 	me.make = function(args) {
 		var Key = BC.Controller.Key;
 
-		var ASSIGN_KEY_BUTTON_TEXT = "...";
 		var KEY_CODE_NAME_MAP = {
 			8: "Backspace",
 			9: "Tab",
@@ -110,6 +109,9 @@ var BC = (function(root) {
 			222: "'"
 		};
 
+		var ASSIGN_KEY_BUTTON_TEXT = "...";
+		var MENU_FADE_SPEED = "slow";
+
 		var controller = args.controller;
 
 		var menu = $("#options-menu");
@@ -145,11 +147,11 @@ var BC = (function(root) {
 		});
 
 		function show() {
-			menu.show();
+			menu.fadeIn(MENU_FADE_SPEED);
 		}
 
 		function hide() {
-			menu.hide();
+			menu.fadeOut(MENU_FADE_SPEED);
 		}
 
 		return {
