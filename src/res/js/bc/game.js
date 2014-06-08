@@ -20,7 +20,7 @@ var BC = (function(root) {
 		var mainMenuTitle = $("#main-menu-title");
 		var mainMenuStats = $("#main-menu-stats");
 
-		var continueGameButton = $("#continue-game-button");
+		var continueButton = $("#continue-button");
 		var newGameButton = $("#new-game-button");
 		var optionsButton = $("#options-button");
 
@@ -175,7 +175,7 @@ var BC = (function(root) {
 			startGame();
 		});
 
-		continueGameButton.click(function() {
+		continueButton.click(function() {
 			resumeGame();
 		});
 
@@ -287,7 +287,7 @@ var BC = (function(root) {
 			if (show) {
 				mainMenuTitle.text(getMainMenuTitle());
 				showMainMenuStats(started || gameOver);
-				setVisible(continueGameButton, started);
+				setVisible(continueButton, started);
 				mainMenu.fadeIn(MENU_DURATION);
 				gameMenu.fadeOut(MENU_DURATION);
 			} else {

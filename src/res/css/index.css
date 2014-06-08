@@ -46,6 +46,17 @@ table {
 	}
 }
 
+.menu-panel {
+	background: rgba(30, 30, 30, 0.9);
+	background-image: linear-gradient(
+		rgba(20, 20, 20, 0.9),
+		rgba(40, 40, 40, 0.9)
+	);
+	border-radius: 20px;
+	text-align: center;
+	padding: 10px;
+}
+
 .main-menu-stats {
 	list-style: none;
 	text-align: center;
@@ -79,7 +90,6 @@ table {
 	padding: 10px;
 	text-align: center;
 	text-shadow: 1px 1px 1px #333333;
-	text-transform: uppercase;
 	white-space: nowrap;
 }
 
@@ -105,7 +115,6 @@ fieldset {
 	border-radius: 10px;
 	border-color: #666666;
 	text-align: center;
-	text-transform: uppercase;
 }
 
 fieldset label, fieldset button {
@@ -117,17 +126,6 @@ fieldset label, fieldset button {
 fieldset p {
 	margin: 0px;
 	padding: 0px;
-}
-
-.light-menu-panel {
-	background: rgba(30, 30, 30, 0.9);
-	background-image: linear-gradient(
-		rgba(20, 20, 20, 0.9),
-		rgba(40, 40, 40, 0.9)
-	);
-	border-radius: 20px;
-	text-align: center;
-	padding: 10px;
 }
 
 #canvas {
