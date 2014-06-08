@@ -38,12 +38,12 @@ var BC = (function(root) {
 			keyCodeMap[key] = parseInt(storage[storageKey], 10) || defaultKeyCode;
 		}
 
-		initKey(Key.UP, "up", 38);
-		initKey(Key.DOWN, "down", 40);
-		initKey(Key.LEFT, "left", 37);
-		initKey(Key.RIGHT, "right", 39);
-		initKey(Key.PRIMARY_ACTION, "primaryAction", 32);
-		initKey(Key.MENU_ACTION, "menuAction", 27);
+		initKey(Key.UP, "bc.controller.up", 38);
+		initKey(Key.DOWN, "bc.controller.down", 40);
+		initKey(Key.LEFT, "bc.controller.left", 37);
+		initKey(Key.RIGHT, "bc.controller.right", 39);
+		initKey(Key.PRIMARY_ACTION, "bc.controller.primaryAction", 32);
+		initKey(Key.MENU_ACTION, "bc.controller.menuAction", 27);
 
 		function setMoveLeft(callback) {
 			moveLeftCallback = callback;
