@@ -70,14 +70,17 @@ table {
 		rgba(40, 40, 40, 0.9),
 		rgba(70, 70, 70, 0.9)
 	);
+	border: 1px;
 	border-radius: 20px;
 	box-shadow: inset 0px 0px 2px #555555;
-	text-shadow: 1px 1px 1px #333333;
+	color: #ffffff;
 	cursor: pointer;
-	text-align: center;
-	white-space: nowrap;
 	margin: 10px;
 	padding: 10px;
+	text-align: center;
+	text-shadow: 1px 1px 1px #333333;
+	text-transform: uppercase;
+	white-space: nowrap;
 }
 
 .button:hover {
@@ -100,6 +103,7 @@ table {
 
 fieldset {
 	border-radius: 10px;
+	border-color: #666666;
 	text-align: center;
 	text-transform: uppercase;
 }
@@ -110,28 +114,20 @@ fieldset label, fieldset button {
 	width: 100px;
 }
 
-fieldset button {
-	border-radius: 10px;
+fieldset p {
+	margin: 0px;
+	padding: 0px;
 }
 
 .light-menu-panel {
-	background: rgba(50, 50, 50, 0.9);
+	background: rgba(30, 30, 30, 0.9);
 	background-image: linear-gradient(
-		rgba(40, 40, 40, 0.9),
-		rgba(70, 70, 70, 0.9)
+		rgba(20, 20, 20, 0.9),
+		rgba(40, 40, 40, 0.9)
 	);
-	border-radius: 10px;
-	padding: 10px;
-}
-
-.centered-button-container {
+	border-radius: 20px;
 	text-align: center;
-	margin: 10px;
-}
-
-.centered-button-container button {
-	border-radius: 10px;
-	text-transform: uppercase;
+	padding: 10px;
 }
 
 #canvas {

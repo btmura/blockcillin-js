@@ -109,7 +109,7 @@ var BC = (function(root) {
 			222: "'"
 		};
 
-		var ASSIGN_KEY_BUTTON_TEXT = "...";
+		var ASSIGN_KEY_BUTTON_TEXT = "PRESS KEY";
 		var MENU_FADE_SPEED = "slow";
 
 		var controller = args.controller;

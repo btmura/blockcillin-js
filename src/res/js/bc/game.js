@@ -160,8 +160,9 @@ var BC = (function(root) {
 		var viewMatrix = makeViewMatrix();
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
-		buttons.click(function() {
+		buttons.click(function(event) {
 			audioPlayer.play(Sound.BUTTON_CLICK);
+			flicker($(event.target));
 		});
 
 		buttons.mouseenter(function() {
@@ -171,22 +172,18 @@ var BC = (function(root) {
 		showMainMenu(true);
 
 		newGameButton.click(function() {
-			flicker(newGameButton);
 			startGame();
 		});
 
 		continueGameButton.click(function() {
-			flicker(continueGameButton);
 			resumeGame();
 		});
 
 		pauseButton.click(function() {
-			flicker(pauseButton);
 			pauseGame();
 		});
 
 		optionsButton.click(function() {
-			flicker(optionsButton);
 			setVisible(optionsMenu, true);
 		});
 
