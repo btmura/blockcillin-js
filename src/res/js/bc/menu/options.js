@@ -114,40 +114,51 @@ var BC = (function(root) {
 
 		var controller = args.controller;
 
+		var keyButtonMap = {};
+
 		var menu = $("#options-menu");
-		var upButton = $("#up-button", menu);
-		var downButton = $("#down-button", menu);
-		var leftButton = $("#left-button", menu);
-		var rightButton = $("#right-button", menu);
-		var swapButton = $("#swap-button", menu);
-		var menuButton = $("#menu-button", menu);
+		var upButton = newKeyButton("#up-button", menu, Key.UP);
+		var downButton = newKeyButton("#down-button", menu, Key.DOWN);
+		var leftButton = newKeyButton("#left-button", menu, Key.LEFT);
+		var rightButton = newKeyButton("#right-button", menu, Key.RIGHT);
+		var swapButton = newKeyButton("#swap-button", menu, Key.PRIMARY_ACTION);
+		var menuButton = newKeyButton("#menu-button", menu, Key.MENU_ACTION);
 		var closeButton = $("#close-button", menu);
+
+		function newKeyButton(id, menu, key) {
+			var button = $(id, menu);
+			keyButtonMap[key] = button;
+			button.click(function() {
+				button.text(ASSIGN_KEY_BUTTON_TEXT);
+				controller.startKeyCodeAssignment(key);
+			});
+			return button;
+		}
 
 		closeButton.click(function() {
 			hide();
 		});
 
-		function setupButton(button, key) {
-			setButtonKeyCodeText(button, controller.getKeyCode(key));
-			button.click(function() {
-				button.text(ASSIGN_KEY_BUTTON_TEXT);
-				controller.startKeyCodeAssignment(key, function(keyCode) {
-					setButtonKeyCodeText(button, keyCode);
-				});
-			});
-		}
+		controller.setKeyCodeAssignmentListener(function(key, keyCode) {
+			var button = keyButtonMap[key];
+			setButtonKeyCodeText(button, keyCode);
+		});
 
 		function setButtonKeyCodeText(button, keyCode) {
 			button.text(KEY_CODE_TEXT[keyCode] || "#" + keyCode);
 		}
 
+		function refreshButton(button, key) {
+			setButtonKeyCodeText(button, controller.getKeyCode(key));
+		}
+
 		function show() {
-			setupButton(upButton, Key.UP);
-			setupButton(downButton, Key.DOWN);
-			setupButton(leftButton, Key.LEFT);
-			setupButton(rightButton, Key.RIGHT);
-			setupButton(swapButton, Key.PRIMARY_ACTION);
-			setupButton(menuButton, Key.MENU_ACTION);
+			refreshButton(upButton, Key.UP);
+			refreshButton(downButton, Key.DOWN);
+			refreshButton(leftButton, Key.LEFT);
+			refreshButton(rightButton, Key.RIGHT);
+			refreshButton(swapButton, Key.PRIMARY_ACTION);
+			refreshButton(menuButton, Key.MENU_ACTION);
 
 			menu.fadeIn(MENU_FADE_SPEED);
 		}

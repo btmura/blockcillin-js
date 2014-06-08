@@ -22,9 +22,9 @@ var BC = (function(root) {
 		var moveDownCallback = function() {};
 		var primaryActionCallback = function() {};
 		var menuActionCallback = function() {};
+		var keyCodeAssignmentCallback = function() {};
 
 		var assignKey;
-		var assignCallback;
 
 		var touchStartX = 0;
 		var touchStartY = 0;
@@ -71,7 +71,7 @@ var BC = (function(root) {
 			if (assignKey != null) {
 				if (!isKeyCodeTaken(assignKey, event.keyCode)) {
 					keyData[assignKey].setKeyCode(event.keyCode);
-					assignCallback(event.keyCode);
+					keyCodeAssignmentCallback(assignKey, event.keyCode);
 					cancelKeyCodeAssignment();
 				}
 				return false;
@@ -188,14 +188,16 @@ var BC = (function(root) {
 			menuActionCallback = callback;
 		}
 
-		function startKeyCodeAssignment(key, callback) {
+		function setKeyCodeAssignmentListener(callback) {
+			keyCodeAssignmentCallback = callback;
+		}
+
+		function startKeyCodeAssignment(key) {
 			assignKey = key;
-			assignCallback = callback;
 		}
 
 		function cancelKeyCodeAssignment() {
 			assignKey = null;
-			assignCallback = null;
 		}
 
 		function getKeyCode(key) {
@@ -209,6 +211,7 @@ var BC = (function(root) {
 			setMoveDownListener: setMoveDownListener,
 			setPrimaryActionListener: setPrimaryActionListener,
 			setMenuActionListener: setMenuActionListener,
+			setKeyCodeAssignmentListener: setKeyCodeAssignmentListener,
 			startKeyCodeAssignment: startKeyCodeAssignment,
 			cancelKeyCodeAssignment: cancelKeyCodeAssignment,
 			getKeyCode: getKeyCode
