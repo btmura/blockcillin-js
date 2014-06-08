@@ -25,6 +25,7 @@ var BC = (function(root) {
 
 		var storageKeyMap = {};
 		var keyCodeMap = {};
+		var storage = localStorage || {};
 
 		var assignKey;
 		var assignCallback;
@@ -34,7 +35,7 @@ var BC = (function(root) {
 
 		function initKey(key, storageKey, defaultKeyCode) {
 			storageKeyMap[key] = storageKey;
-			keyCodeMap[key] = localStorage[storageKey] || defaultKeyCode;
+			keyCodeMap[key] = storage[storageKey] || defaultKeyCode;
 		}
 
 		initKey(Key.UP, "up", 38);
@@ -71,7 +72,7 @@ var BC = (function(root) {
 		$(document).keydown(function(event) {
 			if (assignKey != null) {
 				keyCodeMap[assignKey] = event.keyCode;
-				localStorage[storageKeyMap[assignKey]] = event.keyCode;
+				storage[storageKeyMap[assignKey]] = event.keyCode;
 				assignKey = null;
 				assignCallback.call(null, event.keyCode);
 				return false;

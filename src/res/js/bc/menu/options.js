@@ -120,6 +120,7 @@ var BC = (function(root) {
 		var leftButton = $("#left-button", menu);
 		var rightButton = $("#right-button", menu);
 		var swapButton = $("#swap-button", menu);
+		var menuButton = $("#menu-button", menu);
 		var closeButton = $("#close-button", menu);
 
 		function setupButton(button, key) {
@@ -141,6 +142,7 @@ var BC = (function(root) {
 		setupButton(leftButton, Key.LEFT);
 		setupButton(rightButton, Key.RIGHT);
 		setupButton(swapButton, Key.PRIMARY_ACTION);
+		setupButton(menuButton, Key.MENU_ACTION);
 
 		closeButton.click(function() {
 			hide();
