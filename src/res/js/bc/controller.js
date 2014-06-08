@@ -3,12 +3,12 @@ var BC = (function(root) {
 	var me = root.Controller = root.Controller || {};
 
 	me.Key = {
-		UP: 0,
-		DOWN: 1,
-		LEFT: 2,
-		RIGHT: 3,
-		PRIMARY_ACTION: 4,
-		MENU_ACTION: 5
+		UP: "0",
+		DOWN: "1",
+		LEFT: "2",
+		RIGHT: "3",
+		PRIMARY_ACTION: "4",
+		MENU_ACTION: "5"
 	};
 
 	me.make = function(canvas) {
@@ -23,88 +23,86 @@ var BC = (function(root) {
 		var primaryActionCallback = function() {};
 		var menuActionCallback = function() {};
 
-		var storageKeyMap = {};
-		var keyCodeMap = {};
-		var storage = localStorage || {};
-
 		var assignKey;
 		var assignCallback;
 
 		var touchStartX = 0;
 		var touchStartY = 0;
 
-		function initKey(key, storageKey, defaultKeyCode) {
-			storageKeyMap[key] = storageKey;
-			keyCodeMap[key] = parseInt(storage[storageKey], 10) || defaultKeyCode;
+		var storage = localStorage || {};
+		var keyData = {};
+
+		keyData[Key.UP] = newKey("bc.controller.up", 38);
+		keyData[Key.DOWN] = newKey("bc.controller.down", 40);
+		keyData[Key.LEFT] = newKey("bc.controller.left", 37);
+		keyData[Key.RIGHT] = newKey("bc.controller.right", 39);
+		keyData[Key.PRIMARY_ACTION] = newKey("bc.controller.primaryAction", 32);
+		keyData[Key.MENU_ACTION] = newKey("bc.controller.menuAction", 27);
+
+		function newKey(storageKey, defaultKeyCode) {
+			var initKeyCode = parseInt(storage[storageKey], 10) || defaultKeyCode;
+
+			var key = {
+				storageKey: storageKey,
+				keyCode: initKeyCode,
+				setKeyCode: setKeyCode
+			};
+
+			function setKeyCode(newKeyCode) {
+				key.keyCode = newKeyCode;
+				storage[storageKey] = newKeyCode;
+			}
+
+			return key;
 		}
 
-		initKey(Key.UP, "bc.controller.up", 38);
-		initKey(Key.DOWN, "bc.controller.down", 40);
-		initKey(Key.LEFT, "bc.controller.left", 37);
-		initKey(Key.RIGHT, "bc.controller.right", 39);
-		initKey(Key.PRIMARY_ACTION, "bc.controller.primaryAction", 32);
-		initKey(Key.MENU_ACTION, "bc.controller.menuAction", 27);
-
-		function setMoveLeft(callback) {
-			moveLeftCallback = callback;
-		}
-
-		function setMoveRight(callback) {
-			moveRightCallback = callback;
-		}
-
-		function setMoveUp(callback) {
-			moveUpCallback = callback;
-		}
-
-		function setMoveDown(callback) {
-			moveDownCallback = callback;
-		}
-
-		function setPrimaryAction(callback) {
-			primaryActionCallback = callback;
-		}
-
-		function setMenuAction(callback) {
-			menuActionCallback = callback;
+		function isKeyCodeTaken(assignKey, newKeyCode) {
+			for (var key in keyData) {
+				if (keyData.hasOwnProperty(key)) {
+					if (key !== assignKey && keyData[key].keyCode === newKeyCode) {
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		$(document).keydown(function(event) {
 			if (assignKey != null) {
-				keyCodeMap[assignKey] = event.keyCode;
-				storage[storageKeyMap[assignKey]] = event.keyCode;
-				assignKey = null;
-				assignCallback.call(null, event.keyCode);
+				if (!isKeyCodeTaken(assignKey, event.keyCode)) {
+					keyData[assignKey].setKeyCode(event.keyCode);
+					assignCallback(event.keyCode);
+					cancelKeyCodeAssignment();
+				}
 				return false;
 			}
 
 			switch (event.keyCode) {
-				case keyCodeMap[Key.LEFT]:
+				case keyData[Key.LEFT].keyCode:
 					moveLeftCallback.call();
 					break;
 
-				case keyCodeMap[Key.RIGHT]:
+				case keyData[Key.RIGHT].keyCode:
 					moveRightCallback.call();
 					break;
 
-				case keyCodeMap[Key.UP]:
+				case keyData[Key.UP].keyCode:
 					moveUpCallback.call();
 					break;
 
-				case keyCodeMap[Key.DOWN]:
+				case keyData[Key.DOWN].keyCode:
 					moveDownCallback.call();
 					break;
 
-				case keyCodeMap[Key.PRIMARY_ACTION]:
+				case keyData[Key.PRIMARY_ACTION].keyCode:
 					primaryActionCallback.call();
 					break;
 
-				case keyCodeMap[Key.MENU_ACTION]:
+				case keyData[Key.MENU_ACTION].keyCode:
 					menuActionCallback.call();
 					break;
 
 				default:
-					console.log(keyCodeMap);
 					console.log(event.keyCode);
 					break;
 			}
@@ -166,23 +164,53 @@ var BC = (function(root) {
 			return false;
 		});
 
-		function assign(key, callback) {
+		function setMoveLeftListener(callback) {
+			moveLeftCallback = callback;
+		}
+
+		function setMoveRightListener(callback) {
+			moveRightCallback = callback;
+		}
+
+		function setMoveUpListener(callback) {
+			moveUpCallback = callback;
+		}
+
+		function setMoveDownListener(callback) {
+			moveDownCallback = callback;
+		}
+
+		function setPrimaryActionListener(callback) {
+			primaryActionCallback = callback;
+		}
+
+		function setMenuActionListener(callback) {
+			menuActionCallback = callback;
+		}
+
+		function startKeyCodeAssignment(key, callback) {
 			assignKey = key;
 			assignCallback = callback;
 		}
 
+		function cancelKeyCodeAssignment() {
+			assignKey = null;
+			assignCallback = null;
+		}
+
 		function getKeyCode(key) {
-			return keyCodeMap[key];
+			return keyData[key].keyCode;
 		}
 
 		return {
-			setMoveLeftListener: setMoveLeft,
-			setMoveRightListener: setMoveRight,
-			setMoveUpListener: setMoveUp,
-			setMoveDownListener: setMoveDown,
-			setPrimaryActionListener: setPrimaryAction,
-			setMenuActionListener: setMenuAction,
-			assign: assign,
+			setMoveLeftListener: setMoveLeftListener,
+			setMoveRightListener: setMoveRightListener,
+			setMoveUpListener: setMoveUpListener,
+			setMoveDownListener: setMoveDownListener,
+			setPrimaryActionListener: setPrimaryActionListener,
+			setMenuActionListener: setMenuActionListener,
+			startKeyCodeAssignment: startKeyCodeAssignment,
+			cancelKeyCodeAssignment: cancelKeyCodeAssignment,
 			getKeyCode: getKeyCode
 		};
 	};

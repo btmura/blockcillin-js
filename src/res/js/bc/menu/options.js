@@ -6,7 +6,7 @@ var BC = (function(root) {
 	me.make = function(args) {
 		var Key = BC.Controller.Key;
 
-		var KEY_CODE_NAME_MAP = {
+		var KEY_CODE_TEXT = {
 			8: "Backspace",
 			9: "Tab",
 			13: "Enter",
@@ -123,36 +123,37 @@ var BC = (function(root) {
 		var menuButton = $("#menu-button", menu);
 		var closeButton = $("#close-button", menu);
 
+		closeButton.click(function() {
+			hide();
+		});
+
 		function setupButton(button, key) {
 			setButtonKeyCodeText(button, controller.getKeyCode(key));
 			button.click(function() {
 				button.text(ASSIGN_KEY_BUTTON_TEXT);
-				controller.assign(key, function(keyCode) {
+				controller.startKeyCodeAssignment(key, function(keyCode) {
 					setButtonKeyCodeText(button, keyCode);
 				});
 			});
 		}
 
 		function setButtonKeyCodeText(button, keyCode) {
-			button.text(KEY_CODE_NAME_MAP[keyCode] || keyCode);
+			button.text(KEY_CODE_TEXT[keyCode] || "#" + keyCode);
 		}
 
-		setupButton(upButton, Key.UP);
-		setupButton(downButton, Key.DOWN);
-		setupButton(leftButton, Key.LEFT);
-		setupButton(rightButton, Key.RIGHT);
-		setupButton(swapButton, Key.PRIMARY_ACTION);
-		setupButton(menuButton, Key.MENU_ACTION);
-
-		closeButton.click(function() {
-			hide();
-		});
-
 		function show() {
+			setupButton(upButton, Key.UP);
+			setupButton(downButton, Key.DOWN);
+			setupButton(leftButton, Key.LEFT);
+			setupButton(rightButton, Key.RIGHT);
+			setupButton(swapButton, Key.PRIMARY_ACTION);
+			setupButton(menuButton, Key.MENU_ACTION);
+
 			menu.fadeIn(MENU_FADE_SPEED);
 		}
 
 		function hide() {
+			controller.cancelKeyCodeAssignment();
 			menu.fadeOut(MENU_FADE_SPEED);
 		}
 
