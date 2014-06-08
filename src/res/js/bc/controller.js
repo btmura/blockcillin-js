@@ -23,19 +23,26 @@ var BC = (function(root) {
 		var primaryActionCallback = function() {};
 		var menuActionCallback = function() {};
 
+		var storageKeyMap = {};
 		var keyCodeMap = {};
-		keyCodeMap[Key.UP] = 38;
-		keyCodeMap[Key.DOWN] = 40;
-		keyCodeMap[Key.LEFT] = 37;
-		keyCodeMap[Key.RIGHT] = 39;
-		keyCodeMap[Key.PRIMARY_ACTION] = 32;
-		keyCodeMap[Key.MENU_ACTION] = 27;
 
 		var assignKey;
 		var assignCallback;
 
 		var touchStartX = 0;
 		var touchStartY = 0;
+
+		function initKey(key, storageKey, defaultKeyCode) {
+			storageKeyMap[key] = storageKey;
+			keyCodeMap[key] = localStorage[storageKey] || defaultKeyCode;
+		}
+
+		initKey(Key.UP, "up", 38);
+		initKey(Key.DOWN, "down", 40);
+		initKey(Key.LEFT, "left", 37);
+		initKey(Key.RIGHT, "right", 39);
+		initKey(Key.PRIMARY_ACTION, "primaryAction", 32);
+		initKey(Key.MENU_ACTION, "menuAction", 27);
 
 		function setMoveLeft(callback) {
 			moveLeftCallback = callback;
@@ -64,6 +71,7 @@ var BC = (function(root) {
 		$(document).keydown(function(event) {
 			if (assignKey != null) {
 				keyCodeMap[assignKey] = event.keyCode;
+				localStorage[storageKeyMap[assignKey]] = event.keyCode;
 				assignKey = null;
 				assignCallback.call(null, event.keyCode);
 				return false;
