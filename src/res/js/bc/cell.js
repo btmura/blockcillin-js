@@ -2,6 +2,7 @@ var BC = (function(root) {
 
 	var me = root.Cell = root.Cell || {};
 
+	// TODO(btmura): use strings for values since object keys are strings
 	me.CellState = {
 		EMPTY: 0,
 		EMPTY_NO_SWAP: 1,
