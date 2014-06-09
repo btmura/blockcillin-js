@@ -12,9 +12,9 @@ var BC = (function(root) {
 	};
 
 	me.make = function(canvas) {
-		var TOUCH_THRESHOLD = 20;
-
 		var Key = BC.Controller.Key;
+
+		var TOUCH_THRESHOLD = 20;
 
 		var moveLeftCallback = function() {};
 		var moveRightCallback = function() {};
@@ -24,12 +24,11 @@ var BC = (function(root) {
 		var menuActionCallback = function() {};
 		var keyCodeAssignmentCallback = function() {};
 
-		var assignKey;
-
 		var touchStartX = 0;
 		var touchStartY = 0;
 
 		var storage = localStorage || {};
+		var assignKey;
 		var keyData = {};
 
 		keyData[Key.UP] = newKey("bc.controller.up", 38);
@@ -41,64 +40,40 @@ var BC = (function(root) {
 
 		function newKey(storageKey, defaultKeyCode) {
 			var initKeyCode = parseInt(storage[storageKey], 10) || defaultKeyCode;
-
-			var key = {
+			return {
 				storageKey: storageKey,
-				keyCode: initKeyCode,
-				setKeyCode: setKeyCode
+				keyCode: initKeyCode
 			};
-
-			function setKeyCode(newKeyCode) {
-				key.keyCode = newKeyCode;
-				storage[storageKey] = newKeyCode;
-			}
-
-			return key;
-		}
-
-		function isKeyCodeTaken(assignKey, newKeyCode) {
-			for (var key in keyData) {
-				if (keyData.hasOwnProperty(key)) {
-					if (key !== assignKey && keyData[key].keyCode === newKeyCode) {
-						return true;
-					}
-				}
-			}
-			return false;
 		}
 
 		$(document).keydown(function(event) {
 			if (assignKey != null) {
-				if (!isKeyCodeTaken(assignKey, event.keyCode)) {
-					keyData[assignKey].setKeyCode(event.keyCode);
-					keyCodeAssignmentCallback(assignKey, event.keyCode);
-					cancelKeyCodeAssignment();
-				}
+				finishKeyCodeAssignment(event.keyCode);
 				return false;
 			}
 
 			switch (event.keyCode) {
-				case keyData[Key.LEFT].keyCode:
+				case getKeyCode(Key.LEFT):
 					moveLeftCallback.call();
 					break;
 
-				case keyData[Key.RIGHT].keyCode:
+				case getKeyCode(Key.RIGHT):
 					moveRightCallback.call();
 					break;
 
-				case keyData[Key.UP].keyCode:
+				case getKeyCode(Key.UP):
 					moveUpCallback.call();
 					break;
 
-				case keyData[Key.DOWN].keyCode:
+				case getKeyCode(Key.DOWN):
 					moveDownCallback.call();
 					break;
 
-				case keyData[Key.PRIMARY_ACTION].keyCode:
+				case getKeyCode(Key.PRIMARY_ACTION):
 					primaryActionCallback.call();
 					break;
 
-				case keyData[Key.MENU_ACTION].keyCode:
+				case getKeyCode(Key.MENU_ACTION):
 					menuActionCallback.call();
 					break;
 
@@ -108,6 +83,37 @@ var BC = (function(root) {
 			}
 			return false;
 		});
+
+		function finishKeyCodeAssignment(newKeyCode) {
+			var oldKeyCode = getKeyCode(assignKey);
+			var conflictingKey = getConflictingKey(assignKey, newKeyCode);
+			if (conflictingKey) {
+				setKeyCode(conflictingKey, oldKeyCode);
+			}
+			setKeyCode(assignKey, newKeyCode);
+			cancelKeyCodeAssignment();
+		}
+
+		function getConflictingKey(avoidKey, newKeyCode) {
+			for (var key in keyData) {
+				if (keyData.hasOwnProperty(key)) {
+					if (key !== avoidKey && keyData[key].keyCode === newKeyCode) {
+						return key;
+					}
+				}
+			}
+			return null;
+		}
+
+		function getKeyCode(key) {
+			return keyData[key].keyCode;
+		}
+
+		function setKeyCode(key, keyCode) {
+			keyData[key].keyCode = keyCode;
+			storage[keyData[key].storageKey] = keyCode;
+			keyCodeAssignmentCallback(key, keyCode);
+		}
 
 		$(canvas).on("touchstart touchmove touchend", function(event) {
 			var touch = event.originalEvent.changedTouches[0];
@@ -198,10 +204,6 @@ var BC = (function(root) {
 
 		function cancelKeyCodeAssignment() {
 			assignKey = null;
-		}
-
-		function getKeyCode(key) {
-			return keyData[key].keyCode;
 		}
 
 		return {
