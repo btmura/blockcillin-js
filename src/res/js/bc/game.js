@@ -17,15 +17,16 @@ var BC = (function(root) {
 		var gameOver = false;
 
 		var mainMenu = $("#main-menu");
-		var mainMenuTitle = $("#main-menu-title");
-		var mainMenuStats = $("#main-menu-stats");
+		var mainMenuTitle = $("#main-menu-title", mainMenu);
+		var mainMenuStats = $("#main-menu-stats", mainMenu);
 
-		var continueButton = $("#continue-button");
-		var newGameButton = $("#new-game-button");
-		var optionsButton = $("#options-button");
+		var continueButton = $("#continue-button", mainMenu);
+		var newGameButton = $("#new-game-button", mainMenu);
+		var statsButton = $("#stats-button", mainMenu);
+		var optionsButton = $("#options-button", mainMenu);
 
 		var gameMenu = $("#game-menu");
-		var pauseButton = $("#pause-button");
+		var pauseButton = $("#pause-button", gameMenu);
 
 		var buttons = $(".button");
 
@@ -52,6 +53,8 @@ var BC = (function(root) {
 		if (!canvas) {
 			return;
 		}
+
+		var statsMenu = BC.Menu.Stats.make();
 
 		var controller = BC.Controller.make(canvas);
 		var optionsMenu = BC.Menu.Options.make({
@@ -171,20 +174,24 @@ var BC = (function(root) {
 
 		showMainMenu(true);
 
-		newGameButton.click(function() {
-			startGame();
-		});
-
 		continueButton.click(function() {
 			resumeGame();
 		});
 
-		pauseButton.click(function() {
-			pauseGame();
+		newGameButton.click(function() {
+			startGame();
+		});
+
+		statsButton.click(function() {
+			setVisible(statsMenu, true);
 		});
 
 		optionsButton.click(function() {
 			setVisible(optionsMenu, true);
+		});
+
+		pauseButton.click(function() {
+			pauseGame();
 		});
 
 		controller.setMenuActionListener(function() {

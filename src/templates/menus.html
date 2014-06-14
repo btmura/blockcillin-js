@@ -1,4 +1,4 @@
-{{define "main-menu"}}
+{{define "menus"}}
 	<div id="main-menu" class="centered-menu-container">
 		<table>
 			<td>
@@ -17,9 +17,61 @@
 			</td>
 		</table>
 	</div>
-{{end}}
 
-{{define "game-menu"}}
+	<div id="stats-menu" class="centered-menu-container">
+		<table>
+			<td>
+				<div class="menu-panel">
+					<h1>S T A T S</h1>
+					<button id="stats-close-button" class="button">CLOSE</button>
+				</div>
+			</td>
+		</table>
+	</div>
+
+	<div id="options-menu" class="centered-menu-container">
+		<table>
+			<td>
+				<div class="menu-panel">
+					<h1>O P T I O N S</h1>
+					<fieldset>
+						<legend>KEYBOARD CONTROLS</legend>
+						<p>
+							<label>UP</label>
+							<button id="options-up-button" class="button"></button>
+						</p>
+
+						<p>
+							<label>DOWN</label>
+							<button id="options-down-button" class="button"></button>
+						</p>
+
+						<p>
+							<label>LEFT</label>
+							<button id="options-left-button" class="button"></button>
+						</p>
+
+						<p>
+							<label>RIGHT</label>
+							<button id="options-right-button" class="button"></button>
+						</p>
+
+						<p>
+							<label>SWAP</label>
+							<button id="options-swap-button" class="button"></button>
+						</p>
+
+						<p>
+							<label>MENU</label>
+							<button id="options-menu-button" class="button"></button>
+						</p>
+					</fieldset>
+					<button id="options-close-button" class="button">CLOSE</button>
+				</div>
+			</td>
+		</table>
+	</div>
+
 	<div id="game-menu" class="menu-container">
 		<table>
 			<td>
@@ -37,53 +89,6 @@
 						<p id="score-stat"></p>
 					</li>
 				</ul>
-			</td>
-		</table>
-	</div>
-{{end}}
-
-{{define "options-menu"}}
-	<div id="options-menu" class="centered-menu-container">
-		<table>
-			<td>
-				<div class="menu-panel">
-					<h1>O P T I O N S</h1>
-					<fieldset>
-						<legend>KEYBOARD CONTROLS</legend>
-
-						<p>
-							<label>UP</label>
-							<button id="up-button" class="button"></button>
-						</p>
-
-						<p>
-							<label>DOWN</label>
-							<button id="down-button" class="button"></button>
-						</p>
-
-						<p>
-							<label>LEFT</label>
-							<button id="left-button" class="button"></button>
-						</p>
-
-						<p>
-							<label>RIGHT</label>
-							<button id="right-button" class="button"></button>
-						</p>
-
-						<p>
-							<label>SWAP</label>
-							<button id="swap-button" class="button"></button>
-						</p>
-
-						<p>
-							<label>MENU</label>
-							<button id="menu-button" class="button"></button>
-						</p>
-
-					</fieldset>
-					<button id="close-button" class="button">CLOSE</button>
-				</div>
 			</td>
 		</table>
 	</div>

@@ -117,13 +117,13 @@ var BC = (function(root) {
 		var keyButtonMap = {};
 
 		var menu = $("#options-menu");
-		var upButton = newKeyButton("#up-button", menu, Key.UP);
-		var downButton = newKeyButton("#down-button", menu, Key.DOWN);
-		var leftButton = newKeyButton("#left-button", menu, Key.LEFT);
-		var rightButton = newKeyButton("#right-button", menu, Key.RIGHT);
-		var swapButton = newKeyButton("#swap-button", menu, Key.PRIMARY_ACTION);
-		var menuButton = newKeyButton("#menu-button", menu, Key.MENU_ACTION);
-		var closeButton = $("#close-button", menu);
+		var upButton = newKeyButton("#options-up-button", menu, Key.UP);
+		var downButton = newKeyButton("#options-down-button", menu, Key.DOWN);
+		var leftButton = newKeyButton("#options-left-button", menu, Key.LEFT);
+		var rightButton = newKeyButton("#options-right-button", menu, Key.RIGHT);
+		var swapButton = newKeyButton("#options-swap-button", menu, Key.PRIMARY_ACTION);
+		var menuButton = newKeyButton("#options-menu-button", menu, Key.MENU_ACTION);
+		var closeButton = $("#options-close-button", menu);
 
 		function newKeyButton(id, menu, key) {
 			var button = $(id, menu);
