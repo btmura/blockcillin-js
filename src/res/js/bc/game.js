@@ -50,6 +50,10 @@ var BC = (function(root) {
 		var watch = BC.StopWatch.make();
 		var audioPlayer = BC.Audio.Player.make();
 
+		var speedLevelStat;
+		var elapsedTimeStat;
+		var scoreStat;
+
 		var board;
 		var boardView;
 
@@ -64,6 +68,8 @@ var BC = (function(root) {
 		var optionsMenu = BC.Menu.Options.make({
 			controller: controller
 		});
+
+		var storage = localStorage || {};
 
 		var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 		if (!gl) {
@@ -274,7 +280,11 @@ var BC = (function(root) {
 			// Update the game's state only if theres an active game.
 			if (activeGame) {
 				watch.tick();
+				var oldGameOver = gameOver;
 				gameOver = board.update(watch);
+				if (oldGameOver !== gameOver) {
+					addStats();
+				}
 			}
 
 			// Always draw the board since this may be just a resize event.
@@ -295,6 +305,20 @@ var BC = (function(root) {
 				paused = false;
 				showMainMenu(true);
 			}
+		}
+
+		function addStats() {
+			var speedLevel = board.speedLevel.value;
+			var elapsedTime = board.elapsedTime.value;
+			var score = board.score.value;
+
+			var stats = JSON.parse(storage["bc.stats"] || "[]");
+			stats.push({
+				speedLevel: speedLevel,
+				elapsedTime: elapsedTime,
+				score: score
+			});
+			storage["bc.stats"] = JSON.stringify(stats);
 		}
 
 		function showMainMenu(show) {
