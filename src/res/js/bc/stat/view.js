@@ -6,7 +6,7 @@ var BC = (function(root) {
 
 	var displayFuncs;
 
-	me.make = function(selector) {
+	me.make = function(element) {
 		if (!displayFuncs) {
 			var Unit = BC.Stat.Unit;
 			displayFuncs = {};
@@ -35,8 +35,6 @@ var BC = (function(root) {
 				return hours + ":" + minutes + ":" + seconds;
 			};
 		}
-
-		var element = $(selector);
 
 		function draw(stat) {
 			var df = displayFuncs[stat.unit];

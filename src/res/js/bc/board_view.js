@@ -8,6 +8,9 @@ var BC = (function(root) {
 		var gl = args.gl;
 		var programLocations = args.programLocations;
 		var resources = args.resources;
+		var speedLevelView = args.speedLevelStatView;
+		var elapsedTimeView = args.elapsedTimeStatView;
+		var scoreView = args.scoreStatView;
 
 		var boardRotationMatrixLocation = programLocations.boardRotationMatrixLocation;
 		var boardTranslationMatrixLocation = programLocations.boardTranslationMatrixLocation;
@@ -18,10 +21,6 @@ var BC = (function(root) {
 		var cellView = BC.Cell.View.make(gl, board.metrics, resources.blockTextureTiles);
 		var selectorView = BC.Selector.View.make(gl, board.metrics, resources.selectorTextureTile);
 		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
-
-		var speedLevelView = BC.Stat.View.make("#speed-level-stat");
-		var elapsedTimeView = BC.Stat.View.make("#elapsed-time-stat");
-		var scoreView = BC.Stat.View.make("#score-stat");
 
 		function draw() {
 			drawStats();

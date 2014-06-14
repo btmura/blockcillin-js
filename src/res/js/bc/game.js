@@ -25,8 +25,16 @@ var BC = (function(root) {
 		var statsButton = $("#stats-button", mainMenu);
 		var optionsButton = $("#options-button", mainMenu);
 
+		var mmSpeedLevelView = BC.Stat.View.make($("#speed-level-stat", mainMenu));
+		var mmElapsedTimeView = BC.Stat.View.make($("#elapsed-time-stat", mainMenu));
+		var mmScoreView = BC.Stat.View.make($("#score-stat", mainMenu));
+
 		var gameMenu = $("#game-menu");
 		var pauseButton = $("#pause-button", gameMenu);
+
+		var gmSpeedLevelView = BC.Stat.View.make($("#speed-level-stat", gameMenu));
+		var gmElapsedTimeView = BC.Stat.View.make($("#elapsed-time-stat", gameMenu));
+		var gmScoreView = BC.Stat.View.make($("#score-stat", gameMenu));
 
 		var buttons = $(".button");
 
@@ -41,10 +49,6 @@ var BC = (function(root) {
 		var resources = BC.Resources.make();
 		var watch = BC.StopWatch.make();
 		var audioPlayer = BC.Audio.Player.make();
-
-		var mainMenuSpeedLevelView = BC.Stat.View.make("#main-menu-speed-level-stat");
-		var mainMenuElapsedTimeView = BC.Stat.View.make("#main-menu-elapsed-time-stat");
-		var mainMenuScoreView = BC.Stat.View.make("#main-menu-score-stat");
 
 		var board;
 		var boardView;
@@ -220,7 +224,10 @@ var BC = (function(root) {
 				board: board,
 				gl: gl,
 				programLocations: programLocations,
-				resources: resources
+				resources: resources,
+				speedLevelStatView: gmSpeedLevelView,
+				elapsedTimeStatView: gmElapsedTimeView,
+				scoreStatView: gmScoreView
 			});
 
 			controller.setMoveLeftListener(function() {
@@ -316,9 +323,9 @@ var BC = (function(root) {
 		function showMainMenuStats(show) {
 			// Update stats only on display and leave them the same as the menu fades out.
 			if (show) {
-				mainMenuSpeedLevelView.draw(board.speedLevel);
-				mainMenuScoreView.draw(board.score);
-				mainMenuElapsedTimeView.draw(board.elapsedTime);
+				mmSpeedLevelView.draw(board.speedLevel);
+				mmScoreView.draw(board.score);
+				mmElapsedTimeView.draw(board.elapsedTime);
 			}
 			setVisible(mainMenuStats, show);
 		}

@@ -7,7 +7,7 @@ var BC = (function(root) {
 		var MENU_FADE_SPEED = "slow";
 
 		var menu = $("#stats-menu");
-		var closeButton = $("#stats-close-button", menu);
+		var closeButton = $("#close-button", menu);
 
 		closeButton.click(function() {
 			hide();
