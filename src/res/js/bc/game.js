@@ -62,14 +62,15 @@ var BC = (function(root) {
 			return;
 		}
 
-		var statsMenu = BC.Menu.Stats.make();
+		var storage = BC.Common.Storage.make();
+		var statsMenu = BC.Menu.Stats.make({
+			storage: storage
+		});
 
 		var controller = BC.Controller.make(canvas);
 		var optionsMenu = BC.Menu.Options.make({
 			controller: controller
 		});
-
-		var storage = localStorage || {};
 
 		var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 		if (!gl) {
@@ -312,13 +313,13 @@ var BC = (function(root) {
 			var elapsedTime = board.elapsedTime.value;
 			var score = board.score.value;
 
-			var stats = JSON.parse(storage["bc.stats"] || "[]");
+			var stats = JSON.parse(storage.get("bc.stats") || "[]");
 			stats.push({
 				speedLevel: speedLevel,
 				elapsedTime: elapsedTime,
 				score: score
 			});
-			storage["bc.stats"] = JSON.stringify(stats);
+			storage.set("bc.stats", JSON.stringify(stats));
 		}
 
 		function showMainMenu(show) {

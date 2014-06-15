@@ -6,6 +6,8 @@ var BC = (function(root) {
 	me.make = function(args) {
 		var MENU_FADE_SPEED = "slow";
 
+		var storage = args.storage;
+
 		var menu = $("#stats-menu");
 		var noStatsLabel = $("#no-stats-label", menu);
 		var entries = [
@@ -17,14 +19,12 @@ var BC = (function(root) {
 		];
 		var closeButton = $("#close-button", menu);
 
-		var storage = localStorage || {};
-
 		closeButton.click(function() {
 			hide();
 		});
 
 		function refresh() {
-			var stats = JSON.parse(storage["bc.stats"] || "[]");
+			var stats = JSON.parse(storage.get("bc.stats") || "[]");
 
 			if (stats.length == 0) {
 				noStatsLabel.show();
