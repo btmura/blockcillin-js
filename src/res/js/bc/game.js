@@ -9,8 +9,10 @@ var BC = (function(root) {
 		var MENU_DURATION = "slow";
 		var FLICKER_DURATION = 20;
 
+		var Clock = BC.Common.Clock;
 		var Direction = BC.Common.Direction;
 		var Sound = BC.Audio.Sound;
+		var StopWatch = BC.Common.StopWatch;
 
 		var started = false;
 		var paused = false;
@@ -47,7 +49,10 @@ var BC = (function(root) {
 			ringHeight: 0.3
 		};
 		var resources = BC.Resources.make();
-		var watch = BC.StopWatch.make();
+		var clock = Clock.make();
+		var watch = StopWatch.make({
+			clock: clock
+		});
 		var audioPlayer = BC.Audio.Player.make();
 
 		var speedLevelStat;

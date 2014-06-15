@@ -1,10 +1,13 @@
 var BC = (function(root) {
 
-	var me = root.StopWatch = root.StopWatch || {};
+	var parent = root.Common = root.Common || {};
+	var me = parent.StopWatch = parent.StopWatch || {};
 
-	me.make = function() {
+	me.make = function(args) {
+		var clock = args.clock;
+
 		function getTimeInSeconds() {
-			return Date.now() * 0.001;
+			return clock.now() * 0.001;
 		}
 
 		var watch = {
