@@ -3,7 +3,9 @@
 		<table>
 			<td>
 				<h1 id="main-menu-title">b l o c k c i l l i n</h1>
-				{{template "stats" "main-menu-stats"}}
+				<div id="main-menu-stats">
+					{{template "stats"}}
+				</div>
 				<ul class="vertical-menu">
 					<li id="continue-button" class="button">C O N T I N U E</li>
 					<li id="new-game-button" class="button">N E W &nbsp;G A M E</li>
@@ -98,26 +100,25 @@
 {{end}}
 
 {{define "stats-entry"}}
-	{{$entryId := printf "stats-entry-%d" .}}
-	<fieldset id="{{$entryId}}">
-		<legend>{{.}}</legend>
-		{{$statsId := printf "stats-%d" .}}
-		{{template "stats" $statsId}}
+	<fieldset id="{{printf "stats-entry-%d" .}}">
+		<div id="{{printf "stats-%d" .}}">
+			{{template "stats" .}}
+		</div>
 	</fieldset>
 {{end}}
 
 {{define "stats"}}
-	<table id="{{.}}">
+	<table class="stats-table">
 		<tr>
-			<td class="stats-score-cell" rowspan="2">
+			{{if .}}
+				<td class="stats-rank-cell">#{{.}}</td>
+			{{end}}
+			<td class="stats-score-cell">
 				<span id="score-stat"></span>
 			</td>
 			<td class="stats-other-cell">
 				SPEED: <span id="speed-level-stat"></span>
-			</td>
-		</tr>
-		<tr>
-			<td class="stats-other-cell">
+				<br />
 				TIME: <span id="elapsed-time-stat"></span>
 			</td>
 		</tr>
