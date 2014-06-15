@@ -63,13 +63,18 @@ var BC = (function(root) {
 		}
 
 		var storage = BC.Common.Storage.make();
-		var controller = BC.Controller.make({
-			storage: storage,
-			canvas: canvas
+
+		var statBoard = BC.App.StatBoard.make({
+			storage: storage
 		});
 
 		var statsMenu = BC.Menu.Stats.make({
-			storage: storage
+			statBoard: statBoard
+		});
+
+		var controller = BC.Controller.make({
+			storage: storage,
+			canvas: canvas
 		});
 
 		var optionsMenu = BC.Menu.Options.make({
@@ -313,17 +318,11 @@ var BC = (function(root) {
 		}
 
 		function addStats() {
-			var speedLevel = board.speedLevel.value;
-			var elapsedTime = board.elapsedTime.value;
-			var score = board.score.value;
-
-			var stats = JSON.parse(storage.get("bc.stats") || "[]");
-			stats.push({
-				speedLevel: speedLevel,
-				elapsedTime: elapsedTime,
-				score: score
+			statBoard.addStats({
+				speedLevel: board.speedLevel.value,
+				elapsedTime: board.elapsedTime.value,
+				score: board.score.value
 			});
-			storage.set("bc.stats", JSON.stringify(stats));
 		}
 
 		function showMainMenu(show) {
