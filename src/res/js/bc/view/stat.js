@@ -1,8 +1,7 @@
 var BC = (function(root) {
 
-	// TODO(btmura): put views in a separate module so they can share code
-	var parent = root.Stat = root.Stat || {};
-	var me = parent.View = parent.View || {};
+	var parent = root.View = root.View || {};
+	var me = parent.Stat = parent.Stat || {};
 
 	var displayFuncs;
 

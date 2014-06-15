@@ -25,16 +25,16 @@ var BC = (function(root) {
 		var statsButton = $("#stats-button", mainMenu);
 		var optionsButton = $("#options-button", mainMenu);
 
-		var mmSpeedLevelView = BC.Stat.View.make($("#speed-level-stat", mainMenu));
-		var mmElapsedTimeView = BC.Stat.View.make($("#elapsed-time-stat", mainMenu));
-		var mmScoreView = BC.Stat.View.make($("#score-stat", mainMenu));
+		var mmSpeedLevelView = BC.View.Stat.make($("#speed-level-stat", mainMenu));
+		var mmElapsedTimeView = BC.View.Stat.make($("#elapsed-time-stat", mainMenu));
+		var mmScoreView = BC.View.Stat.make($("#score-stat", mainMenu));
 
 		var gameMenu = $("#game-menu");
 		var pauseButton = $("#pause-button", gameMenu);
 
-		var gmSpeedLevelView = BC.Stat.View.make($("#speed-level-stat", gameMenu));
-		var gmElapsedTimeView = BC.Stat.View.make($("#elapsed-time-stat", gameMenu));
-		var gmScoreView = BC.Stat.View.make($("#score-stat", gameMenu));
+		var gmSpeedLevelView = BC.View.Stat.make($("#speed-level-stat", gameMenu));
+		var gmElapsedTimeView = BC.View.Stat.make($("#elapsed-time-stat", gameMenu));
+		var gmScoreView = BC.View.Stat.make($("#score-stat", gameMenu));
 
 		var buttons = $(".button");
 
