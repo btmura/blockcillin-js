@@ -7,7 +7,7 @@ body, a {
 	font-family: monospace;
 }
 
-#links {
+.links {
 	text-align: center;
 	white-space: nowrap;
 }

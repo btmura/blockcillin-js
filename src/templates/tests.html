@@ -5,7 +5,11 @@
 		<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.14.0.css" />
 	</head>
 	<body>
-		{{template "links" .}}
+		<p class="links">
+			<a href="/debug">Debug</a>
+			| <a href="/">Release</a>
+			| <a href="/tests">Tests</a>
+		</p>
 		<div id="qunit"></div>
 		<div id="qunit-fixture"></div>
 		{{template "bc-tests"}}

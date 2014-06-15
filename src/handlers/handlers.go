@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"appengine"
 	"net/http"
 
 	"blockcillin/template"
@@ -14,30 +13,22 @@ func init() {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	dev := appengine.IsDevAppServer()
 	args := &template.Args{
-		Compiled:        true,
-		ShowDebugLink:   dev,
-		ShowReleaseLink: dev,
-		ShowTestLink:    dev,
+		Compiled: true,
 	}
 	template.ExecuteIndex(w, args)
 }
 
 func debugHandler(w http.ResponseWriter, r *http.Request) {
 	args := &template.Args{
-		ShowDebugLink:   true,
-		ShowReleaseLink: true,
-		ShowTestLink:    true,
+		Compiled: false,
 	}
 	template.ExecuteIndex(w, args)
 }
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
 	args := &template.Args{
-		ShowDebugLink:   true,
-		ShowReleaseLink: true,
-		ShowTestLink:    true,
+		Compiled: false,
 	}
 	template.ExecuteTest(w, args)
 }

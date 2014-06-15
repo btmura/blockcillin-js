@@ -116,13 +116,3 @@
 {{define "close-button"}}
 	<button id="close-button" class="button">CLOSE</button>
 {{end}}
-
-{{define "links"}}
-	<p id="links">
-		<a href="https://blockcillin.blogspot.com">Blog</a>
-		| <a href="https://github.com/btmura/blockcillin">GitHub</a>
-		{{if .ShowDebugLink}}| <a href="/debug">Debug</a>{{end}}
-		{{if .ShowReleaseLink}}| <a href="/">Release</a>{{end}}
-		{{if .ShowTestLink}}| <a href="/tests">Tests</a>{{end}}
-	</p>
-{{end}}

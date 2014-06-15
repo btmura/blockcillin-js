@@ -15,10 +15,7 @@ func newTemplate(name string) *template.Template {
 
 // IndexArgs are arguments passed to the index template.
 type Args struct {
-	Compiled        bool
-	ShowDebugLink   bool
-	ShowReleaseLink bool
-	ShowTestLink    bool
+	Compiled bool
 }
 
 // ExecuteIndex executes the index template which runs the game.
