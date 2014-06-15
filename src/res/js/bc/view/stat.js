@@ -7,7 +7,7 @@ var BC = (function(root) {
 
 	me.make = function(element) {
 		if (!displayFuncs) {
-			var Unit = BC.Stat.Unit;
+			var Unit = BC.App.Stat.Unit;
 			displayFuncs = {};
 			displayFuncs[Unit.INTEGER] = function(value) {
 				return value;

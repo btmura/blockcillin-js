@@ -107,21 +107,21 @@ var BC = (function(root) {
 		var chainManager = BC.Cell.Chain.makeManager();
 		var dropManager = BC.Cell.Drop.makeManager(metrics);
 
-		var speedLevel = BC.Stat.make({
+		var speedLevel = BC.App.Stat.make({
 			value: 1,
-			unit: BC.Stat.Unit.INTEGER
+			unit: BC.App.Stat.Unit.INTEGER
 		});
 		board.speedLevel = speedLevel;
 
-		var elapsedTime = BC.Stat.make({
+		var elapsedTime = BC.App.Stat.make({
 			value: 0,
-			unit: BC.Stat.Unit.SECONDS
+			unit: BC.App.Stat.Unit.SECONDS
 		});
 		board.elapsedTime = elapsedTime;
 
-		var score = BC.Stat.make({
+		var score = BC.App.Stat.make({
 			value: 0,
-			unit: BC.Stat.Unit.INTEGER
+			unit: BC.App.Stat.Unit.INTEGER
 		});
 		board.score = score;
 

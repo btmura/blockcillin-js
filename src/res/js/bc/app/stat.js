@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Stat = root.Stat || {};
+	var parent = root.App = root.App || {};
+	var me = parent.Stat = parent.Stat || {};
 
 	me.Unit = {
 		INTEGER: 0,
