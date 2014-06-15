@@ -18,10 +18,6 @@ table {
 	margin: auto;
 }
 
-#main-menu, #options-menu {
-	background: rgba(0, 0, 0, 0.75);
-}
-
 .centered-menu-container, .menu-container {
 	display: none;
 	position: absolute;
@@ -32,6 +28,7 @@ table {
 }
 
 .centered-menu-container {
+	background: rgba(0, 0, 0, 0.75);
 	height: 100%;
 }
 
@@ -57,16 +54,10 @@ table {
 	padding: 10px;
 }
 
-.stats-bundle {
-	list-style: none;
-	text-align: center;
-	padding: 0px;
-}
-
 .vertical-menu, .horizontal-menu {
 	list-style: none;
 	margin: 10px;
-	padding: 0px;
+	padding: 10px;
 }
 
 .horizontal-menu li {
@@ -100,19 +91,20 @@ table {
 	);
 }
 
-.stat {
-	padding: 5px;
-}
-
-.button h2, .button p, .stat h2, .stat p {
+.button h2, .button p, .game-stat h2, .game-stat p {
 	font-size: 0.75em;
 	margin: 0px;
 	padding: 0px;
 }
 
+.game-stat {
+	padding: 5px;
+}
+
 fieldset {
 	border-radius: 10px;
 	border-color: #666666;
+	margin: 10px;
 	text-align: center;
 }
 
@@ -127,7 +119,14 @@ fieldset p {
 	padding: 0px;
 }
 
-#canvas {
+.stats {
+	list-style: none;
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+}
+
+canvas {
 	position: absolute;
 	top: 0;
 	left: 0;

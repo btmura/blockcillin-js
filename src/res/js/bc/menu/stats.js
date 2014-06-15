@@ -19,7 +19,7 @@ var BC = (function(root) {
 		var entries = [];
 		var views = [];
 		for (var i = 1; i <= MAX_STATS; i++) {
-			var entry = $("#stats-menu-entry-" + i, menu);
+			var entry = $("#stats-entry-" + i, menu);
 			entries.push(entry);
 
 			function makeView(id) {

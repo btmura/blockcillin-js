@@ -3,7 +3,7 @@
 		<table>
 			<td>
 				<h1 id="main-menu-title">b l o c k c i l l i n</h1>
-				{{template "stats-bundle" "main-menu-stats"}}
+				{{template "stats" "main-menu-stats"}}
 				<ul class="vertical-menu">
 					<li id="continue-button" class="button">C O N T I N U E</li>
 					<li id="new-game-button" class="button">N E W &nbsp;G A M E</li>
@@ -20,11 +20,11 @@
 				<div class="menu-panel">
 					<h1>S T A T S</h1>
 					<h2 id="no-stats-label">You haven't played yet!</h2>
-					{{template "stats-menu-entry" 1}}
-					{{template "stats-menu-entry" 2}}
-					{{template "stats-menu-entry" 3}}
-					{{template "stats-menu-entry" 4}}
-					{{template "stats-menu-entry" 5}}
+					{{template "stats-entry" 1}}
+					{{template "stats-entry" 2}}
+					{{template "stats-entry" 3}}
+					{{template "stats-entry" 4}}
+					{{template "stats-entry" 5}}
 					{{template "close-button"}}
 				</div>
 			</td>
@@ -78,7 +78,7 @@
 		<table>
 			<td>
 				<ul class="horizontal-menu">
-					<li class="stat">
+					<li class="game-stat">
 						<h2>SPEED</h2>
 						<p id="speed-level-stat"></p>
 					</li>
@@ -86,7 +86,7 @@
 						<h2>TIME</h2>
 						<p id="elapsed-time-stat"></p>
 					</li>
-					<li class="stat">
+					<li class="game-stat">
 						<h2>SCORE</h2>
 						<p id="score-stat"></p>
 					</li>
@@ -96,17 +96,17 @@
 	</div>
 {{end}}
 
-{{define "stats-menu-entry"}}
-	{{$entryId := printf "stats-menu-entry-%d" .}}
+{{define "stats-entry"}}
+	{{$entryId := printf "stats-entry-%d" .}}
 	<fieldset id="{{$entryId}}">
 		<legend>{{.}}</legend>
-		{{$bundleId := printf "stats-bundle-%d" .}}
-		{{template "stats-bundle" $bundleId}}
+		{{$statsId := printf "stats-%d" .}}
+		{{template "stats" $statsId}}
 	</fieldset>
 {{end}}
 
-{{define "stats-bundle"}}
-	<ul id="{{.}}" class="stats-bundle">
+{{define "stats"}}
+	<ul id="{{.}}" class="stats">
 		<li>SPEED: <span id="speed-level-stat"></span></li>
 		<li>TIME: <span id="elapsed-time-stat"></span></li>
 		<li>SCORE: <span id="score-stat"></span></li>
