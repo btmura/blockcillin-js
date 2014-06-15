@@ -63,11 +63,15 @@ var BC = (function(root) {
 		}
 
 		var storage = BC.Common.Storage.make();
+		var controller = BC.Controller.make({
+			storage: storage,
+			canvas: canvas
+		});
+
 		var statsMenu = BC.Menu.Stats.make({
 			storage: storage
 		});
 
-		var controller = BC.Controller.make(canvas);
 		var optionsMenu = BC.Menu.Options.make({
 			controller: controller
 		});

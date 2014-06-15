@@ -11,10 +11,13 @@ var BC = (function(root) {
 		MENU_ACTION: "5"
 	};
 
-	me.make = function(canvas) {
+	me.make = function(args) {
 		var Key = BC.Controller.Key;
 
 		var TOUCH_THRESHOLD = 20;
+
+		var storage = args.storage;
+		var canvas = args.canvas;
 
 		var moveLeftCallback = function() {};
 		var moveRightCallback = function() {};
@@ -27,7 +30,6 @@ var BC = (function(root) {
 		var touchStartX = 0;
 		var touchStartY = 0;
 
-		var storage = localStorage || {};
 		var assignKey;
 		var keyData = {};
 
@@ -39,7 +41,7 @@ var BC = (function(root) {
 		keyData[Key.MENU_ACTION] = newKey("bc.controller.menuAction", 27);
 
 		function newKey(storageKey, defaultKeyCode) {
-			var initKeyCode = parseInt(storage[storageKey], 10) || defaultKeyCode;
+			var initKeyCode = parseInt(storage.get(storageKey), 10) || defaultKeyCode;
 			return {
 				storageKey: storageKey,
 				keyCode: initKeyCode
@@ -111,7 +113,7 @@ var BC = (function(root) {
 
 		function setKeyCode(key, keyCode) {
 			keyData[key].keyCode = keyCode;
-			storage[keyData[key].storageKey] = keyCode;
+			storage.set(keyData[key].storageKey, keyCode);
 			keyCodeAssignmentCallback(key, keyCode);
 		}
 
