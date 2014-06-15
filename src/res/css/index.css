@@ -119,9 +119,20 @@ fieldset p {
 	padding: 0px;
 }
 
-.stats {
-	list-style: none;
+.stats-score-cell {
+	font-size: 1.5em;
 	text-align: center;
+	padding: 10px;
+	width: 50%;
+}
+
+.stats-other-cell {
+	text-align: left;
+}
+
+.stats-score-cell, .stats-other-cell {
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	margin: 0px;
 	padding: 0px;
 }

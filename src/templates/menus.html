@@ -19,8 +19,8 @@
 		<table>
 			<td>
 				<div class="menu-panel">
-					<h1>S T A T S</h1>
-					<h2 id="no-stats-label">You haven't played yet!</h2>
+					<h2>S T A T S</h2>
+					<h3 id="no-stats-label">You haven't played yet!</h3>
 					{{template "stats-entry" 1}}
 					{{template "stats-entry" 2}}
 					{{template "stats-entry" 3}}
@@ -36,7 +36,7 @@
 		<table>
 			<td>
 				<div class="menu-panel">
-					<h1>O P T I O N S</h1>
+					<h2>O P T I O N S</h2>
 					<fieldset>
 						<legend>KEYBOARD CONTROLS</legend>
 						<p>
@@ -107,11 +107,21 @@
 {{end}}
 
 {{define "stats"}}
-	<ul id="{{.}}" class="stats">
-		<li>SPEED: <span id="speed-level-stat"></span></li>
-		<li>TIME: <span id="elapsed-time-stat"></span></li>
-		<li>SCORE: <span id="score-stat"></span></li>
-	</ul>
+	<table id="{{.}}">
+		<tr>
+			<td class="stats-score-cell" rowspan="2">
+				<span id="score-stat"></span>
+			</td>
+			<td class="stats-other-cell">
+				SPEED: <span id="speed-level-stat"></span>
+			</td>
+		</tr>
+		<tr>
+			<td class="stats-other-cell">
+				TIME: <span id="elapsed-time-stat"></span>
+			</td>
+		</tr>
+	</table>
 {{end}}
 
 {{define "close-button"}}
