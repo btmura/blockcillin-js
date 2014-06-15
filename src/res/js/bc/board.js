@@ -7,7 +7,7 @@ var BC = (function(root) {
 		var audioPlayer = args.audioPlayer;
 
 		var CellState = BC.Cell.CellState;
-		var Direction = BC.Constants.Direction;
+		var Direction = BC.Common.Direction;
 		var Sound = BC.Audio.Sound;
 		var Unit = BC.Common.Unit;
 

@@ -9,7 +9,7 @@ var BC = (function(root) {
 		var MENU_DURATION = "slow";
 		var FLICKER_DURATION = 20;
 
-		var Direction = BC.Constants.Direction;
+		var Direction = BC.Common.Direction;
 		var Sound = BC.Audio.Sound;
 
 		var started = false;

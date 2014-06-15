@@ -20,7 +20,7 @@ var BC = (function(root) {
 
 	me.make = function(args) {
 		var CellState = BC.Cell.CellState;
-		var Direction = BC.Constants.Direction;
+		var Direction = BC.Common.Direction;
 		var Sound = BC.Audio.Sound;
 
 		var metrics = args.metrics;

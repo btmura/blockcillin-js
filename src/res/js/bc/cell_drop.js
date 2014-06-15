@@ -5,7 +5,7 @@ var BC = (function(root) {
 
 	me.makeManager = function(metrics) {
 		var CellState = BC.Cell.CellState;
-		var Direction = BC.Constants.Direction;
+		var Direction = BC.Common.Direction;
 
 		var DROP_DURATION = 0.05;
 
