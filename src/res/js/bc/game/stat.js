@@ -1,6 +1,6 @@
 var BC = (function(root) {
 
-	var parent = root.App = root.App || {};
+	var parent = root.Game = root.Game || {};
 	var me = parent.Stat = parent.Stat || {};
 
 	me.make = function(args) {

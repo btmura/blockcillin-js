@@ -9,6 +9,7 @@ var BC = (function(root) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Common.Direction;
 		var Sound = BC.Audio.Sound;
+		var Stat = BC.Game.Stat;
 		var Unit = BC.Common.Unit;
 
 		var RING_CAPACITY = 11;
@@ -108,19 +109,19 @@ var BC = (function(root) {
 		var chainManager = BC.Cell.Chain.makeManager();
 		var dropManager = BC.Cell.Drop.makeManager(metrics);
 
-		var speedLevel = BC.App.Stat.make({
+		var speedLevel = Stat.make({
 			value: 1,
 			unit: Unit.NONE
 		});
 		board.speedLevel = speedLevel;
 
-		var elapsedTime = BC.App.Stat.make({
+		var elapsedTime = Stat.make({
 			value: 0,
 			unit: Unit.SECONDS
 		});
 		board.elapsedTime = elapsedTime;
 
-		var score = BC.App.Stat.make({
+		var score = Stat.make({
 			value: 0,
 			unit: Unit.NONE
 		});

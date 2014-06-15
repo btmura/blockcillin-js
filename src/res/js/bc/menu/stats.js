@@ -7,7 +7,7 @@ var BC = (function(root) {
 		var MENU_FADE_SPEED = "slow";
 		var MAX_STATS = 5;
 
-		var Stat = BC.App.Stat;
+		var Stat = BC.Game.Stat;
 		var Unit = BC.Common.Unit;
 
 		var statBoard = args.statBoard;

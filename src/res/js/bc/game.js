@@ -64,7 +64,7 @@ var BC = (function(root) {
 
 		var storage = BC.Common.Storage.make();
 
-		var statBoard = BC.App.StatBoard.make({
+		var statBoard = BC.Game.StatBoard.make({
 			storage: storage
 		});
 
