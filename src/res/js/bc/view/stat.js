@@ -7,9 +7,9 @@ var BC = (function(root) {
 
 	me.make = function(element) {
 		if (!displayFuncs) {
-			var Unit = BC.App.Stat.Unit;
+			var Unit = BC.Common.Unit;
 			displayFuncs = {};
-			displayFuncs[Unit.INTEGER] = function(value) {
+			displayFuncs[Unit.NONE] = function(value) {
 				return value;
 			};
 			displayFuncs[Unit.SECONDS] = function(value) {

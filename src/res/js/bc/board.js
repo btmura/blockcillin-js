@@ -9,6 +9,7 @@ var BC = (function(root) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Constants.Direction;
 		var Sound = BC.Audio.Sound;
+		var Unit = BC.Common.Unit;
 
 		var RING_CAPACITY = 11;
 		var MAX_RISE_HEIGHT = RING_CAPACITY * metrics.ringHeight;
@@ -109,19 +110,19 @@ var BC = (function(root) {
 
 		var speedLevel = BC.App.Stat.make({
 			value: 1,
-			unit: BC.App.Stat.Unit.INTEGER
+			unit: Unit.NONE
 		});
 		board.speedLevel = speedLevel;
 
 		var elapsedTime = BC.App.Stat.make({
 			value: 0,
-			unit: BC.App.Stat.Unit.SECONDS
+			unit: Unit.SECONDS
 		});
 		board.elapsedTime = elapsedTime;
 
 		var score = BC.App.Stat.make({
 			value: 0,
-			unit: BC.App.Stat.Unit.INTEGER
+			unit: Unit.NONE
 		});
 		board.score = score;
 
