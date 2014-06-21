@@ -26,6 +26,7 @@ var BC = (function(root) {
 		var newGameButton = $("#new-game-button", mainMenu);
 		var statsButton = $("#stats-button", mainMenu);
 		var optionsButton = $("#options-button", mainMenu);
+		var creditsButton = $("#credits-button", mainMenu);
 
 		var mmSpeedLevelView = BC.View.Stat.make($("#speed-level-stat", mainMenu));
 		var mmElapsedTimeView = BC.View.Stat.make($("#elapsed-time-stat", mainMenu));
@@ -85,6 +86,8 @@ var BC = (function(root) {
 		var optionsMenu = BC.Menu.Options.make({
 			controller: controller
 		});
+
+		var creditsMenu = BC.Menu.Credits.make();
 
 		var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 		if (!gl) {
@@ -213,6 +216,10 @@ var BC = (function(root) {
 
 		optionsButton.click(function() {
 			setVisible(optionsMenu, true);
+		});
+
+		creditsButton.click(function() {
+			setVisible(creditsMenu, true);
 		});
 
 		pauseButton.click(function() {
