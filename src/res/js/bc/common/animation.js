@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Animation = root.Animation || {};
+	var parent = root.Common = root.Common || {};
+	var me = parent.Animation = parent.Animation || {};
 
 	me.make = function(args) {
 		var duration = args.duration;

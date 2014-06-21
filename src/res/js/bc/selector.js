@@ -85,7 +85,7 @@ var BC = (function(root) {
 				BC.Util.error("startMoving: pending animations: " + animations.length);
 			}
 
-			animations.push(BC.Animation.make({
+			animations.push(BC.Common.Animation.make({
 				duration: MOVEMENT_DURATION,
 				updateCallback: function(watch) {
 					var translationDelta = metrics.ringHeight * watch.deltaPercent;
@@ -120,7 +120,7 @@ var BC = (function(root) {
 		}
 
 		function update(watch) {
-			BC.Animation.process(animations, watch);
+			BC.Common.Animation.process(animations, watch);
 			updateSelectorMatrix(watch);
 		}
 
