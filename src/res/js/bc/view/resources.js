@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Resources = root.Resources || {};
+	var parent = root.View = root.View || {};
+	var me = parent.Resources = parent.Resources || {};
 
 	me.make = function() {
 		var BLOCK = 0;

@@ -28,7 +28,7 @@ var BC = (function(root) {
 			ringOuterRadius: 1,
 			ringHeight: 0.3
 		};
-		var resources = BC.Resources.make();
+		var resources = BC.View.Resources.make();
 		var clock = Clock.make();
 		var watch = StopWatch.make({
 			clock: clock
