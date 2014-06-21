@@ -8,6 +8,11 @@ var BC = (function(root) {
 			return;
 		}
 
+		var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+		if (!gl) {
+			return;
+		}
+
 		var storage = BC.Common.Storage.make();
 		var controller = BC.Controller.make({
 			canvas: canvas,
@@ -29,14 +34,14 @@ var BC = (function(root) {
 		var creditsMenu = BC.Menu.Credits.make();
 
 		var game = BC.Game.make({
+			gl: gl,
 			storage: storage,
-			canvas: canvas,
 			controller: controller,
+			statBoard: statBoard,
 			audioPlayer: audioPlayer,
 			gmSpeedLevelView: gameMenu.getSpeedLevelView(),
 			gmElapsedTimeView: gameMenu.getElapsedTimeView(),
-			gmScoreView: gameMenu.getScoreView(),
-			statBoard: statBoard
+			gmScoreView: gameMenu.getScoreView()
 		});
 
 		mainMenu.setContinueListener(function() {

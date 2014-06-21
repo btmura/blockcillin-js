@@ -7,6 +7,15 @@ var BC = (function(root) {
 		var Direction = BC.Common.Direction;
 		var StopWatch = BC.Common.StopWatch;
 
+		var gl = args.gl;
+		var storage = args.storage;
+		var controller = args.controller;
+		var statBoard = args.statBoard;
+		var audioPlayer = args.audioPlayer;
+		var gmSpeedLevelView = args.gmSpeedLevelView;
+		var gmElapsedTimeView = args.gmElapsedTimeView;
+		var gmScoreView = args.gmScoreView;
+
 		var started = false;
 		var paused = false;
 		var gameOver = false;
@@ -24,7 +33,6 @@ var BC = (function(root) {
 		var watch = StopWatch.make({
 			clock: clock
 		});
-		var audioPlayer = args.audioPlayer;
 
 		var speedLevelStat;
 		var elapsedTimeStat;
@@ -33,23 +41,9 @@ var BC = (function(root) {
 		var board;
 		var boardView;
 
-		var canvas = args.canvas;
-		var storage = args.storage;
-		var controller = args.controller;
-		var statBoard = args.statBoard;
-
-		var gmSpeedLevelView = args.gmSpeedLevelView;
-		var gmElapsedTimeView = args.gmElapsedTimeView;
-		var gmScoreView = args.gmScoreView;
-
 		var resumeCallback = function() {};
 		var pauseCallback = function() {};
 		var gameOverCallback = function() {};
-
-		var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-		if (!gl) {
-			return;
-		}
 
 		// Set the 1 required texture to a 1x1 placeholder and then fire off
 		// an async call to load the image while we do other things.
