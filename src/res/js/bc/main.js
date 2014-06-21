@@ -3,26 +3,19 @@ var BC = (function(root) {
 	var me = root.Main = root.Main || {};
 
 	me.run = function() {
-		var Sound = BC.Audio.Sound;
-
-		var FLICKER_DURATION = 20;
-
 		var canvas = document.getElementById("canvas");
 		if (!canvas) {
 			return;
 		}
 
 		var storage = BC.Common.Storage.make();
-
 		var controller = BC.Controller.make({
 			canvas: canvas,
 			storage: storage
 		});
-
 		var statBoard = BC.Game.StatBoard.make({
 			storage: storage
 		});
-
 		var audioPlayer = BC.Audio.Player.make();
 
 		var mainMenu = BC.Menu.Main.make();
@@ -76,17 +69,6 @@ var BC = (function(root) {
 			showMainMenu(true);
 		});
 
-		var buttons = $(".button");
-
-		buttons.click(function(event) {
-			audioPlayer.play(Sound.BUTTON_CLICK);
-			flicker($(event.target));
-		});
-
-		buttons.mouseenter(function() {
-			audioPlayer.play(Sound.BUTTON_HOVER);
-		});
-
 		controller.setMenuActionListener(function() {
 			if (!game.isPaused()) {
 				game.pause();
@@ -111,16 +93,11 @@ var BC = (function(root) {
 			}
 		}
 
-		function flicker(element) {
-			element.fadeIn(FLICKER_DURATION)
-				.fadeOut(FLICKER_DURATION)
-				.fadeIn(FLICKER_DURATION)
-				.fadeOut(FLICKER_DURATION)
-				.fadeIn(FLICKER_DURATION);
-		}
-
+		BC.Menu.init({
+			audioPlayer: audioPlayer
+		});
 		showMainMenu(true);
-	}
+	};
 
 	return root;
 
