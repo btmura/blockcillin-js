@@ -150,7 +150,7 @@ var BC = (function(root) {
 				metrics: metrics,
 				audioPlayer: audioPlayer
 			});
-			boardView = BC.Board.View.make({
+			boardView = BC.View.Board.make({
 				board: board,
 				gl: gl,
 				programLocations: programLocations,
