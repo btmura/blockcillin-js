@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Ring = root.Ring || {};
+	var parent = root.Core = root.Core || {};
+	var me = parent.Ring = parent.Ring || {};
 
 	me.make = function(args) {
 		var CellState = BC.Core.Cell.CellState;

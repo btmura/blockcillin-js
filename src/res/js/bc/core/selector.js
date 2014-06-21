@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Selector = root.Selector || {};
+	var parent = root.Core = root.Core || {};
+	var me = parent.Selector = parent.Selector || {};
 
 	me.make = function(args) {
 		var metrics = args.metrics;

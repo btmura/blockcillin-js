@@ -53,7 +53,7 @@ var BC = (function(root) {
 		// Adds a new ring and increments the ring index counter.
 		function addRing(selectable) {
 			var translationY = -metrics.ringHeight * ringIndex;
-			var newRing = BC.Ring.make({
+			var newRing = BC.Core.Ring.make({
 				metrics: metrics,
 				translationY: translationY,
 				selectable: selectable,
@@ -97,14 +97,14 @@ var BC = (function(root) {
 
 		updateBoardMatrices();
 
-		var selector = BC.Selector.make({
+		var selector = BC.Core.Selector.make({
 			metrics: metrics,
 			board: board,
 			audioPlayer: audioPlayer
 		});
 		board.selector = selector;
 
-		var stage = BC.Stage.make(metrics, stageTranslationY);
+		var stage = BC.Core.Stage.make(metrics, stageTranslationY);
 		board.stage = stage;
 
 		var chainManager = BC.Core.Chain.makeManager();

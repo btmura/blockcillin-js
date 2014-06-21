@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Stage = root.Stage || {};
+	var parent = root.Core = root.Core || {};
+	var me = parent.Stage = parent.Stage || {};
 
 	me.make = function(metrics, translationY) {
 		// Translate the stage up to the top of the ring.
