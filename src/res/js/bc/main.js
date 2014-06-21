@@ -14,7 +14,7 @@ var BC = (function(root) {
 		}
 
 		var storage = BC.Common.Storage.make();
-		var controller = BC.Controller.make({
+		var controller = BC.Common.Controller.make({
 			canvas: canvas,
 			storage: storage
 		});

@@ -4,7 +4,7 @@ var BC = (function(root) {
 	var me = parent.Options = parent.Options || {};
 
 	me.make = function(args) {
-		var Key = BC.Controller.Key;
+		var Key = BC.Common.Controller.Key;
 
 		var KEY_CODE_TEXT = {
 			8: "Backspace",

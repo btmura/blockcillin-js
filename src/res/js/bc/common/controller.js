@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Controller = root.Controller || {};
+	var parent = root.Common = root.Common || {};
+	var me = parent.Controller = parent.Controller || {};
 
 	me.Key = {
 		UP: "0",
@@ -12,7 +13,7 @@ var BC = (function(root) {
 	};
 
 	me.make = function(args) {
-		var Key = BC.Controller.Key;
+		var Key = BC.Common.Controller.Key;
 
 		var TOUCH_THRESHOLD = 20;
 
