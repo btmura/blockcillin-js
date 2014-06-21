@@ -9,7 +9,7 @@ var BC = (function(root) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Common.Direction;
 		var Sound = BC.Audio.Sound;
-		var Stat = BC.Game.Stat;
+		var Stat = BC.Core.Stat;
 		var Unit = BC.Common.Unit;
 
 		var RING_CAPACITY = 11;

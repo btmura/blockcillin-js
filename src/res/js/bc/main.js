@@ -18,7 +18,7 @@ var BC = (function(root) {
 			canvas: canvas,
 			storage: storage
 		});
-		var statBoard = BC.Game.StatBoard.make({
+		var statBoard = BC.Core.StatBoard.make({
 			storage: storage
 		});
 		var audioPlayer = BC.Audio.Player.make();
