@@ -18,7 +18,7 @@ var BC = (function(root) {
 		var ringMatrixLocation = programLocations.ringMatrixLocation;
 		var cellMatrixLocation = programLocations.cellMatrixLocation;
 
-		var cellView = BC.Cell.View.make(gl, board.metrics, resources.blockTextureTiles);
+		var cellView = BC.View.Cell.make(gl, board.metrics, resources.blockTextureTiles);
 		var selectorView = BC.Selector.View.make(gl, board.metrics, resources.selectorTextureTile);
 		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
 

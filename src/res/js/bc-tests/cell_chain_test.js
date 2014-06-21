@@ -1,7 +1,7 @@
-module("BC.Cell.Chain");
+module("BC.Core.Cell.Chain");
 
 test("find_horizontalChains", function() {
-	var board = BC.Cell.Chain.makeBoard([
+	var board = BC.Core.Cell.Chain.makeBoard([
 		[1, 1, 1, 0],
 		[0, 2, 2, 2],
 		[3, 0, 3, 3],
@@ -9,7 +9,7 @@ test("find_horizontalChains", function() {
 		[5, 5, 5, 5]
 	]);
 
-	var actual = BC.Cell.Chain.find(board);
+	var actual = BC.Core.Cell.Chain.find(board);
 	var expected = [
 
 		// Chain of 1s in the 1st row with no wrapping.
@@ -117,14 +117,14 @@ test("find_horizontalChains", function() {
 });
 
 test("find_verticalChains", function() {
-	var board = BC.Cell.Chain.makeBoard([
+	var board = BC.Core.Cell.Chain.makeBoard([
 		[1, 2, 2, 4],
 		[1, 3, 5, 4],
 		[1, 3, 5, 4],
 		[0, 3, 2, 4]
 	]);
 
-	var actual = BC.Cell.Chain.find(board);
+	var actual = BC.Core.Cell.Chain.find(board);
 	var expected = [
 		// Chain of 1s in the 1st column
 		[
@@ -193,13 +193,13 @@ test("find_verticalChains", function() {
 });
 
 test("find_crossChains", function() {
-	var board = BC.Cell.Chain.makeBoard([
+	var board = BC.Core.Cell.Chain.makeBoard([
 		[0, 1, 0],
 		[1, 1, 1],
 		[0, 1, 0]
 	]);
 
-	var actual = BC.Cell.Chain.find(board);
+	var actual = BC.Core.Cell.Chain.find(board);
 	var expected = [
 		[
 			{
@@ -234,7 +234,7 @@ test("find_crossChains", function() {
 });
 
 
-QUnit.extend(BC.Cell.Chain, {
+QUnit.extend(BC.Core.Cell.Chain, {
 	makeBoard: function(specs) {
 		var rings = [];
 		for (var i = 0; i < specs.length; i++) {
@@ -242,7 +242,7 @@ QUnit.extend(BC.Cell.Chain, {
 			for (var j = 0; j < specs[i].length; j++) {
 				var cell = {
 					blockStyle: specs[i][j],
-					state: BC.Cell.CellState.BLOCK
+					state: BC.Core.Cell.CellState.BLOCK
 				};
 				cells.push(cell);
 			}

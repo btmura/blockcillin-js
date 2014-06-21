@@ -1,10 +1,10 @@
 var BC = (function(root) {
 
-	var parent = root.Cell = root.Cell || {};
+	var parent = root.Core = root.Core || {};
 	var me = parent.Chain = parent.Chain || {};
 
 	me.find = function(board) {
-		var CellState = BC.Cell.CellState;
+		var CellState = BC.Core.Cell.CellState;
 
 		var NUM_COLS = board.rings[0].cells.length;
 		var NUM_REQUIRED_MATCHES = 3;
@@ -234,13 +234,13 @@ var BC = (function(root) {
 	};
 
 	me.makeManager = function() {
-		var CellState = BC.Cell.CellState;
+		var CellState = BC.Core.Cell.CellState;
 
 		var cellQueue = [];
 		var chainQueue = [];
 
 		function update(board) {
-			var newChains = BC.Cell.Chain.find(board);
+			var newChains = BC.Core.Chain.find(board);
 			for (var i = 0; i < newChains.length; i++) {
 				var chain = newChains[i];
 				chainQueue.push(chain);

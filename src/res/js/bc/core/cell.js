@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Cell = root.Cell || {};
+	var parent = root.Core = root.Core || {};
+	var me = parent.Cell = parent.Cell || {};
 
 	// TODO(btmura): use strings for values since object keys are strings
 	me.CellState = {
@@ -19,7 +20,7 @@ var BC = (function(root) {
 	};
 
 	me.make = function(args) {
-		var CellState = BC.Cell.CellState;
+		var CellState = BC.Core.Cell.CellState;
 		var Direction = BC.Common.Direction;
 		var Sound = BC.Audio.Sound;
 

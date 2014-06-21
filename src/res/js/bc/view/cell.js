@@ -1,10 +1,10 @@
 var BC = (function(root) {
 
-	var parent = root.Cell = root.Cell || {};
-	var me = parent.View = parent.View || {};
+	var parent = root.View = root.View || {};
+	var me = parent.Cell = parent.Cell || {};
 
 	me.make = function(gl, metrics, tiles) {
-		var CellState = BC.Cell.CellState;
+		var CellState = BC.Core.Cell.CellState;
 
 		var NUM_FACES = 6;
 

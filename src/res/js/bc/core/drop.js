@@ -1,10 +1,10 @@
 var BC = (function(root) {
 
-	var parent = root.Cell = root.Cell || {};
+	var parent = root.Core = root.Core || {};
 	var me = parent.Drop = parent.Drop || {};
 
 	me.makeManager = function(metrics) {
-		var CellState = BC.Cell.CellState;
+		var CellState = BC.Core.Cell.CellState;
 		var Direction = BC.Common.Direction;
 
 		var DROP_DURATION = 0.05;

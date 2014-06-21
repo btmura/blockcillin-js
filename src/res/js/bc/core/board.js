@@ -7,7 +7,7 @@ var BC = (function(root) {
 		var metrics = args.metrics;
 		var audioPlayer = args.audioPlayer;
 
-		var CellState = BC.Cell.CellState;
+		var CellState = BC.Core.Cell.CellState;
 		var Direction = BC.Common.Direction;
 		var Sound = BC.Audio.Sound;
 		var Stat = BC.Core.Stat;
@@ -107,8 +107,8 @@ var BC = (function(root) {
 		var stage = BC.Stage.make(metrics, stageTranslationY);
 		board.stage = stage;
 
-		var chainManager = BC.Cell.Chain.makeManager();
-		var dropManager = BC.Cell.Drop.makeManager(metrics);
+		var chainManager = BC.Core.Chain.makeManager();
+		var dropManager = BC.Core.Drop.makeManager(metrics);
 
 		var speedLevel = Stat.make({
 			value: 1,
