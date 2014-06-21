@@ -1,7 +1,7 @@
-module("BC.Math");
+module("BC.Common.Math");
 
 test("radians", function() {
-	var radians = BC.Math.radians;
+	var radians = BC.Common.Math.radians;
 
 	equal(radians(0), 0, "0 degrees");
 	equal(radians(90), Math.PI / 2, "90 degrees");
@@ -11,7 +11,7 @@ test("radians", function() {
 
 test("circlePoints", function() {
 	var close = QUnit.assert.close;
-	var circlePoints = BC.Math.circlePoints;
+	var circlePoints = BC.Common.Math.circlePoints;
 	var maxErr = 0.0001;
 
 	close(circlePoints(1, 2), [1, 0, -1, 0], maxErr,  "2 points - radius 1");

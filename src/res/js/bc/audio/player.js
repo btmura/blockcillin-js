@@ -29,7 +29,7 @@ var BC = (function(root) {
 				}
 
 				function onDecodeError() {
-					BC.Util.error("error decoding data for " + url);
+					BC.Common.Log.error("error decoding data for " + url);
 				}
 
 				context.decodeAudioData(request.response, onDecodeSuccess, onDecodeError);

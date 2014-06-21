@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Math = root.Math || {};
+	var parent = root.Common = root.Common || {};
+	var me = parent.Math = parent.Math || {};
 
 	/**
 	 * Converts degrees into radians.

@@ -1,27 +1,27 @@
-module("BC.GL");
+module("BC.Common.GL");
 
 test("textureTileSet", function() {
 	var inset = 0;
-	var tileSet = BC.GL.textureTileSet(1, 1, inset);
+	var tileSet = BC.Common.GL.textureTileSet(1, 1, inset);
 	QUnit.assert.tile(tileSet, 0, 0, [0, 0], [1, 0], [1, 1], [0, 1], inset);
 });
 
 test("textureTileSet_inset", function() {
 	var inset = 0.1;
-	var tileSet = BC.GL.textureTileSet(1, 1, inset);
+	var tileSet = BC.Common.GL.textureTileSet(1, 1, inset);
 	QUnit.assert.tile(tileSet, 0, 0, [0, 0], [1, 0], [1, 1], [0, 1], inset);
 });
 
 test("textureTileSet_multipleTiles", function() {
 	var inset = 0;
-	var tileSet = BC.GL.textureTileSet(2, 2, inset);
+	var tileSet = BC.Common.GL.textureTileSet(2, 2, inset);
 	QUnit.assert.tile(tileSet, 0, 0, [0, 0], [0.5, 0], [0.5, 0.5], [0, 0.5], inset);
 	QUnit.assert.tile(tileSet, 0, 1, [0.5, 0], [1, 0], [1, 0.5], [0.5, 0.5], inset);
 });
 
 test("textureTileSet_multipleTiles_inset", function() {
 	var inset = 0.2;
-	var tileSet = BC.GL.textureTileSet(2, 2, inset);
+	var tileSet = BC.Common.GL.textureTileSet(2, 2, inset);
 	QUnit.assert.tile(tileSet, 0, 0, [0, 0], [0.5, 0], [0.5, 0.5], [0, 0.5], inset);
 	QUnit.assert.tile(tileSet, 0, 1, [0.5, 0], [1, 0], [1, 0.5], [0.5, 0.5], inset);
 });

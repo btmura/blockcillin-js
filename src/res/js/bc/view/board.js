@@ -42,7 +42,7 @@ var BC = (function(root) {
 		function drawRings() {
 			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, board.rotationMatrix);
 			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.translationMatrix);
-			gl.uniformMatrix4fv(selectorMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(selectorMatrixLocation, false, BC.Common.Matrix.identity);
 			var rings = board.rings;
 			for (var i = 0; i < 2; i++) {
 				for (var j = 0; j < rings.length; j++) {
@@ -62,20 +62,20 @@ var BC = (function(root) {
 
 		function drawSelector() {
 			// Don't rotate the board since the selector stays centered.
-			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Common.Matrix.identity);
 			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.translationMatrix);
 			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.selector.matrix);
-			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Matrix.identity);
-			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Common.Matrix.identity);
+			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Common.Matrix.identity);
 			selectorView.draw(programLocations);
 		}
 
 		function drawStage() {
-			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Matrix.identity);
-			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Common.Matrix.identity);
+			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, BC.Common.Matrix.identity);
 			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.stage.matrix);
-			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Matrix.identity);
-			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Matrix.identity);
+			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Common.Matrix.identity);
+			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Common.Matrix.identity);
 			stageView.draw(programLocations);
 		}
 

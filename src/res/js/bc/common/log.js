@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Util = root.Util || {};
+	var parent = root.Common = root.Common || {};
+	var me = parent.Log = parent.Log || {};
 
 	me.log = function(msg) {
 		if (window.console) {

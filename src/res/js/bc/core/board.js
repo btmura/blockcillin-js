@@ -86,8 +86,8 @@ var BC = (function(root) {
 			rings: rings,
 
 			// Split rotation and translation to render the selector in a fixed position.
-			rotationMatrix: BC.Matrix.identity,
-			translationMatrix: BC.Matrix.identity,
+			rotationMatrix: BC.Common.Matrix.identity,
+			translationMatrix: BC.Common.Matrix.identity,
 
 			move: move,
 			rotate: rotate,
@@ -187,7 +187,7 @@ var BC = (function(root) {
 		function swap() {
 			var leftCell = getCell(currentRing, currentCell);
 			var rightCell = getCell(currentRing, currentCell + 1);
-			BC.Util.log("swap: (" + leftCell.state + ", " + rightCell.state + ")");
+			BC.Common.Log.log("swap: (" + leftCell.state + ", " + rightCell.state + ")");
 
 			var leftBlockStyle = leftCell.blockStyle;
 			var rightBlockStyle = rightCell.blockStyle;
@@ -297,21 +297,21 @@ var BC = (function(root) {
 		}
 
 		function updateBoardTranslation() {
-			// TODO(btmura): consolidate to BC.Matrix.makeTranslation(array)
-			board.translationMatrix = BC.Matrix.makeTranslation(
+			// TODO(btmura): consolidate to BC.Common.Matrix.makeTranslation(array)
+			board.translationMatrix = BC.Common.Matrix.makeTranslation(
 					translation[0],
 					translation[1],
 					translation[2]);
 		}
 
 		function updateBoardRotation() {
-			// TODO(btmura): consolidate to BC.Matrix.makeRotation(...)
-			var rotationXMatrix = BC.Matrix.makeXRotation(rotation[0]);
-			var rotationYMatrix = BC.Matrix.makeYRotation(rotation[1]);
-			var rotationZMatrix = BC.Matrix.makeZRotation(rotation[2]);
+			// TODO(btmura): consolidate to BC.Common.Matrix.makeRotation(...)
+			var rotationXMatrix = BC.Common.Matrix.makeXRotation(rotation[0]);
+			var rotationYMatrix = BC.Common.Matrix.makeYRotation(rotation[1]);
+			var rotationZMatrix = BC.Common.Matrix.makeZRotation(rotation[2]);
 
-			var matrix = BC.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
-			matrix = BC.Matrix.matrixMultiply(matrix, rotationXMatrix);
+			var matrix = BC.Common.Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
+			matrix = BC.Common.Matrix.matrixMultiply(matrix, rotationXMatrix);
 			board.rotationMatrix = matrix;
 		}
 

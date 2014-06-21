@@ -13,7 +13,7 @@ var BC = (function(root) {
 		var MOVEMENT_DURATION = 0.025;
 
 		var selector = {
-			matrix: BC.Matrix.identity,
+			matrix: BC.Common.Matrix.identity,
 			move: move,
 			update: update
 		};
@@ -21,7 +21,7 @@ var BC = (function(root) {
 		var direction = Direction.NONE;
 		var animations = [];
 		var translation = [0, 0, 0];
-		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
+		var ringRotationY = BC.Common.Math.sliceRadians(metrics.numCells);
 
 		function move(direction) {
 			switch (direction) {
@@ -38,7 +38,7 @@ var BC = (function(root) {
 					return moveDown();
 
 				default:
-					BC.Util.error("move: unsupported direction: " + direction);
+					BC.Common.Log.error("move: unsupported direction: " + direction);
 					return false;
 			}
 		}
@@ -82,7 +82,7 @@ var BC = (function(root) {
 		function startMoving(newDirection) {
 			direction = newDirection;
 			if (animations.length > 0) {
-				BC.Util.error("startMoving: pending animations: " + animations.length);
+				BC.Common.Log.error("startMoving: pending animations: " + animations.length);
 			}
 
 			animations.push(BC.Common.Animation.make({
@@ -126,12 +126,12 @@ var BC = (function(root) {
 
 		function updateSelectorMatrix(watch) {
 			var scale = 1 + Math.abs(Math.sin(4 * watch.now)) / 25;
-			var scaleMatrix = BC.Matrix.makeScale(scale, scale, 1);
-			var translationMatrix = BC.Matrix.makeTranslation(
+			var scaleMatrix = BC.Common.Matrix.makeScale(scale, scale, 1);
+			var translationMatrix = BC.Common.Matrix.makeTranslation(
 					translation[0],
 					translation[1],
 					translation[2]);
-			selector.matrix = BC.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+			selector.matrix = BC.Common.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
 		}
 
 		return selector;

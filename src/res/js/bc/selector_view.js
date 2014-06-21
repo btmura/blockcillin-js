@@ -7,7 +7,7 @@ var BC = (function(root) {
 		var minY = -metrics.ringHeight / 2;
 		var maxY = -minY;
 		var outerRadius = metrics.ringOuterRadius + 0.01;
-		var outerCirclePoints = BC.Math.circlePoints(outerRadius, metrics.numCells, -Math.PI / 2);
+		var outerCirclePoints = BC.Common.Math.circlePoints(outerRadius, metrics.numCells, -Math.PI / 2);
 
 		var lp = outerCirclePoints.length - 2;
 		var mp = 0;

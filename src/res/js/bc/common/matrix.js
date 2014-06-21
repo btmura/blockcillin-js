@@ -1,11 +1,12 @@
 var BC = (function(root) {
 
-	var me = root.Matrix = root.Matrix || {};
+	var parent = root.Common = root.Common || {};
+	var me = parent.Matrix = parent.Matrix || {};
 
 	me.makeLookAt = function(cameraPosition, target, up) {
-		var zAxis = BC.Math.normalize(BC.Math.subtractVectors(cameraPosition, target));
-		var xAxis = BC.Math.cross(up, zAxis);
-		var yAxis = BC.Math.cross(zAxis, xAxis);
+		var zAxis = BC.Common.Math.normalize(BC.Common.Math.subtractVectors(cameraPosition, target));
+		var xAxis = BC.Common.Math.cross(up, zAxis);
+		var yAxis = BC.Common.Math.cross(zAxis, xAxis);
 		return [
 			xAxis[0], xAxis[1], xAxis[2], 0,
 			yAxis[0], yAxis[1], yAxis[2], 0,

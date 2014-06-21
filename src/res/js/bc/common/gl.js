@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.GL = root.GL || {};
+	var parent = root.Common = root.Common || {};
+	var me = parent.GL = parent.GL || {};
 
 	/**
 	 * Loads a shader from a script tag.
@@ -12,7 +13,7 @@ var BC = (function(root) {
 	 * @return {WebGLShader} the created shader
 	 */
 	me.loadShader = function(gl, scriptId, shaderType, opt_errorCallback) {
-		var errFn = opt_errorCallback || BC.Util.error;
+		var errFn = opt_errorCallback || BC.Common.Log.error;
 		var shaderScript = document.getElementById(scriptId);
 		if (!shaderScript) {
 			errFn("** Error getting script element:" + scriptId);
@@ -53,7 +54,7 @@ var BC = (function(root) {
 		var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
 		if (!linked) {
 			lastError = gl.getProgramInfoLog(program);
-			BC.Util.error("Error in program linking: " + lastError);
+			BC.Common.Log.error("Error in program linking: " + lastError);
 
 			gl.deleteProgram(program);
 			return null;

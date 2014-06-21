@@ -6,7 +6,7 @@ var BC = (function(root) {
 		// Translate the stage up to the top of the ring.
 		translationY += metrics.ringHeight / 2 - 0.01;
 
-		var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
+		var matrix = BC.Common.Matrix.makeTranslation(0, translationY, 0);
 
 		return {
 			matrix: matrix

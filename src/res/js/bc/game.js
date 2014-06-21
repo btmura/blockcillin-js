@@ -67,9 +67,9 @@ var BC = (function(root) {
 		gl.enable(gl.BLEND);
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-		var vertexShader = BC.GL.loadShader(gl, "vertex-shader", gl.VERTEX_SHADER);
-		var fragmentShader = BC.GL.loadShader(gl, "fragment-shader", gl.FRAGMENT_SHADER);
-		var program = BC.GL.createProgram(gl, [vertexShader, fragmentShader]);
+		var vertexShader = BC.Common.GL.loadShader(gl, "vertex-shader", gl.VERTEX_SHADER);
+		var fragmentShader = BC.Common.GL.loadShader(gl, "fragment-shader", gl.FRAGMENT_SHADER);
+		var program = BC.Common.GL.createProgram(gl, [vertexShader, fragmentShader]);
 		gl.useProgram(program);
 
 		function getAttrib(name) {
@@ -114,8 +114,8 @@ var BC = (function(root) {
 		// Creates the projection matrix based upon the current canvas dimensions.
 		function makeProjectionMatrix() {
 			var aspect = canvas.width / canvas.height;
-			var fieldOfViewRadians = BC.Math.radians(90);
-			return BC.Matrix.makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+			var fieldOfViewRadians = BC.Common.Math.radians(90);
+			return BC.Common.Matrix.makePerspective(fieldOfViewRadians, aspect, 1, 2000);
 		}
 
 		// Create the inital projection matrix.
@@ -134,8 +134,8 @@ var BC = (function(root) {
 			var cameraPosition = [0, 0.1, 3];
 			var targetPosition = [0, 0, 0];
 			var up = [0, 1, 0];
-			var cameraMatrix = BC.Matrix.makeLookAt(cameraPosition, targetPosition, up);
-			return BC.Matrix.makeInverse(cameraMatrix);
+			var cameraMatrix = BC.Common.Matrix.makeLookAt(cameraPosition, targetPosition, up);
+			return BC.Common.Matrix.makeInverse(cameraMatrix);
 		}
 
 		// Create the initial view matrix. Doesn't need to be set again later.

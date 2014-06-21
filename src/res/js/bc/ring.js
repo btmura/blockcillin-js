@@ -11,9 +11,9 @@ var BC = (function(root) {
 		var audioPlayer = args.audioPlayer;
 
 		// How much to rotate each cell by to form a ring of cells.
-		var RING_ROTATION_Y_DELTA = BC.Math.sliceRadians(metrics.numCells);
+		var RING_ROTATION_Y_DELTA = BC.Common.Math.sliceRadians(metrics.numCells);
 
-		var matrix = BC.Matrix.makeTranslation(0, translationY, 0);
+		var matrix = BC.Common.Matrix.makeTranslation(0, translationY, 0);
 
 		var state = selectable ? CellState.BLOCK : CellState.BLOCK_INCOMING;
 
@@ -21,7 +21,7 @@ var BC = (function(root) {
 		for (var i = 0; i < metrics.numCells; i++) {
 			var rotationY = i * RING_ROTATION_Y_DELTA;
 
-			var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
+			var blockStyle = BC.Common.Math.randomInt(metrics.numBlockTypes);
 			if (!selectable) {
 				blockStyle += metrics.numBlockTypes * 2;
 			}

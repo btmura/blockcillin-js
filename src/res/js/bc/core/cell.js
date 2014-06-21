@@ -33,14 +33,14 @@ var BC = (function(root) {
 		var FLICKER_DURATION = 0.5;
 		var FREEZE_DURATION = 0.25;
 		var FADE_OUT_DURATION = 0.25;
-		var ROTATION_Y_DELTA = BC.Math.sliceRadians(metrics.numCells);
+		var ROTATION_Y_DELTA = BC.Common.Math.sliceRadians(metrics.numCells);
 
 		var animations = [];
 		var droppingBlock = false;
 
 		var rotation = [0, rotationY, 0];
 		var translation = [0, 0, 0];
-		var matrix = BC.Matrix.makeYRotation(rotation[1]);
+		var matrix = BC.Common.Matrix.makeYRotation(rotation[1]);
 
 		var cell = {
 			matrix: matrix,
@@ -64,7 +64,7 @@ var BC = (function(root) {
 		function markBlock() {
 			cell.state = CellState.BLOCK_CLEARING_MARKED;
 			if (animations.length > 0) {
-				BC.Util.error("markBlock: pending animations: " + animations.length);
+				BC.Common.Log.error("markBlock: pending animations: " + animations.length);
 			}
 
 			var flicker = BC.Common.Animation.make({
@@ -97,7 +97,7 @@ var BC = (function(root) {
 		function clearBlock() {
 			cell.state = CellState.BLOCK_CLEARING_IN_PROGRESS;
 			if (animations.length > 0) {
-				BC.Util.error("clearBlock: pending animations: " + animations.length);
+				BC.Common.Log.error("clearBlock: pending animations: " + animations.length);
 			}
 
 			var fadeOut = BC.Common.Animation.make({
@@ -125,7 +125,7 @@ var BC = (function(root) {
 			cell.state = CellState.EMPTY_NO_SWAP;
 
 			if (animations.length > 0) {
-				BC.Util.error("sendBlock: pending animations: " + animations.length);
+				BC.Common.Log.error("sendBlock: pending animations: " + animations.length);
 			}
 
 			animations.push(BC.Common.Animation.make({
@@ -157,13 +157,13 @@ var BC = (function(root) {
 					break;
 
 				default:
-					BC.Util.error("receiveBlock: unsupport direction: " + direction);
+					BC.Common.Log.error("receiveBlock: unsupport direction: " + direction);
 					break;
 			}
 			updateCellMatrix();
 
 			if (animations.length > 0) {
-				BC.Util.error("receiveBlock: pending animations: " + animations.length);
+				BC.Common.Log.error("receiveBlock: pending animations: " + animations.length);
 			}
 
 			animations.push(BC.Common.Animation.make({
@@ -224,12 +224,12 @@ var BC = (function(root) {
 		}
 
 		function updateCellMatrix() {
-			var rotationMatrix = BC.Matrix.makeYRotation(rotation[1]);
-			var translationMatrix = BC.Matrix.makeTranslation(
+			var rotationMatrix = BC.Common.Matrix.makeYRotation(rotation[1]);
+			var translationMatrix = BC.Common.Matrix.makeTranslation(
 					translation[0],
 					translation[1],
 					translation[2]);
-			cell.matrix = BC.Matrix.matrixMultiply(rotationMatrix, translationMatrix);
+			cell.matrix = BC.Common.Matrix.matrixMultiply(rotationMatrix, translationMatrix);
 		}
 
 		return cell;

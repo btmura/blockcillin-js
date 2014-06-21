@@ -15,8 +15,8 @@ var BC = (function(root) {
 		var minY = -maxY;
 
 		var offset = -Math.PI / 2;
-		var innerCirclePoints = BC.Math.circlePoints(innerRadius, numSlices, offset);
-		var outerCirclePoints = BC.Math.circlePoints(outerRadius, numSlices, offset);
+		var innerCirclePoints = BC.Common.Math.circlePoints(innerRadius, numSlices, offset);
+		var outerCirclePoints = BC.Common.Math.circlePoints(outerRadius, numSlices, offset);
 
 		var i = 0;
 		var p = 0;

@@ -15,7 +15,7 @@ var BC = (function(root) {
 		var YELLOW = 4;
 		var BLUE = 5;
 
-		var tileSet = BC.GL.textureTileSet(8, 8, 0.002);
+		var tileSet = BC.Common.GL.textureTileSet(8, 8, 0.002);
 		var blockTextureTiles = [
 			tileSet.tile(BLOCK, RED),
 			tileSet.tile(BLOCK, GREEN),
