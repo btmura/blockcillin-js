@@ -1,7 +1,7 @@
 var BC = (function(root) {
 
-	var parent = root.Selector = root.Selector || {};
-	var me = parent.View = parent.View || {};
+	var parent = root.View = root.View || {};
+	var me = parent.Selector = parent.Selector || {};
 
 	me.make = function(gl, metrics, textureTile) {
 		var minY = -metrics.ringHeight / 2;

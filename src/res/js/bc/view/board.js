@@ -19,8 +19,8 @@ var BC = (function(root) {
 		var cellMatrixLocation = programLocations.cellMatrixLocation;
 
 		var cellView = BC.View.Cell.make(gl, board.metrics, resources.blockTextureTiles);
-		var selectorView = BC.Selector.View.make(gl, board.metrics, resources.selectorTextureTile);
-		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
+		var selectorView = BC.View.Selector.make(gl, board.metrics, resources.selectorTextureTile);
+		var stageView = BC.View.Stage.make(gl, board.metrics, resources.blackTextureTile);
 
 		function draw() {
 			drawStats();

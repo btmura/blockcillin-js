@@ -1,7 +1,7 @@
 var BC = (function(root) {
 
-	var parent = root.Stage = root.Stage || {};
-	var me = parent.View = parent.View || {};
+	var parent = root.View = root.View || {};
+	var me = parent.Stage = parent.Stage || {};
 
 	me.make = function(gl, metrics, textureTile) {
 		var points = [];
