@@ -2,44 +2,14 @@ var BC = (function(root) {
 
 	var me = root.Game = root.Game || {};
 
-	me.run = function() {
-		var MAIN_MENU_GAME_TITLE = "b l o c k c i l l i n";
-		var MAIN_MENU_PAUSED_TITLE = "P A U S E D";
-		var MAIN_MENU_GAME_OVER_TITLE = "G A M E  O V E R";
-		var MENU_DURATION = "slow";
-		var FLICKER_DURATION = 20;
-
+	me.make = function(args) {
 		var Clock = BC.Common.Clock;
 		var Direction = BC.Common.Direction;
-		var Sound = BC.Audio.Sound;
 		var StopWatch = BC.Common.StopWatch;
 
 		var started = false;
 		var paused = false;
 		var gameOver = false;
-
-		var mainMenu = $("#main-menu");
-		var mainMenuTitle = $("#main-menu-title", mainMenu);
-		var mainMenuStats = $("#main-menu-stats", mainMenu);
-
-		var continueButton = $("#continue-button", mainMenu);
-		var newGameButton = $("#new-game-button", mainMenu);
-		var statsButton = $("#stats-button", mainMenu);
-		var optionsButton = $("#options-button", mainMenu);
-		var creditsButton = $("#credits-button", mainMenu);
-
-		var mmSpeedLevelView = BC.View.Stat.make($("#speed-level-stat", mainMenu));
-		var mmElapsedTimeView = BC.View.Stat.make($("#elapsed-time-stat", mainMenu));
-		var mmScoreView = BC.View.Stat.make($("#score-stat", mainMenu));
-
-		var gameMenu = $("#game-menu");
-		var pauseButton = $("#pause-button", gameMenu);
-
-		var gmSpeedLevelView = BC.View.Stat.make($("#speed-level-stat", gameMenu));
-		var gmElapsedTimeView = BC.View.Stat.make($("#elapsed-time-stat", gameMenu));
-		var gmScoreView = BC.View.Stat.make($("#score-stat", gameMenu));
-
-		var buttons = $(".button");
 
 		var metrics = {
 			numRings: 3,
@@ -54,7 +24,7 @@ var BC = (function(root) {
 		var watch = StopWatch.make({
 			clock: clock
 		});
-		var audioPlayer = BC.Audio.Player.make();
+		var audioPlayer = args.audioPlayer;
 
 		var speedLevelStat;
 		var elapsedTimeStat;
@@ -63,31 +33,18 @@ var BC = (function(root) {
 		var board;
 		var boardView;
 
-		var canvas = document.getElementById("canvas");
-		if (!canvas) {
-			return;
-		}
+		var canvas = args.canvas;
+		var storage = args.storage;
+		var controller = args.controller;
+		var statBoard = args.statBoard;
 
-		var storage = BC.Common.Storage.make();
+		var gmSpeedLevelView = args.gmSpeedLevelView;
+		var gmElapsedTimeView = args.gmElapsedTimeView;
+		var gmScoreView = args.gmScoreView;
 
-		var statBoard = BC.Game.StatBoard.make({
-			storage: storage
-		});
-
-		var statsMenu = BC.Menu.Stats.make({
-			statBoard: statBoard
-		});
-
-		var controller = BC.Controller.make({
-			storage: storage,
-			canvas: canvas
-		});
-
-		var optionsMenu = BC.Menu.Options.make({
-			controller: controller
-		});
-
-		var creditsMenu = BC.Menu.Credits.make();
+		var resumeCallback = function() {};
+		var pauseCallback = function() {};
+		var gameOverCallback = function() {};
 
 		var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 		if (!gl) {
@@ -191,55 +148,6 @@ var BC = (function(root) {
 		var viewMatrix = makeViewMatrix();
 		gl.uniformMatrix4fv(programLocations.viewMatrixLocation, false, viewMatrix);
 
-		buttons.click(function(event) {
-			audioPlayer.play(Sound.BUTTON_CLICK);
-			flicker($(event.target));
-		});
-
-		buttons.mouseenter(function() {
-			audioPlayer.play(Sound.BUTTON_HOVER);
-		});
-
-		showMainMenu(true);
-
-		continueButton.click(function() {
-			resumeGame();
-		});
-
-		newGameButton.click(function() {
-			startGame();
-		});
-
-		statsButton.click(function() {
-			setVisible(statsMenu, true);
-		});
-
-		optionsButton.click(function() {
-			setVisible(optionsMenu, true);
-		});
-
-		creditsButton.click(function() {
-			setVisible(creditsMenu, true);
-		});
-
-		pauseButton.click(function() {
-			pauseGame();
-		});
-
-		controller.setMenuActionListener(function() {
-			if (!paused) {
-				pauseGame();
-			} else {
-				resumeGame();
-			}
-		});
-
-		document.addEventListener("visibilitychange", function() {
-			if (document.hidden) {
-				pauseGame();
-			}
-		});
-
 		function startGame() {
 			started = true;
 			gameOver = false;
@@ -279,12 +187,12 @@ var BC = (function(root) {
 
 		function pauseGame() {
 			paused = true;
-			showMainMenu(true);
+			pauseCallback();
 		}
 
 		function resumeGame() {
 			paused = false;
-			showMainMenu(false);
+			resumeCallback();
 			watch.reset();
 			drawFrame();
 		}
@@ -325,7 +233,7 @@ var BC = (function(root) {
 			if (gameOver) {
 				started = false;
 				paused = false;
-				showMainMenu(true);
+				gameOverCallback();
 			}
 		}
 
@@ -337,11 +245,195 @@ var BC = (function(root) {
 			});
 		}
 
+		function isPaused() {
+			return paused;
+		}
+
+		function isGameOver() {
+			return gameOver;
+		}
+
+		function isStarted() {
+			return started;
+		}
+
+		function setResumeListener(callback) {
+			resumeCallback = callback;
+		}
+
+		function setPauseListener(callback) {
+			pauseCallback = callback;
+		}
+
+		function setGameOverListener(callback) {
+			gameOverCallback = callback;
+		}
+
+		function getSpeedLevel() {
+			return board.speedLevel;
+		}
+
+		function getElapsedTime() {
+			return board.elapsedTime;
+		}
+
+		function getScore() {
+			return board.score;
+		}
+
+		return {
+			resume: resumeGame,
+			start: startGame,
+			pause: pauseGame,
+			isPaused: isPaused,
+			isGameOver: isGameOver,
+			isStarted: isStarted,
+			setResumeListener: setResumeListener,
+			setPauseListener: setPauseListener,
+			setGameOverListener: setGameOverListener,
+			getSpeedLevel: getSpeedLevel,
+			getElapsedTime: getElapsedTime,
+			getScore: getScore
+		};
+	};
+
+	me.run = function() {
+		var Sound = BC.Audio.Sound;
+
+		var MAIN_MENU_GAME_TITLE = "b l o c k c i l l i n";
+		var MAIN_MENU_PAUSED_TITLE = "P A U S E D";
+		var MAIN_MENU_GAME_OVER_TITLE = "G A M E  O V E R";
+		var MENU_DURATION = "slow";
+		var FLICKER_DURATION = 20;
+
+		var mainMenu = $("#main-menu");
+		var mainMenuTitle = $("#main-menu-title", mainMenu);
+		var mainMenuStats = $("#main-menu-stats", mainMenu);
+
+		var continueButton = $("#continue-button", mainMenu);
+		var newGameButton = $("#new-game-button", mainMenu);
+		var statsButton = $("#stats-button", mainMenu);
+		var optionsButton = $("#options-button", mainMenu);
+		var creditsButton = $("#credits-button", mainMenu);
+
+		var mmSpeedLevelView = BC.View.Stat.make($("#speed-level-stat", mainMenu));
+		var mmElapsedTimeView = BC.View.Stat.make($("#elapsed-time-stat", mainMenu));
+		var mmScoreView = BC.View.Stat.make($("#score-stat", mainMenu));
+
+		var gameMenu = $("#game-menu");
+		var pauseButton = $("#pause-button", gameMenu);
+
+		var gmSpeedLevelView = BC.View.Stat.make($("#speed-level-stat", gameMenu));
+		var gmElapsedTimeView = BC.View.Stat.make($("#elapsed-time-stat", gameMenu));
+		var gmScoreView = BC.View.Stat.make($("#score-stat", gameMenu));
+
+		var canvas = document.getElementById("canvas");
+		if (!canvas) {
+			return;
+		}
+
+		var storage = BC.Common.Storage.make();
+
+		var controller = BC.Controller.make({
+			storage: storage,
+			canvas: canvas
+		});
+
+		var audioPlayer = BC.Audio.Player.make();
+
+		var statBoard = BC.Game.StatBoard.make({
+			storage: storage
+		});
+
+		var statsMenu = BC.Menu.Stats.make({
+			statBoard: statBoard
+		});
+
+		var optionsMenu = BC.Menu.Options.make({
+			controller: controller
+		});
+
+		var creditsMenu = BC.Menu.Credits.make();
+
+		var game = BC.Game.make({
+			storage: storage,
+			canvas: canvas,
+			controller: controller,
+			audioPlayer: audioPlayer,
+			gmSpeedLevelView: gmSpeedLevelView,
+			gmElapsedTimeView: gmElapsedTimeView,
+			gmScoreView: gmScoreView,
+			statBoard: statBoard
+		});
+
+		game.setResumeListener(function() {
+			showMainMenu(false);
+		});
+
+		game.setPauseListener(function() {
+			showMainMenu(true);
+		});
+
+		game.setGameOverListener(function() {
+			showMainMenu(true);
+		});
+
+		var buttons = $(".button");
+
+		buttons.click(function(event) {
+			audioPlayer.play(Sound.BUTTON_CLICK);
+			flicker($(event.target));
+		});
+
+		buttons.mouseenter(function() {
+			audioPlayer.play(Sound.BUTTON_HOVER);
+		});
+
+		showMainMenu(true);
+
+		continueButton.click(function() {
+			game.resume();
+		});
+
+		newGameButton.click(function() {
+			game.start();
+		});
+
+		statsButton.click(function() {
+			setVisible(statsMenu, true);
+		});
+
+		optionsButton.click(function() {
+			setVisible(optionsMenu, true);
+		});
+
+		creditsButton.click(function() {
+			setVisible(creditsMenu, true);
+		});
+
+		pauseButton.click(function() {
+			game.pause();
+		});
+
+		controller.setMenuActionListener(function() {
+			if (!game.isPaused()) {
+				game.pause();
+			} else {
+				game.resume();
+			}
+		});
+
+		document.addEventListener("visibilitychange", function() {
+			if (document.hidden) {
+				game.pause();
+			}
+		});
+
 		function showMainMenu(show) {
 			if (show) {
 				mainMenuTitle.text(getMainMenuTitle());
-				showMainMenuStats(started || gameOver);
-				setVisible(continueButton, started);
+				showMainMenuStats(game.isStarted() || game.isGameOver());
+				setVisible(continueButton, game.isStarted());
 				mainMenu.fadeIn(MENU_DURATION);
 				gameMenu.fadeOut(MENU_DURATION);
 			} else {
@@ -351,9 +443,9 @@ var BC = (function(root) {
 		}
 
 		function getMainMenuTitle() {
-			if (gameOver) {
+			if (game.isGameOver()) {
 				return MAIN_MENU_GAME_OVER_TITLE;
-			} else if (started && paused) {
+			} else if (game.isStarted() && game.isPaused()) {
 				return MAIN_MENU_PAUSED_TITLE;
 			} else {
 				return MAIN_MENU_GAME_TITLE;
@@ -363,9 +455,9 @@ var BC = (function(root) {
 		function showMainMenuStats(show) {
 			// Update stats only on display and leave them the same as the menu fades out.
 			if (show) {
-				mmSpeedLevelView.draw(board.speedLevel);
-				mmScoreView.draw(board.score);
-				mmElapsedTimeView.draw(board.elapsedTime);
+				mmSpeedLevelView.draw(game.getSpeedLevel());
+				mmScoreView.draw(game.getScore());
+				mmElapsedTimeView.draw(game.getElapsedTime());
 			}
 			setVisible(mainMenuStats, show);
 		}
