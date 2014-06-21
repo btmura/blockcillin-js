@@ -5,15 +5,7 @@ var BC = (function(root) {
 	me.run = function() {
 		var Sound = BC.Audio.Sound;
 
-		var MENU_DURATION = "slow";
 		var FLICKER_DURATION = 20;
-
-		var gameMenu = $("#game-menu");
-		var pauseButton = $("#pause-button", gameMenu);
-
-		var gmSpeedLevelView = BC.View.Stat.make($("#speed-level-stat", gameMenu));
-		var gmElapsedTimeView = BC.View.Stat.make($("#elapsed-time-stat", gameMenu));
-		var gmScoreView = BC.View.Stat.make($("#score-stat", gameMenu));
 
 		var canvas = document.getElementById("canvas");
 		if (!canvas) {
@@ -34,15 +26,13 @@ var BC = (function(root) {
 		var audioPlayer = BC.Audio.Player.make();
 
 		var mainMenu = BC.Menu.Main.make();
-
+		var gameMenu = BC.Menu.Game.make();
 		var statsMenu = BC.Menu.Stats.make({
 			statBoard: statBoard
 		});
-
 		var optionsMenu = BC.Menu.Options.make({
 			controller: controller
 		});
-
 		var creditsMenu = BC.Menu.Credits.make();
 
 		var game = BC.Game.make({
@@ -50,40 +40,38 @@ var BC = (function(root) {
 			canvas: canvas,
 			controller: controller,
 			audioPlayer: audioPlayer,
-			gmSpeedLevelView: gmSpeedLevelView,
-			gmElapsedTimeView: gmElapsedTimeView,
-			gmScoreView: gmScoreView,
+			gmSpeedLevelView: gameMenu.getSpeedLevelView(),
+			gmElapsedTimeView: gameMenu.getElapsedTimeView(),
+			gmScoreView: gameMenu.getScoreView(),
 			statBoard: statBoard
 		});
 
 		mainMenu.setContinueListener(function() {
 			game.resume();
 		});
-
 		mainMenu.setNewGameListener(function() {
 			game.start();
 		});
-
 		mainMenu.setStatsListener(function() {
 			statsMenu.show();
 		});
-
 		mainMenu.setOptionsListener(function() {
 			optionsMenu.show();
 		});
-
 		mainMenu.setCreditsListener(function() {
 			creditsMenu.show();
+		});
+
+		gameMenu.setPauseListener(function() {
+			game.pause();
 		});
 
 		game.setResumeListener(function() {
 			showMainMenu(false);
 		});
-
 		game.setPauseListener(function() {
 			showMainMenu(true);
 		});
-
 		game.setGameOverListener(function() {
 			showMainMenu(true);
 		});
@@ -97,10 +85,6 @@ var BC = (function(root) {
 
 		buttons.mouseenter(function() {
 			audioPlayer.play(Sound.BUTTON_HOVER);
-		});
-
-		pauseButton.click(function() {
-			game.pause();
 		});
 
 		controller.setMenuActionListener(function() {
@@ -120,10 +104,10 @@ var BC = (function(root) {
 		function showMainMenu(show) {
 			if (show) {
 				mainMenu.show(game);
-				gameMenu.fadeOut(MENU_DURATION);
+				gameMenu.hide();
 			} else {
 				mainMenu.hide();
-				gameMenu.fadeIn(MENU_DURATION);
+				gameMenu.show();
 			}
 		}
 
