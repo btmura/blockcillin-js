@@ -146,7 +146,7 @@ var BC = (function(root) {
 			started = true;
 			gameOver = false;
 
-			board = BC.Board.make({
+			board = BC.Core.Board.make({
 				metrics: metrics,
 				audioPlayer: audioPlayer
 			});

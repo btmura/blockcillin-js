@@ -1,6 +1,7 @@
 var BC = (function(root) {
 
-	var me = root.Board = root.Board || {};
+	var parent = root.Core = root.Core || {};
+	var me = parent.Board = parent.Board || {};
 
 	me.make = function(args) {
 		var metrics = args.metrics;
