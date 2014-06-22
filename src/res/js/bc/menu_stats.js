@@ -20,7 +20,7 @@ var BC = (function(root) {
 			entries.push(entry);
 
 			function makeView(id) {
-				return BC.Stat.View.make($(id, entry));
+				return BC.Quantity.View.make($(id, entry));
 			}
 
 			views.push({

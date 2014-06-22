@@ -9,9 +9,9 @@ var BC = (function(root) {
 		var gameMenu = $("#game-menu");
 		var pauseButton = $("#pause-button", gameMenu);
 
-		var gmSpeedLevelView = BC.Stat.View.make($("#speed-level-stat", gameMenu));
-		var gmElapsedTimeView = BC.Stat.View.make($("#elapsed-time-stat", gameMenu));
-		var gmScoreView = BC.Stat.View.make($("#score-stat", gameMenu));
+		var gmSpeedLevelView = BC.Quantity.View.make($("#speed-level-stat", gameMenu));
+		var gmElapsedTimeView = BC.Quantity.View.make($("#elapsed-time-stat", gameMenu));
+		var gmScoreView = BC.Quantity.View.make($("#score-stat", gameMenu));
 
 		var pauseCallback = function() {};
 

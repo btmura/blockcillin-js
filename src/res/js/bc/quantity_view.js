@@ -1,6 +1,6 @@
 var BC = (function(root) {
 
-	var parent = root.Stat = root.Stat || {};
+	var parent = root.Quantity = root.Quantity || {};
 	var me = parent.View = parent.View || {};
 
 	var displayFuncs;
@@ -35,9 +35,9 @@ var BC = (function(root) {
 			};
 		}
 
-		function draw(stat) {
-			var df = displayFuncs[stat.unit];
-			element.text(df(stat.value));
+		function draw(quantity) {
+			var df = displayFuncs[quantity.unit];
+			element.text(df(quantity.value));
 		}
 
 		return {

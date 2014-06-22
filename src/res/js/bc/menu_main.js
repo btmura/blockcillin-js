@@ -23,9 +23,9 @@ var BC = (function(root) {
 		var optionsButton = $("#options-button", mainMenu);
 		var creditsButton = $("#credits-button", mainMenu);
 
-		var mmSpeedLevelView = BC.Stat.View.make($("#speed-level-stat", mainMenu));
-		var mmElapsedTimeView = BC.Stat.View.make($("#elapsed-time-stat", mainMenu));
-		var mmScoreView = BC.Stat.View.make($("#score-stat", mainMenu));
+		var mmSpeedLevelView = BC.Quantity.View.make($("#speed-level-stat", mainMenu));
+		var mmElapsedTimeView = BC.Quantity.View.make($("#elapsed-time-stat", mainMenu));
+		var mmScoreView = BC.Quantity.View.make($("#score-stat", mainMenu));
 
 		var audioPlayer = args.audioPlayer;
 
