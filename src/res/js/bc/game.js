@@ -3,9 +3,11 @@ var BC = (function(root) {
 	var me = root.Game = root.Game || {};
 
 	me.make = function(args) {
-		var Clock = BC.Common.Clock;
-		var Direction = BC.Common.Direction;
-		var StopWatch = BC.Common.StopWatch;
+		var Clock = BC.Time.Clock;
+		var Direction = BC.Direction;
+		var GL = BC.GL;
+		var Matrix = BC.Math.Matrix;
+		var Stopwatch = BC.Time.Stopwatch;
 
 		var gl = args.gl;
 		var storage = args.storage;
@@ -28,9 +30,9 @@ var BC = (function(root) {
 			ringOuterRadius: 1,
 			ringHeight: 0.3
 		};
-		var resources = BC.View.Resources.make();
+		var resources = BC.Resources.make();
 		var clock = Clock.make();
-		var watch = StopWatch.make({
+		var watch = Stopwatch.make({
 			clock: clock
 		});
 
@@ -67,9 +69,9 @@ var BC = (function(root) {
 		gl.enable(gl.BLEND);
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-		var vertexShader = BC.Common.GL.loadShader(gl, "vertex-shader", gl.VERTEX_SHADER);
-		var fragmentShader = BC.Common.GL.loadShader(gl, "fragment-shader", gl.FRAGMENT_SHADER);
-		var program = BC.Common.GL.createProgram(gl, [vertexShader, fragmentShader]);
+		var vertexShader = GL.loadShader(gl, "vertex-shader", gl.VERTEX_SHADER);
+		var fragmentShader = GL.loadShader(gl, "fragment-shader", gl.FRAGMENT_SHADER);
+		var program = GL.createProgram(gl, [vertexShader, fragmentShader]);
 		gl.useProgram(program);
 
 		function getAttrib(name) {
@@ -114,8 +116,8 @@ var BC = (function(root) {
 		// Creates the projection matrix based upon the current canvas dimensions.
 		function makeProjectionMatrix() {
 			var aspect = canvas.width / canvas.height;
-			var fieldOfViewRadians = BC.Common.Math.radians(90);
-			return BC.Common.Matrix.makePerspective(fieldOfViewRadians, aspect, 1, 2000);
+			var fieldOfViewRadians = BC.Math.radians(90);
+			return BC.Math.Matrix.makePerspective(fieldOfViewRadians, aspect, 1, 2000);
 		}
 
 		// Create the inital projection matrix.
@@ -134,8 +136,8 @@ var BC = (function(root) {
 			var cameraPosition = [0, 0.1, 3];
 			var targetPosition = [0, 0, 0];
 			var up = [0, 1, 0];
-			var cameraMatrix = BC.Common.Matrix.makeLookAt(cameraPosition, targetPosition, up);
-			return BC.Common.Matrix.makeInverse(cameraMatrix);
+			var cameraMatrix = Matrix.makeLookAt(cameraPosition, targetPosition, up);
+			return Matrix.makeInverse(cameraMatrix);
 		}
 
 		// Create the initial view matrix. Doesn't need to be set again later.
@@ -146,11 +148,11 @@ var BC = (function(root) {
 			started = true;
 			gameOver = false;
 
-			board = BC.Core.Board.make({
+			board = BC.Board.make({
 				metrics: metrics,
 				audioPlayer: audioPlayer
 			});
-			boardView = BC.View.Board.make({
+			boardView = BC.Board.View.make({
 				board: board,
 				gl: gl,
 				programLocations: programLocations,

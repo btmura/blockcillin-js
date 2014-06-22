@@ -13,17 +13,19 @@ var BC = (function(root) {
 			return;
 		}
 
-		var storage = BC.Common.Storage.make();
-		var controller = BC.Common.Controller.make({
+		var storage = BC.Storage.make();
+		var controller = BC.Controller.make({
 			canvas: canvas,
 			storage: storage
 		});
-		var statBoard = BC.Core.StatBoard.make({
+		var statBoard = BC.StatBoard.make({
 			storage: storage
 		});
 		var audioPlayer = BC.Audio.Player.make();
 
-		var mainMenu = BC.Menu.Main.make();
+		var mainMenu = BC.Menu.Main.make({
+			audioPlayer: audioPlayer
+		});
 		var gameMenu = BC.Menu.Game.make();
 		var statsMenu = BC.Menu.Stats.make({
 			statBoard: statBoard
@@ -98,9 +100,6 @@ var BC = (function(root) {
 			}
 		}
 
-		BC.Menu.init({
-			audioPlayer: audioPlayer
-		});
 		showMainMenu(true);
 	};
 
