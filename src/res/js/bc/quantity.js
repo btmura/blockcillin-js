@@ -1,6 +1,6 @@
 var BC = (function(root) {
 
-	var me = root.Stat = root.Stat || {};
+	var me = root.Quantity = root.Quantity || {};
 
 	me.make = function(args) {
 		args = args || {};

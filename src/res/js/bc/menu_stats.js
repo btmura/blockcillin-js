@@ -7,9 +7,6 @@ var BC = (function(root) {
 		var MENU_FADE_SPEED = "slow";
 		var MAX_STATS = 5;
 
-		var Stat = BC.Stat;
-		var Unit = BC.Unit;
-
 		var statBoard = args.statBoard;
 
 		var menu = $("#stats-menu");
@@ -34,9 +31,9 @@ var BC = (function(root) {
 		}
 
 		var models = {
-			speedLevel: Stat.make(),
-			elapsedTime: Stat.make({unit: Unit.SECONDS}),
-			score: Stat.make()
+			speedLevel: BC.Quantity.make(),
+			elapsedTime: BC.Quantity.make({unit: BC.Unit.SECONDS}),
+			score: BC.Quantity.make()
 		};
 
 		closeButton.click(function() {

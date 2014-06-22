@@ -8,10 +8,10 @@ var BC = (function(root) {
 		var Direction = BC.Direction
 		var Drop = BC.Drop;
 		var Matrix = BC.Math.Matrix;
+		var Quantity = BC.Quantity;
 		var Selector = BC.Selector;
 		var Sound = BC.Audio.Sound;
 		var Stage = BC.Stage;
-		var Stat = BC.Stat;
 		var Unit = BC.Unit;
 
 		var metrics = args.metrics;
@@ -114,19 +114,19 @@ var BC = (function(root) {
 		var chainManager = Chain.makeManager();
 		var dropManager = Drop.makeManager(metrics);
 
-		var speedLevel = Stat.make({
+		var speedLevel = Quantity.make({
 			value: 1,
 			unit: Unit.NONE
 		});
 		board.speedLevel = speedLevel;
 
-		var elapsedTime = Stat.make({
+		var elapsedTime = Quantity.make({
 			value: 0,
 			unit: Unit.SECONDS
 		});
 		board.elapsedTime = elapsedTime;
 
-		var score = Stat.make({
+		var score = Quantity.make({
 			value: 0,
 			unit: Unit.NONE
 		});
