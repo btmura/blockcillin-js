@@ -144,6 +144,15 @@ fieldset p {
 	padding: 0px;
 }
 
+.credits ul {
+	list-style: none;
+	padding: 0px;
+}
+
+.credits li {
+	display: inline-block;
+}
+
 canvas {
 	position: absolute;
 	top: 0;
