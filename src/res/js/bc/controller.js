@@ -3,12 +3,12 @@ var BC = (function(root) {
 	var me = root.Controller = root.Controller || {};
 
 	me.Key = {
-		UP: "0",
-		DOWN: "1",
-		LEFT: "2",
-		RIGHT: "3",
-		PRIMARY_ACTION: "4",
-		MENU_ACTION: "5"
+		UP: "UP",
+		DOWN: "DOWN",
+		LEFT: "LEFT",
+		RIGHT: "RIGHT",
+		PRIMARY_ACTION: "PRIMARY_ACTION",
+		MENU_ACTION: "MENU_ACTION"
 	};
 
 	me.make = function(args) {
