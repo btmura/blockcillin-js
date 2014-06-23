@@ -21,15 +21,7 @@ var BC = (function(root) {
 
 	var me = root.GL = root.GL || {};
 
-	/**
-	 * Loads a shader from a script tag.
-	 *
-	 * @param {WebGLContext} gl - the WebGLContext to use
-	 * @param {string} scriptId - id of the script tag
-	 * @param {number} shaderType - type of the shader
-	 * @param {function(string): void} opt_errorCallback - callback for errors
-	 * @return {WebGLShader} the created shader
-	 */
+	// Loads a shader from a script tag.
 	me.loadShader = function(gl, scriptId, shaderType, opt_errorCallback) {
 		var errFn = opt_errorCallback || BC.Log.error;
 		var shaderScript = document.getElementById(scriptId);
@@ -80,37 +72,19 @@ var BC = (function(root) {
 		return program;
 	};
 
-	/**
-	 * Returns a tile set representing a texture split up into multiple.
-	 *
-	 * @param {number} numRows - rows the tile map has
-	 * @param {number} numCols - columns the tile map has
-	 * @param {number} inset - amount to inset from 0 to 1
-	 * @return {Object} the tile map to query for tiles
-	 */
+	// Returns a tile set representing a texture split up into multiple.
 	me.textureTileSet = function(numRows, numCols, inset) {
 		var tw = 1.0 / numRows;
 		var th = 1.0 / numCols;
 		return {
 
-			/**
-			 * Returns the tile at a certain row and column.
-			 *
-			 * @param {number} row - zero-based index from top
-			 * @param {number} col - zero-based index from left
-			 * @return {Object} the tile at that row and column
-			 */
+			// Returns the tile at a certain row and column.
 			tile : function(row, col) {
 				var tx = tw * col;
 				var ty = th * row;
 				return {
 
-					/**
-					 * Translates the relative position to absolute position.
-					 *
-					 * @param {number} s - s coord from left as if one texture
-					 * @param {number} t - t coord from top as if one texture
-					 */
+					// Translates the relative position to absolute position.
 					textureCoord : function(s, t) {
 						return [
 							tx + inset + (tw - inset*2) * s,

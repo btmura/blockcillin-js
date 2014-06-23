@@ -21,12 +21,7 @@ var BC = (function(root) {
 
 	var me = root.Math = root.Math || {};
 
-	/**
-	 * Converts degrees into radians.
-	 *
-	 * @param {Number} degrees - degrees to convert to radians
-	 * @returns {@number} equivalent radians
-	 */
+	// Converts degrees into radians.
 	me.radians = function(degrees) {
 		return  degrees * Math.PI / 180;
 	}
@@ -35,23 +30,12 @@ var BC = (function(root) {
 		return 2 * Math.PI / numSlices;
 	}
 
-	/**
-	 * Returns a random integer between 0 and max exclusive.
-	 *
-	 * @param {Number} max - the max exclusive upper bound
-	 */
+	// Returns a random integer between 0 and max exclusive.
 	me.randomInt = function(max) {
 		return Math.floor(Math.random() * max);
 	}
 
-	/**
-	 * Return array of points on a circle.
-	 *
-	 * @param {Number} radius - radius of the circle
-	 * @param {Number} count - number of points on the circle
-	 * @param {Number} offset - starting radian offset
-	 * @returns {Array} array with x and y values
-	 */
+	// Return array of points on a circle.
 	me.circlePoints = function(radius, count, offset) {
 		offset = offset || 0;
 		var theta = 2 * Math.PI / count;
