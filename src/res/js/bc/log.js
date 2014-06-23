@@ -19,8 +19,14 @@
 
 var BC = (function(root) {
 
+	// Log is a module for logging.
 	var me = root.Log = root.Log || {};
 
+	/**
+	 * log logs a message.
+	 *
+	 * @param msg - message to be logged
+	 */
 	me.log = function(msg) {
 		if (window.console) {
 			if (window.console.log) {
@@ -29,6 +35,11 @@ var BC = (function(root) {
 		}
 	};
 
+	/**
+	 * error logs a message at error level.
+	 *
+	 * @param msg - message to be logged
+	 */
 	me.error = function(msg) {
 		if (window.console) {
 			if (window.console.error) {
