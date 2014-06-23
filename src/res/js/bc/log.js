@@ -19,7 +19,7 @@
 
 var BC = (function(root) {
 
-	// Log is a module for logging.
+	/** Log is a module for logging. */
 	var me = root.Log = root.Log || {};
 
 	/**

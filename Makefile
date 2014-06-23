@@ -12,4 +12,4 @@ todo:
 	@grep --line-number --recursive --with-filename TODO src
 
 docs: $(JS_SOURCES)
-	./node_modules/docker/docker -I -u -n -c monokai -i src/res/js/bc -o docs
+	./node_modules/docker/docker -I -u -n -c monokai -i src/res/js/bc -o src/res/docs

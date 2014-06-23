@@ -10,6 +10,9 @@ handlers:
 - url: /css
   static_dir: res/css
 
+- url: /docs
+  static_dir: res/docs
+
 - url: /favicon.ico
   static_files: res/images/favicon.png
   upload: res/images/favicon.png
