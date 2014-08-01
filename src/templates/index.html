@@ -1,16 +1,16 @@
 <html>
 	<head>
-		<title>blockcillin</title>
+		<title>blockcillin {{if .Debug}}- DEBUG{{end}}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="/css/index.css">
 	</head>
 	<body>
 		{{template "menus"}}
 		<canvas id="canvas"></canvas>
-		{{if .Compiled}}
-			{{template "bc-compiled"}}
+		{{if .Debug}}
+			{{template "bc-debug"}}
 		{{else}}
-			{{template "bc"}}
+			{{template "bc-release"}}
 		{{end}}
 	</body>
 </html>
