@@ -5,6 +5,7 @@
 
 {{define "qunit"}}
 	<script src="//code.jquery.com/qunit/qunit-1.14.0.js"></script>
+	<script>window.QUnit || document.write('<script src="js/third_party/qunit-1.14.0.js">\x3C/script>')</script>
 	<script src="js/qunit-plugins/qunit-close-enough.js"></script>
 {{end}}
 
