@@ -23,5 +23,8 @@ handlers:
 - url: /js
   static_dir: res/js
 
+- url: /third_party
+  static_dir: res/third_party
+
 - url: /.*
   script: _go_app
