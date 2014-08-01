@@ -20,7 +20,7 @@
 module("BC.Chain");
 
 test("find_horizontalChains", function() {
-	var board = BC.Chain.makeBoard([
+	var board = QUnit.makeBoard([
 		[1, 1, 1, 0],
 		[0, 2, 2, 2],
 		[3, 0, 3, 3],
@@ -136,7 +136,7 @@ test("find_horizontalChains", function() {
 });
 
 test("find_verticalChains", function() {
-	var board = BC.Chain.makeBoard([
+	var board = QUnit.makeBoard([
 		[1, 2, 2, 4],
 		[1, 3, 5, 4],
 		[1, 3, 5, 4],
@@ -212,7 +212,7 @@ test("find_verticalChains", function() {
 });
 
 test("find_crossChains", function() {
-	var board = BC.Chain.makeBoard([
+	var board = QUnit.makeBoard([
 		[0, 1, 0],
 		[1, 1, 1],
 		[0, 1, 0]
@@ -253,7 +253,7 @@ test("find_crossChains", function() {
 });
 
 
-QUnit.extend(BC.Chain, {
+QUnit.extend(QUnit, {
 	makeBoard: function(specs) {
 		var rings = [];
 		for (var i = 0; i < specs.length; i++) {
