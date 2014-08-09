@@ -1,6 +1,6 @@
 *.min.css
 *.wav
-bc-compiled
+bc.js
 compiler.jar
 docs
 node_modules
