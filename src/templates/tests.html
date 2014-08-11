@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>blockcillin {{if .Debug}}- DEBUG{{end}} - tests</title>
-		<link rel="stylesheet" type="text/css" href="/css/tests{{if .Debug}}.min{{end}}.css">
+		<link rel="stylesheet" type="text/css" href="{{cssPath "tests" .Debug}}">
 		<link rel="stylesheet" type="text/css" href="/third_party/css/qunit-1.14.0.css" />
 	</head>
 	<body>

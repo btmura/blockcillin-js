@@ -20,6 +20,7 @@
 package template
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -29,7 +30,7 @@ var testsTemplate = newTemplate("tests.html")
 
 // newTemplate creates a template with a name that must match one of the globbed templates.
 func newTemplate(name string) *template.Template {
-	return template.Must(template.New(name).ParseGlob("templates/*.html"))
+	return template.Must(template.New(name).Funcs(funcMap).ParseGlob("templates/*.html"))
 }
 
 // IndexArgs are arguments passed to the index template.
@@ -45,4 +46,17 @@ func ExecuteIndex(w http.ResponseWriter, args *Args) {
 // ExecuteTests executes the tests template which runs the unit tests.
 func ExecuteTests(w http.ResponseWriter, args *Args) {
 	testsTemplate.Execute(w, args)
+}
+
+var funcMap = map[string]interface{}{
+	"cssPath": cssPath,
+}
+
+// cssPath returns the path of the CSS resource by its basename and whether the app is in debug mode.
+func cssPath(basename string, debug bool) string {
+	if debug {
+		return fmt.Sprintf("/css/%s.css", basename)
+	} else {
+		return fmt.Sprintf("/css/%s.min.css", basename)
+	}
 }
