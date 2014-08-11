@@ -30,24 +30,23 @@ type Args struct {
 	Debug bool
 }
 
-// ExecuteIndex executes the index template which runs the game.
-func ExecuteIndex(w http.ResponseWriter, args *Args) {
-	indexTemplate.Execute(w, args)
+// Execute executes the template by name and args.
+func Execute(w http.ResponseWriter, name string, args *Args) {
+	templateMap[name].Execute(w, args)
 }
 
-// ExecuteTests executes the tests template which runs the unit tests.
-func ExecuteTests(w http.ResponseWriter, args *Args) {
-	testsTemplate.Execute(w, args)
+// templateMap is map from name to template used by the Execute function.
+var templateMap = map[string]*template.Template{
+	"index": newTemplate("index.html"),
+	"tests": newTemplate("tests.html"),
 }
-
-var indexTemplate = newTemplate("index.html")
-var testsTemplate = newTemplate("tests.html")
 
 // newTemplate creates a template with a name that must match one of the globbed templates.
 func newTemplate(name string) *template.Template {
 	return template.Must(template.New(name).Funcs(funcMap).ParseGlob("templates/*.html"))
 }
 
+// funcMap is a map from name to helper function available to templates.
 var funcMap = map[string]interface{}{
 	"cssPath": cssPath,
 }

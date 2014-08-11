@@ -26,24 +26,18 @@ import (
 )
 
 func init() {
-	http.HandleFunc("/", indexHandlerFunc(false))
-	http.HandleFunc("/tests", testsHandlerFunc(false))
+	http.HandleFunc("/", handlerFunc("index", false))
+	http.HandleFunc("/tests", handlerFunc("tests", false))
 
-	http.HandleFunc("/debug", indexHandlerFunc(true))
-	http.HandleFunc("/debug/tests", testsHandlerFunc(false))
+	http.HandleFunc("/debug", handlerFunc("index", true))
+	http.HandleFunc("/debug/tests", handlerFunc("tests", false))
 
 	http.HandleFunc("/docs", docsHandler)
 }
 
-func indexHandlerFunc(debug bool) http.HandlerFunc {
+func handlerFunc(name string, debug bool) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		template.ExecuteIndex(w, &template.Args{Debug: debug})
-	}
-}
-
-func testsHandlerFunc(debug bool) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		template.ExecuteTests(w, &template.Args{Debug: debug})
+		template.Execute(w, name, &template.Args{Debug: debug})
 	}
 }
 
