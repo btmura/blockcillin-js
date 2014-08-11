@@ -1,7 +1,7 @@
 <html>
 	<head>
-		<title>blockcillin {{if .Debug}}- DEBUG{{end}} - tests</title>
-		<link rel="stylesheet" type="text/css" href="{{cssPath "tests" .Debug}}">
+		<title>blockcillin {{if .Mode.Debug}}- DEBUG{{end}} - tests</title>
+		<link rel="stylesheet" type="text/css" href="{{cssPath "tests" .Mode}}">
 		<link rel="stylesheet" type="text/css" href="/third_party/css/qunit-1.14.0.css" />
 	</head>
 	<body>
@@ -13,7 +13,7 @@
 		</p>
 		<div id="qunit"></div>
 		<div id="qunit-fixture"></div>
-		{{if .Debug}}
+		{{if .Mode.Debug}}
 			{{template "bc-tests-debug"}}
 		{{else}}
 			{{template "bc-tests-release"}}

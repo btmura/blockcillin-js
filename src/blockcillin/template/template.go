@@ -20,14 +20,13 @@
 package template
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 )
 
-// IndexArgs are arguments passed to the index template.
+// Args are arguments passed to Execute function.
 type Args struct {
-	Debug bool
+	Mode Mode
 }
 
 // Execute executes the template by name and args.
@@ -51,11 +50,6 @@ var funcMap = map[string]interface{}{
 	"cssPath": cssPath,
 }
 
-// cssPath returns the path of the CSS resource by its basename and whether the app is in debug mode.
-func cssPath(basename string, debug bool) string {
-	if debug {
-		return fmt.Sprintf("/css/%s.css", basename)
-	} else {
-		return fmt.Sprintf("/css/%s.min.css", basename)
-	}
+func cssPath(basename string, mode Mode) string {
+	return mode.cssPath(basename)
 }

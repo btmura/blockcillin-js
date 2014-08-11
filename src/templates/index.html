@@ -1,13 +1,13 @@
 <html>
 	<head>
-		<title>blockcillin {{if .Debug}}- DEBUG{{end}}</title>
+		<title>blockcillin {{if .Mode.Debug}}- DEBUG{{end}}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" type="text/css" href="{{cssPath "index" .Debug}}">
+		<link rel="stylesheet" type="text/css" href="{{cssPath "index" .Mode}}">
 	</head>
 	<body>
 		{{template "menus"}}
 		<canvas id="canvas"></canvas>
-		{{if .Debug}}
+		{{if .Mode.Debug}}
 			{{template "bc-debug"}}
 		{{else}}
 			{{template "bc-release"}}
