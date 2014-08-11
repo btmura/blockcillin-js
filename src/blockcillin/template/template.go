@@ -25,14 +25,6 @@ import (
 	"net/http"
 )
 
-var indexTemplate = newTemplate("index.html")
-var testsTemplate = newTemplate("tests.html")
-
-// newTemplate creates a template with a name that must match one of the globbed templates.
-func newTemplate(name string) *template.Template {
-	return template.Must(template.New(name).Funcs(funcMap).ParseGlob("templates/*.html"))
-}
-
 // IndexArgs are arguments passed to the index template.
 type Args struct {
 	Debug bool
@@ -46,6 +38,14 @@ func ExecuteIndex(w http.ResponseWriter, args *Args) {
 // ExecuteTests executes the tests template which runs the unit tests.
 func ExecuteTests(w http.ResponseWriter, args *Args) {
 	testsTemplate.Execute(w, args)
+}
+
+var indexTemplate = newTemplate("index.html")
+var testsTemplate = newTemplate("tests.html")
+
+// newTemplate creates a template with a name that must match one of the globbed templates.
+func newTemplate(name string) *template.Template {
+	return template.Must(template.New(name).Funcs(funcMap).ParseGlob("templates/*.html"))
 }
 
 var funcMap = map[string]interface{}{
