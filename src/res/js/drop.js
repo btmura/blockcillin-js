@@ -25,7 +25,7 @@ var BC = (function(root) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Direction;
 
-		var DROP_DURATION = 0.05;
+		var DROP_UPDATE_COUNT = 10;
 
 		var dropQueue = [];
 
@@ -51,8 +51,8 @@ var BC = (function(root) {
 			var downCell = getCell(board, downRow, col);
 
 			if (cell.state === CellState.BLOCK && downCell.state == CellState.EMPTY) {
-				var blockStyle = cell.sendBlock(DROP_DURATION);
-				downCell.receiveBlock(DROP_DURATION, Direction.UP, blockStyle);
+				var blockStyle = cell.sendBlock(DROP_UPDATE_COUNT);
+				downCell.receiveBlock(DROP_UPDATE_COUNT, Direction.UP, blockStyle);
 				dropQueue.push(downCell);
 			}
 		}

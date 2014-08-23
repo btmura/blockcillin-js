@@ -46,7 +46,7 @@ var BC = (function(root) {
 		var INITIAL_RISE_SPEED = 0.02;
 		var RISE_SPEED_DELTA = 0.01;
 
-		var SWAP_DURATION = 0.1;
+		var SWAP_UPDATE_COUNT = 15;
 
 		// Keep track of the selector to know what cells to swap.
 		var currentRing = 0;
@@ -225,24 +225,24 @@ var BC = (function(root) {
 
 			var moveLeft = isEmpty(leftCell) && isBlock(rightCell);
 			if (moveLeft) {
-				rightCell.sendBlock(SWAP_DURATION, Direction.LEFT);
-				leftCell.receiveBlock(SWAP_DURATION, Direction.RIGHT, rightBlockStyle);
+				rightCell.sendBlock(SWAP_UPDATE_COUNT, Direction.LEFT);
+				leftCell.receiveBlock(SWAP_UPDATE_COUNT, Direction.RIGHT, rightBlockStyle);
 				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
 
 			var moveRight = isBlock(leftCell) && isEmpty(rightCell);
 			if (moveRight) {
-				leftCell.sendBlock(SWAP_DURATION, Direction.RIGHT);
-				rightCell.receiveBlock(SWAP_DURATION, Direction.LEFT, leftBlockStyle);
+				leftCell.sendBlock(SWAP_UPDATE_COUNT, Direction.RIGHT);
+				rightCell.receiveBlock(SWAP_UPDATE_COUNT, Direction.LEFT, leftBlockStyle);
 				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
 
 			var swap = isBlock(leftCell) && isBlock(rightCell);
 			if (swap) {
-				leftCell.receiveBlock(SWAP_DURATION, Direction.RIGHT, rightBlockStyle);
-				rightCell.receiveBlock(SWAP_DURATION, Direction.LEFT, leftBlockStyle);
+				leftCell.receiveBlock(SWAP_UPDATE_COUNT, Direction.RIGHT, rightBlockStyle);
+				rightCell.receiveBlock(SWAP_UPDATE_COUNT, Direction.LEFT, leftBlockStyle);
 				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}

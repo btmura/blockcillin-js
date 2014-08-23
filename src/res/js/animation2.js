@@ -38,9 +38,7 @@ var BC = (function(root) {
 				startCallback();
 			}
 
-			var result = updateCallback({
-				update: currentUpdate
-			});
+			var result = updateCallback(currentUpdate);
 			currentUpdate++;
 
 			if (currentUpdate === numUpdates) {
