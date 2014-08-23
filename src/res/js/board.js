@@ -45,6 +45,7 @@ var BC = (function(root) {
 		var SPEED_LEVEL_DURATION = 30;
 		var INITIAL_RISE_SPEED = 0.02;
 		var RISE_SPEED_DELTA = 0.01;
+		var RISE_UPDATE_COUNT = 100;
 
 		var SWAP_UPDATE_COUNT = 15;
 
@@ -267,7 +268,7 @@ var BC = (function(root) {
 			stopRising |= updateCellChains();
 
 			if (!stopRising) {
-				raiseBoard(watch);
+				raiseBoard();
 			}
 
 			// Update the time-related stats.
@@ -303,9 +304,9 @@ var BC = (function(root) {
 			return result.pendingChainCount > 0;
 		}
 
-		function raiseBoard(watch, rise) {
+		function raiseBoard() {
 			var riseSpeed = INITIAL_RISE_SPEED + (speedLevel.value - 1) * RISE_SPEED_DELTA;
-			var translationDelta = riseSpeed * watch.deltaTime;
+			var translationDelta = riseSpeed / RISE_UPDATE_COUNT;
 			if (riseHeight + translationDelta > MAX_RISE_HEIGHT) {
 				translationDelta = MAX_RISE_HEIGHT - riseHeight;
 			}
