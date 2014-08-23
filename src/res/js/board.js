@@ -274,7 +274,7 @@ var BC = (function(root) {
 			updateTimeStats(watch);
 
 			// Update selector which might have rotated the board.
-			selector.update(watch);
+			selector.update();
 
 			// Update the board matrices.
 			updateBoardMatrices();

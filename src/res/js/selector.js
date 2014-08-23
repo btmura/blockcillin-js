@@ -22,14 +22,18 @@ var BC = (function(root) {
 	var me = root.Selector = root.Selector || {};
 
 	me.make = function(args) {
+		var Direction = BC.Direction;
+		var Log = BC.Log;
+		var Matrix = BC.Math.Matrix;
+		var Sound = BC.Audio.Sound;
+
+		var MOVEMENT_UPDATE_COUNT = 10;
+		var SCALE_AMPLITUDE_DIVISOR = 25;
+		var SCALE_SPEED_MULTIPLIER = 0.035;
+
 		var metrics = args.metrics;
 		var board = args.board;
 		var audioPlayer = args.audioPlayer;
-
-		var Direction = BC.Direction;
-		var Sound = BC.Audio.Sound;
-
-		var MOVEMENT_DURATION = 0.025;
 
 		var selector = {
 			matrix: BC.Math.Matrix.identity,
@@ -41,6 +45,7 @@ var BC = (function(root) {
 		var animations = [];
 		var translation = [0, 0, 0];
 		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
+		var scaleCounter = 0;
 
 		function move(direction) {
 			switch (direction) {
@@ -57,7 +62,7 @@ var BC = (function(root) {
 					return moveDown();
 
 				default:
-					BC.Log.error("move: unsupported direction: " + direction);
+					Log.error("move: unsupported direction: " + direction);
 					return false;
 			}
 		}
@@ -101,14 +106,14 @@ var BC = (function(root) {
 		function startMoving(newDirection) {
 			direction = newDirection;
 			if (animations.length > 0) {
-				BC.Log.error("startMoving: pending animations: " + animations.length);
+				Log.error("startMoving: pending animations: " + animations.length);
 			}
 
-			animations.push(BC.Animation.make({
-				duration: MOVEMENT_DURATION,
-				updateCallback: function(watch) {
-					var translationDelta = metrics.ringHeight * watch.deltaPercent;
-					var rotationDelta = ringRotationY * watch.deltaPercent;
+			animations.push(BC.Animation2.make({
+				numUpdates: MOVEMENT_UPDATE_COUNT,
+				updateCallback: function() {
+					var translationDelta = metrics.ringHeight / MOVEMENT_UPDATE_COUNT;
+					var rotationDelta = ringRotationY / MOVEMENT_UPDATE_COUNT;
 
 					switch (direction) {
 						case Direction.UP:
@@ -138,19 +143,21 @@ var BC = (function(root) {
 			}));
 		}
 
-		function update(watch) {
-			BC.Animation.process(animations, watch);
-			updateSelectorMatrix(watch);
+		function update() {
+			BC.Animation2.process(animations);
+			updateSelectorMatrix();
 		}
 
-		function updateSelectorMatrix(watch) {
-			var scale = 1 + Math.abs(Math.sin(4 * watch.now)) / 25;
-			var scaleMatrix = BC.Math.Matrix.makeScale(scale, scale, 1);
-			var translationMatrix = BC.Math.Matrix.makeTranslation(
+		function updateSelectorMatrix() {
+			var scale = 1 + Math.abs(Math.sin(scaleCounter * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
+			scaleCounter++;
+
+			var scaleMatrix = Matrix.makeScale(scale, scale, 1);
+			var translationMatrix = Matrix.makeTranslation(
 					translation[0],
 					translation[1],
 					translation[2]);
-			selector.matrix = BC.Math.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+			selector.matrix = Matrix.matrixMultiply(scaleMatrix, translationMatrix);
 		}
 
 		return selector;
