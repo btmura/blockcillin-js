@@ -26,19 +26,19 @@ import (
 )
 
 func init() {
-	http.HandleFunc("/", handlerFunc("index", template.Release))
-	http.HandleFunc("/tests", handlerFunc("tests", template.Release))
+	handle("/", template.Index, template.Release)
+	handle("/tests", template.Tests, template.Release)
 
-	http.HandleFunc("/debug", handlerFunc("index", template.Debug))
-	http.HandleFunc("/debug/tests", handlerFunc("tests", template.Debug))
+	handle("/debug", template.Index, template.Debug)
+	handle("/debug/tests", template.Tests, template.Debug)
 
 	http.HandleFunc("/docs", docsHandler)
 }
 
-func handlerFunc(name string, mode template.Mode) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func handle(pattern string, name template.Name, mode template.Mode) {
+	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
 		template.Execute(w, name, &template.Args{Mode: mode})
-	}
+	})
 }
 
 func docsHandler(w http.ResponseWriter, r *http.Request) {

@@ -24,20 +24,27 @@ import (
 	"net/http"
 )
 
+type Name int
+
+const (
+	Index Name = iota
+	Tests
+)
+
 // Args are arguments passed to Execute function.
 type Args struct {
 	Mode Mode
 }
 
 // Execute executes the template by name and args.
-func Execute(w http.ResponseWriter, name string, args *Args) {
+func Execute(w http.ResponseWriter, name Name, args *Args) {
 	templateMap[name].Execute(w, args)
 }
 
 // templateMap is map from name to template used by the Execute function.
-var templateMap = map[string]*template.Template{
-	"index": newTemplate("index.html"),
-	"tests": newTemplate("tests.html"),
+var templateMap = map[Name]*template.Template{
+	Index: newTemplate("index.html"),
+	Tests: newTemplate("tests.html"),
 }
 
 // newTemplate creates a template with a name that must match one of the globbed templates.
