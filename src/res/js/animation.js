@@ -19,7 +19,7 @@
 
 var BC = (function(root) {
 
-	var me = root.Animation2 = root.Animation2 || {};
+	var me = root.Animation = root.Animation || {};
 
 	me.make = function(args) {
 		var numUpdates = args.numUpdates;

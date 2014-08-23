@@ -87,7 +87,7 @@ var BC = (function(root) {
 				BC.Log.error("markBlock: pending animations: " + animations.length);
 			}
 
-			var flicker = BC.Animation2.make({
+			var flicker = BC.Animation.make({
 				numUpdates: FLICKER_UPDATE_COUNT,
 				startCallback: function() {
 					cell.state = CellState.BLOCK_CLEARING_PREPARING;
@@ -101,7 +101,7 @@ var BC = (function(root) {
 				}
 			});
 
-			var freeze = BC.Animation2.make({
+			var freeze = BC.Animation.make({
 				numUpdates: FREEZE_UPDATE_COUNT,
 				startCallback: function() {
 					cell.blockStyle += metrics.numBlockTypes;
@@ -120,7 +120,7 @@ var BC = (function(root) {
 				BC.Log.error("clearBlock: pending animations: " + animations.length);
 			}
 
-			var fadeOut = BC.Animation2.make({
+			var fadeOut = BC.Animation.make({
 				numUpdates: FADE_OUT_COUNT,
 				startCallback: function() {
 					audioPlayer.play(Sound.CELL_CLEAR);
@@ -148,7 +148,7 @@ var BC = (function(root) {
 				BC.Log.error("sendBlock: pending animations: " + animations.length);
 			}
 
-			animations.push(BC.Animation2.make({
+			animations.push(BC.Animation.make({
 				numUpdates: updateCount,
 				finishCallback: function() {
 					cell.state = CellState.EMPTY;
@@ -186,7 +186,7 @@ var BC = (function(root) {
 				BC.Log.error("receiveBlock: pending animations: " + animations.length);
 			}
 
-			animations.push(BC.Animation2.make({
+			animations.push(BC.Animation.make({
 				numUpdates: updateCount,
 				updateCallback: function(update) {
 					var rotationDelta = ROTATION_Y_DELTA / updateCount;
@@ -237,7 +237,7 @@ var BC = (function(root) {
 		}
 
 		function update(watch) {
-			var needMatrixUpdate = BC.Animation2.process(animations);
+			var needMatrixUpdate = BC.Animation.process(animations);
 			if (needMatrixUpdate) {
 				updateCellMatrix();
 			}

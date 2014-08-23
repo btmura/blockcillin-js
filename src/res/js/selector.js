@@ -107,7 +107,7 @@ var BC = (function(root) {
 				Log.error("startMoving: pending animations: " + animations.length);
 			}
 
-			animations.push(BC.Animation2.make({
+			animations.push(BC.Animation.make({
 				numUpdates: MOVEMENT_UPDATE_COUNT,
 				updateCallback: function() {
 					var translationDelta = metrics.ringHeight / MOVEMENT_UPDATE_COUNT;
@@ -144,7 +144,7 @@ var BC = (function(root) {
 		}
 
 		function update() {
-			BC.Animation2.process(animations);
+			BC.Animation.process(animations);
 			updateTransforms();
 		}
 
