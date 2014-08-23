@@ -236,7 +236,7 @@ var BC = (function(root) {
 			return droppingBlock;
 		}
 
-		function update(watch) {
+		function update() {
 			var needMatrixUpdate = BC.Animation.process(animations);
 			if (needMatrixUpdate) {
 				updateCellMatrix();

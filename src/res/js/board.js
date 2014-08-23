@@ -253,7 +253,7 @@ var BC = (function(root) {
 			for (var i = 0; i < rings.length; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
 					var cell = getCell(i, j);
-					cell.update(watch);
+					cell.update();
 				}
 			}
 
