@@ -66,6 +66,7 @@ table {
 }
 
 .button {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	background: rgba(50, 50, 50, 0.9);
 	background-image: linear-gradient(
 		rgba(40, 40, 40, 0.9),
@@ -77,6 +78,7 @@ table {
 	color: #ffffff;
 	cursor: pointer;
 	margin: 10px;
+	outline: none;
 	padding: 10px;
 	text-align: center;
 	text-shadow: 1px 1px 1px #333333;
