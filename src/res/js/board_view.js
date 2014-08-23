@@ -83,7 +83,7 @@ var BC = (function(root) {
 			// Don't rotate the board since the selector stays centered.
 			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Math.Matrix.identity);
 			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.translationMatrix);
-			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.selector.matrix);
+			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.selector.getMatrix());
 			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Math.Matrix.identity);
 			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Math.Matrix.identity);
 			selectorView.draw(programLocations);

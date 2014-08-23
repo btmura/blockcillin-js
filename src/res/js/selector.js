@@ -35,17 +35,15 @@ var BC = (function(root) {
 		var board = args.board;
 		var audioPlayer = args.audioPlayer;
 
-		var selector = {
-			matrix: BC.Math.Matrix.identity,
-			move: move,
-			update: update
-		};
-
 		var direction = Direction.NONE;
 		var animations = [];
-		var translation = [0, 0, 0];
 		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
+
+		var scale = [0, 0, 1];
 		var scaleCounter = 0;
+		var translation = [0, 0, 0];
+		var matrix = BC.Math.Matrix.identity;
+		var isMatrixDirty = false;
 
 		function move(direction) {
 			switch (direction) {
@@ -118,10 +116,12 @@ var BC = (function(root) {
 					switch (direction) {
 						case Direction.UP:
 							translation[1] += translationDelta;
+							isMatrixDirty = true;
 							return true;
 
 						case Direction.DOWN:
 							translation[1] -= translationDelta;
+							isMatrixDirty = true;
 							return true;
 
 						case Direction.LEFT:
@@ -145,22 +145,35 @@ var BC = (function(root) {
 
 		function update() {
 			BC.Animation2.process(animations);
-			updateSelectorMatrix();
+			updateTransforms();
 		}
 
-		function updateSelectorMatrix() {
-			var scale = 1 + Math.abs(Math.sin(scaleCounter * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
+		function updateTransforms() {
+			scale[0] = scale[1] = 1 + Math.abs(Math.sin(scaleCounter * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
 			scaleCounter++;
-
-			var scaleMatrix = Matrix.makeScale(scale, scale, 1);
-			var translationMatrix = Matrix.makeTranslation(
-					translation[0],
-					translation[1],
-					translation[2]);
-			selector.matrix = Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+			isMatrixDirty = true;
 		}
 
-		return selector;
+		function getMatrix() {
+			if (isMatrixDirty) {
+				updateMatrix();
+				isMatrixDirty = false;
+			}
+			return matrix;
+		}
+
+		function updateMatrix() {
+			// TODO(btmura): reuse prior matrices rather than making new ones all the time
+			var scaleMatrix = Matrix.makeScale(scale[0], scale[1], scale[2]);
+			var translationMatrix = Matrix.makeTranslation(translation[0], translation[1], translation[2]);
+			matrix = Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+		}
+
+		return {
+			move: move,
+			update: update,
+			getMatrix: getMatrix
+		};
 	};
 
 	return root;
