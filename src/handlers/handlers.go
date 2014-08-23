@@ -32,7 +32,7 @@ func init() {
 	handle("/debug", template.Index, template.Debug)
 	handle("/debug/tests", template.Tests, template.Debug)
 
-	http.HandleFunc("/docs", docsHandler)
+	redirect("/docs", "docs/main.js.html")
 }
 
 func handle(pattern string, name template.Name, mode template.Mode) {
@@ -41,7 +41,8 @@ func handle(pattern string, name template.Name, mode template.Mode) {
 	})
 }
 
-func docsHandler(w http.ResponseWriter, r *http.Request) {
-	// Redirect since Docker doesn't produce an index.html.
-	http.Redirect(w, r, "docs/main.js.html", 302)
+func redirect(pattern string, url string) {
+	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, url, 302)
+	})
 }
