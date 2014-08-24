@@ -28,6 +28,10 @@ var BC = (function(root) {
 		var programLocations = args.programLocations;
 		var textureTile = args.textureTile;
 
+		var positionLocation = programLocations.positionLocation;
+		var textureCoordLocation = programLocations.textureCoordLocation;
+		var alphaLocation = programLocations.alphaLocation;
+
 		var minY = -metrics.ringHeight / 2;
 		var maxY = -minY;
 		var outerRadius = metrics.ringOuterRadius + 0.01;
@@ -108,10 +112,6 @@ var BC = (function(root) {
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
 		function draw() {
-			var positionLocation = programLocations.positionLocation;
-			var textureCoordLocation = programLocations.textureCoordLocation;
-			var alphaLocation = programLocations.alphaLocation;
-
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);

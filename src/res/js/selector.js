@@ -39,6 +39,9 @@ var BC = (function(root) {
 		var animations = [];
 		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
 
+		var translationDelta = metrics.ringHeight / MOVEMENT_UPDATE_COUNT;
+		var rotationDelta = ringRotationY / MOVEMENT_UPDATE_COUNT;
+
 		var scale = [0, 0, 1];
 		var scaleCounter = 0;
 		var translation = [0, 0, 0];
@@ -110,18 +113,13 @@ var BC = (function(root) {
 			animations.push(BC.Animation.make({
 				numUpdates: MOVEMENT_UPDATE_COUNT,
 				updateCallback: function() {
-					var translationDelta = metrics.ringHeight / MOVEMENT_UPDATE_COUNT;
-					var rotationDelta = ringRotationY / MOVEMENT_UPDATE_COUNT;
-
 					switch (direction) {
 						case Direction.UP:
 							translation[1] += translationDelta;
-							isMatrixDirty = true;
 							return true;
 
 						case Direction.DOWN:
 							translation[1] -= translationDelta;
-							isMatrixDirty = true;
 							return true;
 
 						case Direction.LEFT:
@@ -151,22 +149,27 @@ var BC = (function(root) {
 		function updateTransforms() {
 			scale[0] = scale[1] = 1 + Math.abs(Math.sin(scaleCounter * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
 			scaleCounter++;
-			isMatrixDirty = true;
 		}
 
-		function getMatrix() {
-			if (isMatrixDirty) {
-				updateMatrix();
-				isMatrixDirty = false;
+		function getMatrix(lagFactor) {
+			var adjustedTranslation = translation;
+			if (lagFactor !== 0 && direction !== Direction.NONE) {
+				adjustedTranslation = [translation[0], translation[1], translation[2]];
+				switch (direction) {
+					case Direction.UP:
+						adjustedTranslation[1] += translationDelta * lagFactor;
+						break;
+
+					case Direction.DOWN:
+						adjustedTranslation[1] -= translationDelta * lagFactor;
+						break;
+				}
 			}
-			return matrix;
-		}
 
-		function updateMatrix() {
 			// TODO(btmura): reuse prior matrices rather than making new ones all the time
 			var scaleMatrix = Matrix.makeScale(scale[0], scale[1], scale[2]);
-			var translationMatrix = Matrix.makeTranslation(translation[0], translation[1], translation[2]);
-			matrix = Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+			var translationMatrix = Matrix.makeTranslation(adjustedTranslation[0], adjustedTranslation[1], adjustedTranslation[2]);
+			return Matrix.matrixMultiply(scaleMatrix, translationMatrix);
 		}
 
 		return {

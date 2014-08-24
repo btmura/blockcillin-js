@@ -46,14 +46,14 @@ var BC = (function(root) {
 		});
 		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
 
-		function draw() {
+		function draw(lagFactor) {
 			drawStats();
 
 			drawRings();
 			drawStage();
 
 			// Draw selector last for alpha values.
-			drawSelector();
+			drawSelector(lagFactor);
 		}
 
 		function drawStats() {
@@ -84,11 +84,11 @@ var BC = (function(root) {
 			}
 		}
 
-		function drawSelector() {
+		function drawSelector(lagFactor) {
 			// Don't rotate the board since the selector stays centered.
 			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Math.Matrix.identity);
 			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.translationMatrix);
-			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.selector.getMatrix());
+			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.selector.getMatrix(lagFactor));
 			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Math.Matrix.identity);
 			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Math.Matrix.identity);
 			selectorView.draw();
