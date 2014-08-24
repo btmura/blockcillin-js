@@ -28,8 +28,6 @@ var BC = (function(root) {
 		var Sound = BC.Audio.Sound;
 
 		var MOVEMENT_UPDATE_COUNT = 10;
-		var SCALE_AMPLITUDE_DIVISOR = 25;
-		var SCALE_SPEED_MULTIPLIER = 0.035;
 
 		var metrics = args.metrics;
 		var board = args.board;
@@ -42,11 +40,8 @@ var BC = (function(root) {
 		var translationDelta = metrics.ringHeight / MOVEMENT_UPDATE_COUNT;
 		var rotationDelta = ringRotationY / MOVEMENT_UPDATE_COUNT;
 
-		var scale = [0, 0, 1];
 		var scaleCounter = 0;
 		var translation = [0, 0, 0];
-		var matrix = BC.Math.Matrix.identity;
-		var isMatrixDirty = false;
 
 		function move(direction) {
 			switch (direction) {
@@ -115,11 +110,11 @@ var BC = (function(root) {
 				updateCallback: function() {
 					switch (direction) {
 						case Direction.UP:
-							translation[1] += translationDelta;
+							translation[1]++;
 							return true;
 
 						case Direction.DOWN:
-							translation[1] -= translationDelta;
+							translation[1]--;
 							return true;
 
 						case Direction.LEFT:
@@ -143,39 +138,28 @@ var BC = (function(root) {
 
 		function update() {
 			BC.Animation.process(animations);
-			updateTransforms();
-		}
-
-		function updateTransforms() {
-			scale[0] = scale[1] = 1 + Math.abs(Math.sin(scaleCounter * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
 			scaleCounter++;
 		}
 
-		function getMatrix(lagFactor) {
-			var adjustedTranslation = translation;
-			if (lagFactor !== 0 && direction !== Direction.NONE) {
-				adjustedTranslation = [translation[0], translation[1], translation[2]];
-				switch (direction) {
-					case Direction.UP:
-						adjustedTranslation[1] += translationDelta * lagFactor;
-						break;
+		function getMovementDirection() {
+			return direction;
+		}
 
-					case Direction.DOWN:
-						adjustedTranslation[1] -= translationDelta * lagFactor;
-						break;
-				}
-			}
+		function getTranslationSteps() {
+			return translation;
+		}
 
-			// TODO(btmura): reuse prior matrices rather than making new ones all the time
-			var scaleMatrix = Matrix.makeScale(scale[0], scale[1], scale[2]);
-			var translationMatrix = Matrix.makeTranslation(adjustedTranslation[0], adjustedTranslation[1], adjustedTranslation[2]);
-			return Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+		function getScaleCounter() {
+			return scaleCounter;
 		}
 
 		return {
+			getMovementDirection: getMovementDirection,
+			getTranslationSteps: getTranslationSteps,
+			getScaleCounter: getScaleCounter,
+
 			move: move,
 			update: update,
-			getMatrix: getMatrix
 		};
 	};
 
