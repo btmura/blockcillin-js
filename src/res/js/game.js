@@ -232,11 +232,7 @@ var BC = (function(root) {
 				lag += watch.deltaTime;
 				for (var update = 0; lag >= SEC_PER_UPDATE; update++) {
 					var oldGameOver = gameOver;
-					var now = watch.now + SEC_PER_UPDATE * update;
-					gameOver = board.update({
-						now: now,
-						deltaTime: SEC_PER_UPDATE
-					});
+					gameOver = board.update();
 					lag -= SEC_PER_UPDATE;
 					if (oldGameOver !== gameOver) {
 						addStats();

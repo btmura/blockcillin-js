@@ -47,6 +47,9 @@ var BC = (function(root) {
 		var RISE_SPEED_DELTA = 0.01;
 		var RISE_UPDATE_COUNT = 100;
 
+		// TODO(btmura): remove duplication with game.js
+		var SEC_PER_UPDATE = 0.008;
+
 		var SWAP_UPDATE_COUNT = 15;
 
 		// Keep track of the selector to know what cells to swap.
@@ -249,7 +252,7 @@ var BC = (function(root) {
 			}
 		}
 
-		function update(watch) {
+		function update() {
 			// 1st pass - update each cell's existing animations.
 			for (var i = 0; i < rings.length; i++) {
 				for (var j = 0; j < metrics.numCells; j++) {
@@ -272,7 +275,7 @@ var BC = (function(root) {
 			}
 
 			// Update the time-related stats.
-			updateTimeStats(watch);
+			updateTimeStats();
 
 			// Update selector which might have rotated the board.
 			selector.update();
@@ -286,8 +289,8 @@ var BC = (function(root) {
 			return isGameOver();
 		}
 
-		function updateTimeStats(watch) {
-			elapsedTime.value += watch.deltaTime;
+		function updateTimeStats() {
+			elapsedTime.value += SEC_PER_UPDATE;
 			speedLevel.value = 1 + Math.floor(elapsedTime.value / SPEED_LEVEL_DURATION);
 		}
 
