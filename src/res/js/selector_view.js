@@ -22,7 +22,12 @@ var BC = (function(root) {
 	var parent = root.Selector = root.Selector || {};
 	var me = parent.View = parent.View || {};
 
-	me.make = function(gl, metrics, textureTile) {
+	me.make = function(args) {
+		var gl = args.gl;
+		var metrics = args.metrics;
+		var programLocations = args.programLocations;
+		var textureTile = args.textureTile;
+
 		var minY = -metrics.ringHeight / 2;
 		var maxY = -minY;
 		var outerRadius = metrics.ringOuterRadius + 0.01;
@@ -102,7 +107,7 @@ var BC = (function(root) {
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
-		function draw(programLocations) {
+		function draw() {
 			var positionLocation = programLocations.positionLocation;
 			var textureCoordLocation = programLocations.textureCoordLocation;
 			var alphaLocation = programLocations.alphaLocation;

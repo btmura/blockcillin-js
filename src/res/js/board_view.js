@@ -38,7 +38,12 @@ var BC = (function(root) {
 		var cellMatrixLocation = programLocations.cellMatrixLocation;
 
 		var cellView = BC.Cell.View.make(gl, board.metrics, resources.blockTextureTiles);
-		var selectorView = BC.Selector.View.make(gl, board.metrics, resources.selectorTextureTile);
+		var selectorView = BC.Selector.View.make({
+			gl: gl,
+			metrics: board.metrics,
+			programLocations: programLocations,
+			textureTile: resources.selectorTextureTile
+		});
 		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
 
 		function draw() {
@@ -86,7 +91,7 @@ var BC = (function(root) {
 			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.selector.getMatrix());
 			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Math.Matrix.identity);
 			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Math.Matrix.identity);
-			selectorView.draw(programLocations);
+			selectorView.draw();
 		}
 
 		function drawStage() {
