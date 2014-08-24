@@ -26,13 +26,21 @@ var BC = (function(root) {
 	me.make = function(args) {
 
 		var SEC_PER_UPDATE = 0.008;
+		var UPDATES_PER_SWAP = 15;
 
+		// getSecondsPerUpdate returns the interval between updates.
 		function getSecondsPerUpdate() {
 			return SEC_PER_UPDATE;
 		}
 
+		// getUpdatesPerSwap returns how many updates swapping blocks takes.
+		function getUpdatesPerSwap() {
+			return UPDATES_PER_SWAP;
+		}
+
 		return {
-			getSecondsPerUpdate: getSecondsPerUpdate
+			getSecondsPerUpdate: getSecondsPerUpdate,
+			getUpdatesPerSwap: getUpdatesPerSwap
 		};
 	};
 

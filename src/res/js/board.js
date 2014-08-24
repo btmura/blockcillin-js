@@ -48,8 +48,6 @@ var BC = (function(root) {
 		var RISE_SPEED_DELTA = 0.01;
 		var RISE_UPDATE_COUNT = 100;
 
-		var SWAP_UPDATE_COUNT = 15;
-
 		// Keep track of the selector to know what cells to swap.
 		var currentRing = 0;
 		var currentCell = metrics.numCells - 1;
@@ -212,10 +210,11 @@ var BC = (function(root) {
 		function swap() {
 			var leftCell = getCell(currentRing, currentCell);
 			var rightCell = getCell(currentRing, currentCell + 1);
-			BC.Log.log("swap: (" + leftCell.state + ", " + rightCell.state + ")");
+			var leftStyle = leftCell.blockStyle;
+			var rightStyle = rightCell.blockStyle;
+			var updatesPerSwap = config.getUpdatesPerSwap();
 
-			var leftBlockStyle = leftCell.blockStyle;
-			var rightBlockStyle = rightCell.blockStyle;
+			BC.Log.log("swap: (" + leftCell.state + ", " + rightCell.state + ")");
 
 			function isEmpty(cell) {
 				return cell.state === CellState.EMPTY || cell.state === CellState.EMPTY_NO_DROP;
@@ -227,24 +226,24 @@ var BC = (function(root) {
 
 			var moveLeft = isEmpty(leftCell) && isBlock(rightCell);
 			if (moveLeft) {
-				rightCell.sendBlock(SWAP_UPDATE_COUNT, Direction.LEFT);
-				leftCell.receiveBlock(SWAP_UPDATE_COUNT, Direction.RIGHT, rightBlockStyle);
+				rightCell.sendBlock(updatesPerSwap, Direction.LEFT);
+				leftCell.receiveBlock(updatesPerSwap, Direction.RIGHT, rightStyle);
 				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
 
 			var moveRight = isBlock(leftCell) && isEmpty(rightCell);
 			if (moveRight) {
-				leftCell.sendBlock(SWAP_UPDATE_COUNT, Direction.RIGHT);
-				rightCell.receiveBlock(SWAP_UPDATE_COUNT, Direction.LEFT, leftBlockStyle);
+				leftCell.sendBlock(updatesPerSwap, Direction.RIGHT);
+				rightCell.receiveBlock(updatesPerSwap, Direction.LEFT, leftStyle);
 				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
 
 			var swap = isBlock(leftCell) && isBlock(rightCell);
 			if (swap) {
-				leftCell.receiveBlock(SWAP_UPDATE_COUNT, Direction.RIGHT, rightBlockStyle);
-				rightCell.receiveBlock(SWAP_UPDATE_COUNT, Direction.LEFT, leftBlockStyle);
+				leftCell.receiveBlock(updatesPerSwap, Direction.RIGHT, rightStyle);
+				rightCell.receiveBlock(updatesPerSwap, Direction.LEFT, leftStyle);
 				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
