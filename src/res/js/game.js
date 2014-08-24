@@ -28,8 +28,6 @@ var BC = (function(root) {
 		var Matrix = BC.Math.Matrix;
 		var Stopwatch = BC.Time.Stopwatch;
 
-		var SEC_PER_UPDATE = 0.008;
-
 		var gl = args.gl;
 		var storage = args.storage;
 		var controller = args.controller;
@@ -51,6 +49,7 @@ var BC = (function(root) {
 			ringOuterRadius: 1,
 			ringHeight: 0.3
 		};
+		var config = BC.Config.make();
 		var resources = BC.Resources.make();
 		var clock = Clock.make();
 		var watch = Stopwatch.make({
@@ -172,6 +171,7 @@ var BC = (function(root) {
 
 			board = BC.Board.make({
 				metrics: metrics,
+				config: config,
 				audioPlayer: audioPlayer
 			});
 			boardView = BC.Board.View.make({
@@ -224,16 +224,17 @@ var BC = (function(root) {
 
 			// Check whether there is a game in progress.
 			var activeGame = !paused && !gameOver && board;
+			var secondsPerUpdate = config.getSecondsPerUpdate();
 
 			// Update the game's state only if theres an active game.
 			if (activeGame) {
 				watch.tick();
 
 				lag += watch.deltaTime;
-				for (var update = 0; lag >= SEC_PER_UPDATE; update++) {
+				for (var update = 0; lag >= secondsPerUpdate; update++) {
 					var oldGameOver = gameOver;
 					gameOver = board.update();
-					lag -= SEC_PER_UPDATE;
+					lag -= secondsPerUpdate;
 					if (oldGameOver !== gameOver) {
 						addStats();
 						break;
@@ -243,7 +244,7 @@ var BC = (function(root) {
 
 			// Always draw the board since this may be just a resize event.
 			if (boardView) {
-				boardView.draw(lag / SEC_PER_UPDATE);
+				boardView.draw(lag / secondsPerUpdate);
 			}
 
 			// Request another frame if there is an active game.

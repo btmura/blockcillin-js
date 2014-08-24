@@ -34,6 +34,7 @@ var BC = (function(root) {
 		var Unit = BC.Unit;
 
 		var metrics = args.metrics;
+		var config = args.config;
 		var audioPlayer = args.audioPlayer;
 
 		var RING_CAPACITY = 11;
@@ -46,9 +47,6 @@ var BC = (function(root) {
 		var INITIAL_RISE_SPEED = 0.02;
 		var RISE_SPEED_DELTA = 0.01;
 		var RISE_UPDATE_COUNT = 100;
-
-		// TODO(btmura): remove duplication with game.js
-		var SEC_PER_UPDATE = 0.008;
 
 		var SWAP_UPDATE_COUNT = 15;
 
@@ -290,7 +288,7 @@ var BC = (function(root) {
 		}
 
 		function updateTimeStats() {
-			elapsedTime.value += SEC_PER_UPDATE;
+			elapsedTime.value += config.getSecondsPerUpdate();
 			speedLevel.value = 1 + Math.floor(elapsedTime.value / SPEED_LEVEL_DURATION);
 		}
 
