@@ -112,18 +112,7 @@ var BC = (function(root) {
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
-		var MOVEMENT_UPDATE_COUNT = 10;
-		var SCALE_AMPLITUDE_DIVISOR = 25;
-		var SCALE_SPEED_MULTIPLIER = 0.035;
-
-		var translationDelta = metrics.ringHeight / MOVEMENT_UPDATE_COUNT;
-
-		function draw(args) {
-			var selector = args.selector;
-			var lagFactor = args.lagFactor;
-
-			gl.uniformMatrix4fv(selectorMatrixLocation, false, getMatrix(selector, lagFactor));
-
+		function draw() {
 			gl.bindBuffer(gl.ARRAY_BUFFER, pointBuffer);
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
@@ -136,33 +125,6 @@ var BC = (function(root) {
 
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 			gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
-		}
-
-		function getMatrix(selector, lagFactor) {
-			var translationSteps = selector.getTranslationSteps();
-
-			var translation = [
-				translationDelta * translationSteps[0],
-				translationDelta * translationSteps[1],
-				translationDelta * translationSteps[2]
-			];
-
-			switch (selector.getMovementDirection()) {
-				case BC.Direction.UP:
-					translation[1] += translationDelta * lagFactor;
-					break;
-
-				case BC.Direction.DOWN:
-					translation[1] -= translationDelta * lagFactor;
-					break;
-			}
-
-			var scale = [0, 0, 1];
-			scale[0] = scale[1] = 1 + Math.abs(Math.sin((selector.getScaleCounter() + lagFactor) * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
-
-			var scaleMatrix = BC.Math.Matrix.makeScale(scale[0], scale[1], scale[2]);
-			var translationMatrix = BC.Math.Matrix.makeTranslation(translation[0], translation[1], translation[2]);
-			return BC.Math.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
 		}
 
 		return {

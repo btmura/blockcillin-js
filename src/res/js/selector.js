@@ -23,11 +23,11 @@ var BC = (function(root) {
 
 	me.make = function(args) {
 		var Direction = BC.Direction;
-		var Log = BC.Log;
-		var Matrix = BC.Math.Matrix;
 		var Sound = BC.Audio.Sound;
 
 		var MOVEMENT_UPDATE_COUNT = 10;
+		var SCALE_AMPLITUDE_DIVISOR = 25;
+		var SCALE_SPEED_MULTIPLIER = 0.035;
 
 		var metrics = args.metrics;
 		var board = args.board;
@@ -40,7 +40,8 @@ var BC = (function(root) {
 		var translationDelta = metrics.ringHeight / MOVEMENT_UPDATE_COUNT;
 		var rotationDelta = ringRotationY / MOVEMENT_UPDATE_COUNT;
 
-		var scaleCounter = 0;
+		var scaleAccumulator = 0;
+		var scale = [1, 1, 1];
 		var translation = [0, 0, 0];
 
 		function move(direction) {
@@ -58,7 +59,7 @@ var BC = (function(root) {
 					return moveDown();
 
 				default:
-					Log.error("move: unsupported direction: " + direction);
+					BC.Log.error("move: unsupported direction: " + direction);
 					return false;
 			}
 		}
@@ -102,7 +103,7 @@ var BC = (function(root) {
 		function startMoving(newDirection) {
 			direction = newDirection;
 			if (animations.length > 0) {
-				Log.error("startMoving: pending animations: " + animations.length);
+				BC.Log.error("startMoving: pending animations: " + animations.length);
 			}
 
 			animations.push(BC.Animation.make({
@@ -110,11 +111,11 @@ var BC = (function(root) {
 				updateCallback: function() {
 					switch (direction) {
 						case Direction.UP:
-							translation[1]++;
+							translation[1] += translationDelta;
 							return true;
 
 						case Direction.DOWN:
-							translation[1]--;
+							translation[1] -= translationDelta;
 							return true;
 
 						case Direction.LEFT:
@@ -138,28 +139,41 @@ var BC = (function(root) {
 
 		function update() {
 			BC.Animation.process(animations);
-			scaleCounter++;
+			scaleAccumulator++;
 		}
 
-		function getMovementDirection() {
-			return direction;
+		function getMatrix(lagFactor) {
+			var scaleMatrix = getScaleMatrix(lagFactor);
+			var translationMatrix = getTranslationMatrix(lagFactor);
+			return BC.Math.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
 		}
 
-		function getTranslationSteps() {
-			return translation;
+		function getScaleMatrix(lagFactor) {
+			scale[0] = scale[1] = 1 + Math.abs(Math.sin((scaleAccumulator + lagFactor) * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
+			return BC.Math.Matrix.makeScale(scale[0], scale[1], scale[2]);
 		}
 
-		function getScaleCounter() {
-			return scaleCounter;
+		function getTranslationMatrix(lagFactor) {
+			var adjustedTranslation = translation;
+			if (isMoving()) {
+				adjustedTranslation = [translation[0], translation[1], translation[2]];
+				switch (direction) {
+					case BC.Direction.UP:
+						adjustedTranslation[1] += translationDelta * lagFactor;
+						break;
+
+					case BC.Direction.DOWN:
+						adjustedTranslation[1] -= translationDelta * lagFactor;
+						break;
+				}
+			}
+			return BC.Math.Matrix.makeTranslation(adjustedTranslation[0], adjustedTranslation[1], adjustedTranslation[2]);
 		}
 
 		return {
-			getMovementDirection: getMovementDirection,
-			getTranslationSteps: getTranslationSteps,
-			getScaleCounter: getScaleCounter,
-
 			move: move,
 			update: update,
+			getMatrix: getMatrix
 		};
 	};
 
