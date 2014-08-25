@@ -25,6 +25,7 @@ var BC = (function(root) {
 		var Direction = BC.Direction;
 		var Sound = BC.Audio.Sound;
 
+		// TODO(btmura): remove duplication with board.js and move them to config module
 		var MOVEMENT_UPDATE_COUNT = 10;
 		var SCALE_AMPLITUDE_DIVISOR = 25;
 		var SCALE_SPEED_MULTIPLIER = 0.035;
@@ -35,10 +36,8 @@ var BC = (function(root) {
 
 		var direction = Direction.NONE;
 		var animations = [];
-		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
 
 		var translationDelta = metrics.ringHeight / MOVEMENT_UPDATE_COUNT;
-		var rotationDelta = ringRotationY / MOVEMENT_UPDATE_COUNT;
 
 		var scaleAccumulator = 0;
 		var scale = [1, 1, 1];
@@ -119,11 +118,11 @@ var BC = (function(root) {
 							return true;
 
 						case Direction.LEFT:
-							board.rotate(rotationDelta);
+							board.rotate(Direction.LEFT);
 							return true;
 
 						case Direction.RIGHT:
-							board.rotate(-rotationDelta);
+							board.rotate(Direction.RIGHT);
 							return true;
 
 						default:
@@ -132,6 +131,7 @@ var BC = (function(root) {
 				},
 				finishCallback: function() {
 					direction = Direction.NONE;
+					board.rotate(Direction.NONE);
 					audioPlayer.play(Sound.SELECTOR_MOVEMENT);
 				}
 			}));

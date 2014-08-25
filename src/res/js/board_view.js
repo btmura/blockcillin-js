@@ -49,7 +49,7 @@ var BC = (function(root) {
 		function draw(lagFactor) {
 			drawStats();
 
-			drawRings();
+			drawRings(lagFactor);
 			drawStage();
 
 			// Draw selector last for alpha values.
@@ -63,9 +63,9 @@ var BC = (function(root) {
 			scoreView.draw(board.score);
 		}
 
-		function drawRings() {
-			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, board.rotationMatrix);
-			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.translationMatrix);
+		function drawRings(lagFactor) {
+			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, board.getRotationMatrix(lagFactor));
+			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.getTranslationMatrix(lagFactor));
 			gl.uniformMatrix4fv(selectorMatrixLocation, false, BC.Math.Matrix.identity);
 			var rings = board.rings;
 			for (var i = 0; i < 2; i++) {
@@ -87,11 +87,11 @@ var BC = (function(root) {
 		function drawSelector(lagFactor) {
 			// Don't rotate the board since the selector stays centered.
 			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Math.Matrix.identity);
-			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.translationMatrix);
+			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.getTranslationMatrix(lagFactor));
 			gl.uniformMatrix4fv(selectorMatrixLocation, false, board.selector.getMatrix(lagFactor));
 			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Math.Matrix.identity);
 			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Math.Matrix.identity);
-			selectorView.draw();
+			selectorView.draw(lagFactor);
 		}
 
 		function drawStage() {
