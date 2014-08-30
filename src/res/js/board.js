@@ -49,8 +49,6 @@ var BC = (function(root) {
 		var RISE_SPEED_DELTA = 0.01;
 		var RISE_UPDATE_COUNT = 100;
 
-		var MOVEMENT_UPDATE_COUNT = 10;
-
 		// Keep track of the selector to know what cells to swap.
 		var currentRing = 0;
 		var currentCell = metrics.numCells - 1;
@@ -77,7 +75,7 @@ var BC = (function(root) {
 		var ringIndex = 0;
 
 		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
-		var rotationDelta = ringRotationY / MOVEMENT_UPDATE_COUNT;
+		var rotationDelta = ringRotationY / config.getUpdatesPerMove();
 		var rotatingDirection = Direction.NONE;
 
 		// Adds a new ring and increments the ring index counter.
@@ -123,6 +121,7 @@ var BC = (function(root) {
 
 		var selector = Selector.make({
 			metrics: metrics,
+			config: config,
 			board: board,
 			audioPlayer: audioPlayer
 		});

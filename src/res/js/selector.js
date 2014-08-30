@@ -26,18 +26,19 @@ var BC = (function(root) {
 		var Sound = BC.Audio.Sound;
 
 		// TODO(btmura): remove duplication with board.js and move them to config module
-		var MOVEMENT_UPDATE_COUNT = 10;
 		var SCALE_AMPLITUDE_DIVISOR = 25;
 		var SCALE_SPEED_MULTIPLIER = 0.035;
 
 		var metrics = args.metrics;
+		var config = args.config;
 		var board = args.board;
 		var audioPlayer = args.audioPlayer;
 
 		var direction = Direction.NONE;
 		var animations = [];
 
-		var translationDelta = metrics.ringHeight / MOVEMENT_UPDATE_COUNT;
+		var updatesPerMove = config.getUpdatesPerMove();
+		var translationDelta = metrics.ringHeight / updatesPerMove;
 
 		var scaleAccumulator = 0;
 		var scale = [1, 1, 1];
@@ -106,7 +107,7 @@ var BC = (function(root) {
 			}
 
 			animations.push(BC.Animation.make({
-				numUpdates: MOVEMENT_UPDATE_COUNT,
+				numUpdates: updatesPerMove,
 				updateCallback: function() {
 					switch (direction) {
 						case Direction.UP:

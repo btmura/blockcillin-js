@@ -25,22 +25,33 @@ var BC = (function(root) {
 	// make makes a new Config object.
 	me.make = function(args) {
 
-		var SEC_PER_UPDATE = 0.008;
-		var UPDATES_PER_SWAP = 15;
+		var SECONDS_PER_UPDATE = 0.008;
+
+		var SWAP_ANIMATION_SECONDS = 0.1;
+		var MOVE_ANIMATION_SECONDS = 0.1;
+
+		var SWAP_ANIMATION_UPDATES = Math.ceil(SWAP_ANIMATION_SECONDS / SECONDS_PER_UPDATE);
+		var MOVE_ANIMATION_UPDATES = Math.ceil(MOVE_ANIMATION_SECONDS / SECONDS_PER_UPDATE);
 
 		// getSecondsPerUpdate returns the interval between updates.
 		function getSecondsPerUpdate() {
-			return SEC_PER_UPDATE;
+			return SECONDS_PER_UPDATE;
 		}
 
 		// getUpdatesPerSwap returns how many updates swapping blocks takes.
 		function getUpdatesPerSwap() {
-			return UPDATES_PER_SWAP;
+			return SWAP_ANIMATION_UPDATES;
+		}
+
+		// getUpdatesPerMove returns how many updates moving the selector takes.
+		function getUpdatesPerMove() {
+			return MOVE_ANIMATION_UPDATES;
 		}
 
 		return {
 			getSecondsPerUpdate: getSecondsPerUpdate,
-			getUpdatesPerSwap: getUpdatesPerSwap
+			getUpdatesPerSwap: getUpdatesPerSwap,
+			getUpdatesPerMove: getUpdatesPerMove,
 		};
 	};
 
