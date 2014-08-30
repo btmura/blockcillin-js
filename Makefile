@@ -12,7 +12,7 @@ ogg:
 	oggenc src/res/audio/*.wav
 
 todo:
-	@grep --line-number --recursive --with-filename TODO src
+	@grep --line-number --recursive --with-filename --exclude-dir=docs TODO src
 
 docs: $(JS_SOURCES)
 	./node_modules/docker/docker -I -u -n -c monokai -i $(JS_DIR) -x $(COMPILED_JS) -o src/res/docs
