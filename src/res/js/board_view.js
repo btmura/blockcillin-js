@@ -52,7 +52,7 @@ var BC = (function(root) {
 
 			drawStats();
 
-			drawRings(boardDrawSpec, selectorDrawSpec);
+			drawRings(boardDrawSpec, selectorDrawSpec, lagFactor);
 			drawStage();
 
 			// Draw selector last for alpha values.
@@ -66,7 +66,7 @@ var BC = (function(root) {
 			scoreView.draw(board.score);
 		}
 
-		function drawRings(boardDrawSpec, selectorDrawSpec) {
+		function drawRings(boardDrawSpec, selectorDrawSpec, lagFactor) {
 			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, selectorDrawSpec.boardRotationMatrix);
 			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, boardDrawSpec.translationMatrix);
 			gl.uniformMatrix4fv(selectorMatrixLocation, false, BC.Math.Matrix.identity);
@@ -76,11 +76,12 @@ var BC = (function(root) {
 					gl.uniformMatrix4fv(ringMatrixLocation, false, rings[j].matrix);
 					var cells = rings[j].cells;
 					for (var k = 0; k < cells.length; k++) {
-						gl.uniformMatrix4fv(cellMatrixLocation, false, cells[k].matrix);
+						var cellDrawSpec = cells[k].getDrawSpec(lagFactor);
+						gl.uniformMatrix4fv(cellMatrixLocation, false, cellDrawSpec.matrix);
 						if (i == 0) {
-							cellView.drawOpaque(cells[k], programLocations);
+							cellView.drawOpaque(cellDrawSpec, programLocations);
 						} else {
-							cellView.drawTransparent(cells[k], programLocations);
+							cellView.drawTransparent(cellDrawSpec, programLocations);
 						}
 					}
 				}

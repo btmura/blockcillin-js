@@ -222,21 +222,21 @@ var BC = (function(root) {
 
 		var count = indexArray.length;
 
-		function drawOpaque(cell, programLocations) {
-			if (cell.isDrawable() && !cell.isTransparent()) {
-				drawCell(cell, programLocations);
+		function drawOpaque(cellDrawSpec, programLocations) {
+			if (cellDrawSpec.isDrawable && !cellDrawSpec.isTransparent) {
+				drawCell(cellDrawSpec, programLocations);
 			}
 		}
 
-		function drawTransparent(cell, programLocations) {
-			if (cell.isDrawable() && cell.isTransparent()) {
+		function drawTransparent(cellDrawSpec, programLocations) {
+			if (cellDrawSpec.isDrawable && cellDrawSpec.isTransparent) {
 				gl.disable(gl.CULL_FACE);
-				drawCell(cell, programLocations);
+				drawCell(cellDrawSpec, programLocations);
 				gl.enable(gl.CULL_FACE);
 			}
 		}
 
-		function drawCell(cell, programLocations) {
+		function drawCell(cellDrawSpec, programLocations) {
 			var positionLocation = programLocations.positionLocation;
 			var textureCoordLocation = programLocations.textureCoordLocation;
 			var yellowBoostLocation = programLocations.yellowBoostLocation;
@@ -246,13 +246,13 @@ var BC = (function(root) {
 			gl.enableVertexAttribArray(positionLocation);
 			gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 
-			var textureCoordBuffer = textureCoordBuffers[cell.blockStyle];
+			var textureCoordBuffer = textureCoordBuffers[cellDrawSpec.blockStyle];
 			gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
 			gl.enableVertexAttribArray(textureCoordLocation);
 			gl.vertexAttribPointer(textureCoordLocation, 2, gl.FLOAT, false, 0, 0);
 
-			gl.uniform1f(yellowBoostLocation, cell.yellowBoost);
-			gl.uniform1f(alphaLocation, cell.alpha);
+			gl.uniform1f(yellowBoostLocation, cellDrawSpec.yellowBoost);
+			gl.uniform1f(alphaLocation, cellDrawSpec.alpha);
 
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 			gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);

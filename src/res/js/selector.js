@@ -47,10 +47,20 @@ var BC = (function(root) {
 			scaleAccumulator: 0
 		};
 
-		var stateManager = BC.StateManager.make();
-		var directionMutators = {};
+		function cloneState(state) {
+			return {
+				direction: state.direction,
+				scale: state.scale.slice(),
+				translation: state.translation.slice(),
+				boardRotation: state.boardRotation.slice(),
+				scaleAccumulator: state.scaleAccumulator
+			};
+		}
 
-		directionMutators[Direction.UP] = {
+		var stateManager = BC.StateManager.make();
+		var directionStateMutators = {};
+
+		directionStateMutators[Direction.UP] = {
 			totalUpdates: updatesPerMove,
 
 			onStart: function(state, stepPercent) {
@@ -67,7 +77,7 @@ var BC = (function(root) {
 			},
 		};
 
-		directionMutators[Direction.DOWN] = {
+		directionStateMutators[Direction.DOWN] = {
 			totalUpdates: updatesPerMove,
 
 			onStart: function(state, stepPercent) {
@@ -84,7 +94,7 @@ var BC = (function(root) {
 			}
 		};
 
-		directionMutators[Direction.LEFT] = {
+		directionStateMutators[Direction.LEFT] = {
 			totalUpdates: updatesPerMove,
 
 			onStart: function(state, stepPercent) {
@@ -101,7 +111,7 @@ var BC = (function(root) {
 			}
 		};
 
-		directionMutators[Direction.RIGHT] = {
+		directionStateMutators[Direction.RIGHT] = {
 			totalUpdates: updatesPerMove,
 
 			onStart: function(state, stepPercent) {
@@ -153,16 +163,6 @@ var BC = (function(root) {
 			currentState.scaleAccumulator += stepPercent;
 		}
 
-		function cloneState(state) {
-			return {
-				direction: state.direction,
-				scale: state.scale.slice(),
-				translation: state.translation.slice(),
-				boardRotation: state.boardRotation.slice(),
-				scaleAccumulator: state.scaleAccumulator
-			};
-		}
-
 		function getMatrix(state, lagFactor) {
 			var scaleMatrix = getScaleMatrix(state, lagFactor);
 			var translationMatrix = getTranslationMatrix(state, lagFactor);
@@ -202,7 +202,7 @@ var BC = (function(root) {
 
 		function startMoving(newDirection) {
 			currentState.direction = newDirection;
-			stateManager.addStateMutator(directionMutators[newDirection]);
+			stateManager.addStateMutator(directionStateMutators[newDirection]);
 		}
 
 		return {

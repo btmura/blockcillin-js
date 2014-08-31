@@ -50,7 +50,7 @@ var BC = (function(root) {
 		}
 
 		function isMatch(cell, otherCell) {
-			return cell.state === otherCell.state && cell.blockStyle == otherCell.blockStyle;
+			return cell.getState() === otherCell.getState() && cell.getBlockStyle() == otherCell.getBlockStyle();
 		}
 
 		function getStartCol(row) {
@@ -77,7 +77,7 @@ var BC = (function(root) {
 				for (var startCol = 0; startCol < NUM_COLS; ) {
 					var realCol = (startCol + startOffset) % NUM_COLS;
 					var cell = getCell(row, realCol);
-					if (cell.state !== CellState.BLOCK) {
+					if (cell.getState() !== CellState.BLOCK) {
 						startCol++;
 						continue;
 					}
@@ -110,7 +110,6 @@ var BC = (function(root) {
 					startCol = endCol;
 				}
 			}
-
 			return chains;
 		}
 
@@ -122,7 +121,7 @@ var BC = (function(root) {
 			for (var col = 0; col < NUM_COLS; col++) {
 				for (var startRow = 0; startRow < NUM_ROWS; ) {
 					var cell = getCell(startRow, col);
-					if (cell.state !== CellState.BLOCK) {
+					if (cell.getState() !== CellState.BLOCK) {
 						startRow++;
 						continue;
 					}
@@ -162,7 +161,7 @@ var BC = (function(root) {
 				var cell1 = chain1[i];
 				for (var j = 0; j < chain2.length; j++) {
 					var cell2 = chain2[j];
-					if (cell1.blockStyle === cell2.blockStyle
+					if (cell1.cell.getBlockStyle() === cell2.cell.getBlockStyle()
 							&& cell1.row === cell2.row
 							&& cell1.col === cell2.col) {
 						return true;
@@ -175,7 +174,7 @@ var BC = (function(root) {
 		function contains(chain, otherMatch) {
 			for (var i = 0; i < chain.length; i++) {
 				var match = chain[i];
-				if (match.blockStyle === otherMatch.blockStyle
+				if (match.cell.getBlockStyle() === otherMatch.cell.getBlockStyle()
 						&& match.row === otherMatch.row
 						&& match.col === otherMatch.col) {
 					return true;
@@ -271,7 +270,7 @@ var BC = (function(root) {
 
 			if (cellQueue.length > 0) {
 				var cell = cellQueue[0];
-				switch (cell.state) {
+				switch (cell.getState()) {
 					case CellState.BLOCK_CLEARING_MARKED:
 					case CellState.BLOCK_CLEARING_PREPARING:
 						break;
@@ -301,8 +300,8 @@ var BC = (function(root) {
 				if (finished) {
 					for (var i = 0; i < chain.length; i++) {
 						var cell = chain[i].cell;
-						if (cell.state === CellState.EMPTY_NO_DROP) {
-							cell.state = CellState.EMPTY;
+						if (cell.getState() === CellState.EMPTY_NO_DROP) {
+							cell.setState(CellState.EMPTY);
 						}
 					}
 					chainQueue.shift();

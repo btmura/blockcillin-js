@@ -39,12 +39,12 @@ var BC = (function(root) {
 	me.make = function(args) {
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Direction;
+		var Log = BC.Log;
+		var Matrix = BC.Math.Matrix;
 		var Sound = BC.Audio.Sound;
 
 		var metrics = args.metrics;
-		var rotationY = args.rotationY;
-		var state = args.state;
-		var blockStyle = args.blockStyle;
+		var config = args.config;
 		var audioPlayer = args.audioPlayer;
 
 		var FLICKER_UPDATE_COUNT = 60;
@@ -55,204 +55,250 @@ var BC = (function(root) {
 		var YELLOW_BOOST_SPEED_MULTIPLIER = 75;
 		var YELLOW_BOOST_AMPLITUDE_DIVISOR = 2;
 
-		var animations = [];
-		var droppingBlock = false;
+		var updatesPerSwap = config.getUpdatesPerSwap();
+		var rotationDelta = ROTATION_Y_DELTA / updatesPerSwap;
+		var translationDelta = TRANSLATION_Y_DELTA / updatesPerSwap;
+		var alphaDelta = 1 / FADE_OUT_COUNT;
 
-		var rotation = [0, rotationY, 0];
-		var translation = [0, 0, 0];
-		var matrix = BC.Math.Matrix.makeYRotation(rotation[1]);
-
-		var cell = {
-			matrix: matrix,
-			state: state,
-			blockStyle: blockStyle,
+		var currentState = {
+			state: args.state,
+			blockStyle: args.blockStyle,
 			yellowBoost: 0,
 			alpha: 1,
+			rotation: [0, args.rotationY, 0],
+			translation: [0, 0, 0],
+			droppingBlock: false
+		};
 
+		function cloneState(state) {
+			return {
+				state: state.state,
+				blockStyle: state.blockStyle,
+				yellowBoost: state.yellowBoost,
+				alpha: state.alpha,
+				rotation: state.rotation.slice(),
+				translation: state.translation.slice(),
+				droppingBlock: state.droppingBlock
+			};
+		}
+
+		var stateManager = BC.StateManager.make();
+
+		var flickerStateMutator = {
+			totalUpdates: FLICKER_UPDATE_COUNT,
+
+			onStart: function(state, stepPercent) {
+				state.state = CellState.BLOCK_CLEARING_PREPARING;
+			},
+
+			onUpdate: function(state, stepPercent, update) {
+				state.yellowBoost = Math.abs(Math.sin((update + stepPercent) * YELLOW_BOOST_SPEED_MULTIPLIER) / YELLOW_BOOST_AMPLITUDE_DIVISOR);
+			},
+
+			onFinish: function(state) {
+				state.yellowBoost = 0;
+			}
+		};
+
+		var freezeStateMutator = {
+			totalUpdates: FREEZE_UPDATE_COUNT,
+
+			onStart: function(state, stepPercent) {
+				state.blockStyle += metrics.numBlockTypes;
+			},
+
+			onFinish: function(state) {
+				state.state = CellState.BLOCK_CLEARING_READY;
+			},
+		};
+
+		var fadeOutStateMutator = {
+			totalUpdates: FADE_OUT_COUNT,
+
+			onStart: function(state, stepPercent) {
+				audioPlayer.play(Sound.CELL_CLEAR);
+			},
+
+			onUpdate: function(state, stepPercent) {
+				state.alpha -= alphaDelta;
+			},
+
+			onFinish: function(state) {
+				state.state = CellState.EMPTY_NO_DROP;
+				state.alpha = 1;
+			}
+		};
+
+		var sendStateMutator = {
+			totalUpdates: config.getUpdatesPerSwap(),
+
+			onFinish: function(state) {
+				state.state = CellState.EMPTY;
+			}
+		};
+
+		var receiveDirectionStateMutators = {};
+
+		receiveDirectionStateMutators[Direction.UP] = {
+			totalUpdates: updatesPerSwap,
+
+			onStart: function(state, stepPercent) {
+				state.translation[1] = metrics.ringHeight;
+				state.droppingBlock = true;
+			},
+
+			onUpdate: function(state, stepPercent) {
+				state.translation[1] -= translationDelta * stepPercent;
+			},
+
+			onFinish: function(state) {
+				state.state = CellState.BLOCK;
+				state.droppingBlock = false;
+			},
+		};
+
+		receiveDirectionStateMutators[Direction.LEFT] = {
+			totalUpdates: updatesPerSwap,
+
+			onStart: function(state, stepPercent) {
+				state.rotation[1] -= ROTATION_Y_DELTA;
+			},
+
+			onUpdate: function(state, stepPercent) {
+				state.rotation[1] += rotationDelta * stepPercent;
+			},
+
+			onFinish: function(state) {
+				state.state = CellState.BLOCK;
+			}
+		};
+
+		receiveDirectionStateMutators[Direction.RIGHT] = {
+			totalUpdates: updatesPerSwap,
+
+			onStart: function(state, stepPercent) {
+				state.rotation[1] += ROTATION_Y_DELTA;
+			},
+
+			onUpdate: function(state, stepPercent) {
+				state.rotation[1] -= rotationDelta * stepPercent;
+			},
+
+			onFinish: function(state) {
+				state.state = CellState.BLOCK;
+			}
+		};
+
+		function markBlock() {
+			currentState.state = CellState.BLOCK_CLEARING_MARKED;
+			stateManager.addStateMutator(flickerStateMutator);
+			stateManager.addStateMutator(freezeStateMutator);
+		}
+
+		function clearBlock() {
+			currentState.state = CellState.BLOCK_CLEARING_IN_PROGRESS;
+			stateManager.addStateMutator(fadeOutStateMutator);
+		}
+
+		function sendBlock() {
+			var blockStyle = currentState.blockStyle;
+			currentState.blockStyle = 0;
+			currentState.state = CellState.EMPTY_NO_SWAP;
+			stateManager.addStateMutator(sendStateMutator);
+			return blockStyle;
+		}
+
+		function receiveBlock(direction, blockStyle) {
+			currentState.blockStyle = blockStyle;
+			currentState.state = CellState.BLOCK_RECEIVING;
+			stateManager.addStateMutator(receiveDirectionStateMutators[direction]);
+		}
+
+		function getState() {
+			return currentState.state;
+		}
+
+		function setState(newState) {
+			currentState.state = newState;
+		}
+
+		function getBlockStyle() {
+			return currentState.blockStyle;
+		}
+
+		function setBlockStyle(newBlockStyle) {
+			currentState.blockStyle = newBlockStyle;
+		}
+
+		function isClearing() {
+			return currentState.state === CellState.BLOCK_CLEARING_MARKED
+					|| currentState.state === CellState.BLOCK_CLEARING_PREPARING
+					|| currentState.state === CellState.BLOCK_CLEARING_READY
+					|| currentState.state === CellState.BLOCK_CLEARING_IN_PROGRESS
+		}
+
+		function hasDroppingBlock() {
+			return currentState.droppingBlock;
+		}
+
+		function update() {
+			updateState(currentState, 1);
+		}
+
+		function getDrawSpec(lagFactor) {
+			var state = cloneState(currentState);
+			updateState(state, lagFactor);
+
+			var matrix = getMatrix(state, lagFactor);
+			var isDrawable = getDrawable(state);
+			var isTransparent = getTransparent(state);
+			return {
+				matrix: matrix,
+				blockStyle: state.blockStyle,
+				yellowBoost: state.yellowBoost,
+				alpha: state.alpha,
+				isDrawable: isDrawable,
+				isTransparent: isTransparent,
+			}
+		}
+
+		function updateState(state, stepPercent) {
+			stateManager.updateState(state, stepPercent);
+		}
+
+		function getMatrix(state, lagFactor) {
+			var rotationMatrix = Matrix.makeYRotation(state.rotation[1]);
+			var translationMatrix = Matrix.makeTranslation(state.translation[0], state.translation[1], state.translation[2]);
+			return Matrix.matrixMultiply(rotationMatrix, translationMatrix);
+		}
+
+		function getDrawable(state) {
+			return state.state !== CellState.EMPTY
+					&& state.state !== CellState.EMPTY_NO_SWAP
+					&& state.state !== CellState.EMPTY_NO_DROP;
+		}
+
+		function getTransparent(state) {
+			return state.state === CellState.BLOCK_CLEARING_IN_PROGRESS;
+		}
+
+		return {
 			markBlock: markBlock,
 			clearBlock: clearBlock,
 			sendBlock: sendBlock,
 			receiveBlock: receiveBlock,
 
+			getState: getState,
+			setState: setState,
+			getBlockStyle: getBlockStyle,
+			setBlockStyle: setBlockStyle,
+
 			isClearing: isClearing,
-			isDrawable : isDrawable,
-			isTransparent: isTransparent,
 			hasDroppingBlock: hasDroppingBlock,
-			update: update
+
+			update: update,
+			getDrawSpec: getDrawSpec
 		};
-
-		function markBlock() {
-			cell.state = CellState.BLOCK_CLEARING_MARKED;
-			if (animations.length > 0) {
-				BC.Log.error("markBlock: pending animations: " + animations.length);
-			}
-
-			var flicker = BC.Animation.make({
-				numUpdates: FLICKER_UPDATE_COUNT,
-				startCallback: function() {
-					cell.state = CellState.BLOCK_CLEARING_PREPARING;
-				},
-				updateCallback: function(update) {
-					cell.yellowBoost = Math.abs(Math.sin(update * YELLOW_BOOST_SPEED_MULTIPLIER) / YELLOW_BOOST_AMPLITUDE_DIVISOR);
-					return false;
-				},
-				finishCallback: function() {
-					cell.yellowBoost = 0;
-				}
-			});
-
-			var freeze = BC.Animation.make({
-				numUpdates: FREEZE_UPDATE_COUNT,
-				startCallback: function() {
-					cell.blockStyle += metrics.numBlockTypes;
-				},
-				finishCallback: function() {
-					cell.state = CellState.BLOCK_CLEARING_READY;
-				}
-			});
-
-			animations.push(flicker, freeze);
-		}
-
-		function clearBlock() {
-			cell.state = CellState.BLOCK_CLEARING_IN_PROGRESS;
-			if (animations.length > 0) {
-				BC.Log.error("clearBlock: pending animations: " + animations.length);
-			}
-
-			var fadeOut = BC.Animation.make({
-				numUpdates: FADE_OUT_COUNT,
-				startCallback: function() {
-					audioPlayer.play(Sound.CELL_CLEAR);
-				},
-				updateCallback: function(update) {
-					cell.alpha = 1.0 - update / FADE_OUT_COUNT;
-					return false;
-				},
-				finishCallback: function() {
-					cell.state = CellState.EMPTY_NO_DROP;
-					cell.alpha = 1;
-				}
-			});
-
-			animations.push(fadeOut);
-		}
-
-		function sendBlock(updateCount) {
-			var blockStyle = cell.blockStyle;
-
-			cell.blockStyle = 0;
-			cell.state = CellState.EMPTY_NO_SWAP;
-
-			if (animations.length > 0) {
-				BC.Log.error("sendBlock: pending animations: " + animations.length);
-			}
-
-			animations.push(BC.Animation.make({
-				numUpdates: updateCount,
-				finishCallback: function() {
-					cell.state = CellState.EMPTY;
-				}
-			}));
-			return blockStyle;
-		}
-
-		function receiveBlock(updateCount, direction, blockStyle) {
-			cell.blockStyle = blockStyle;
-			cell.state = CellState.BLOCK_RECEIVING;
-
-			switch (direction) {
-				case Direction.LEFT:
-					rotation[1] -= ROTATION_Y_DELTA;
-					break;
-
-				case Direction.RIGHT:
-					rotation[1] += ROTATION_Y_DELTA;
-					break;
-
-				case Direction.UP:
-					translation[1] = metrics.ringHeight;
-					// TODO(btmura): add a specific method to handle drops
-					droppingBlock = true;
-					break;
-
-				default:
-					BC.Log.error("receiveBlock: unsupport direction: " + direction);
-					break;
-			}
-			updateCellMatrix();
-
-			if (animations.length > 0) {
-				BC.Log.error("receiveBlock: pending animations: " + animations.length);
-			}
-
-			animations.push(BC.Animation.make({
-				numUpdates: updateCount,
-				updateCallback: function(update) {
-					var rotationDelta = ROTATION_Y_DELTA / updateCount;
-					var translationDelta = TRANSLATION_Y_DELTA / updateCount;
-					switch (direction) {
-						case Direction.LEFT:
-							rotation[1] += rotationDelta;
-							return true;
-
-						case Direction.RIGHT:
-							rotation[1] -= rotationDelta;
-							return true;
-
-						case Direction.UP:
-							translation[1] -= translationDelta;
-							return true;
-
-						default:
-							return false;
-					}
-				},
-				finishCallback: function() {
-					cell.state = CellState.BLOCK;
-					droppingBlock = false;
-				}
-			}));
-		}
-
-		function isClearing() {
-			return cell.state === CellState.BLOCK_CLEARING_MARKED
-					|| cell.state === CellState.BLOCK_CLEARING_PREPARING
-					|| cell.state === CellState.BLOCK_CLEARING_READY
-					|| cell.state === CellState.BLOCK_CLEARING_IN_PROGRESS
-		}
-
-		function isDrawable() {
-			return cell.state !== CellState.EMPTY
-					&& cell.state !== CellState.EMPTY_NO_SWAP
-					&& cell.state !== CellState.EMPTY_NO_DROP;
-		}
-
-		function isTransparent() {
-			return cell.state === CellState.BLOCK_CLEARING_IN_PROGRESS;
-		}
-
-		function hasDroppingBlock() {
-			return droppingBlock;
-		}
-
-		function update() {
-			var needMatrixUpdate = BC.Animation.process(animations);
-			if (needMatrixUpdate) {
-				updateCellMatrix();
-			}
-		}
-
-		function updateCellMatrix() {
-			var rotationMatrix = BC.Math.Matrix.makeYRotation(rotation[1]);
-			var translationMatrix = BC.Math.Matrix.makeTranslation(
-					translation[0],
-					translation[1],
-					translation[2]);
-			cell.matrix = BC.Math.Matrix.matrixMultiply(rotationMatrix, translationMatrix);
-		}
-
-		return cell;
 	};
 
 	return root;

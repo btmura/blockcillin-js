@@ -32,6 +32,8 @@ var BC = (function(root) {
 
 	// make makes a new StateManager object.
 	me.make = function() {
+		var Log = BC.Log;
+
 		var stateMutatorQueue = [];
 		var updateCounter = 0;
 
@@ -42,6 +44,10 @@ var BC = (function(root) {
 		 *                          and totalUpdates members
 		 */
 		function addStateMutator(newStateMutator) {
+			if (!newStateMutator) {
+				Log.error("newStateMutator is not defined");
+				return;
+			}
 			stateMutatorQueue.push(newStateMutator);
 		}
 
@@ -62,7 +68,8 @@ var BC = (function(root) {
 					}
 				}
 				if (currentStateMutator.onUpdate) {
-					currentStateMutator.onUpdate(state, stepPercent);
+					// TODO(btmura): pass values to callback using an object
+					currentStateMutator.onUpdate(state, stepPercent, updateCounter);
 				}
 
 				// Don't increment the counter or dequeue mutators for partial updates,

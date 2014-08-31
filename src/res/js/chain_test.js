@@ -259,9 +259,16 @@ QUnit.extend(QUnit, {
 		for (var i = 0; i < specs.length; i++) {
 			var cells = [];
 			for (var j = 0; j < specs[i].length; j++) {
+				var blockStyle = specs[i][j];
+				var state = BC.Cell.CellState.BLOCK;
 				var cell = {
-					blockStyle: specs[i][j],
-					state: BC.Cell.CellState.BLOCK
+					getBlockStyle: function() {
+						return blockStyle;
+					},
+
+					getState: function() {
+						return state;
+					}
 				};
 				cells.push(cell);
 			}
