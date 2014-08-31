@@ -47,15 +47,16 @@ var BC = (function(root) {
 		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
 
 		function draw(lagFactor) {
+			var boardDrawSpec = board.getDrawSpec(lagFactor);
 			var selectorDrawSpec = board.selector.getDrawSpec(lagFactor);
 
 			drawStats();
 
-			drawRings(selectorDrawSpec, lagFactor);
+			drawRings(boardDrawSpec, selectorDrawSpec);
 			drawStage();
 
 			// Draw selector last for alpha values.
-			drawSelector(selectorDrawSpec, lagFactor);
+			drawSelector(boardDrawSpec, selectorDrawSpec);
 		}
 
 		function drawStats() {
@@ -65,9 +66,9 @@ var BC = (function(root) {
 			scoreView.draw(board.score);
 		}
 
-		function drawRings(selectorDrawSpec, lagFactor) {
+		function drawRings(boardDrawSpec, selectorDrawSpec) {
 			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, selectorDrawSpec.boardRotationMatrix);
-			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.getTranslationMatrix(lagFactor));
+			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, boardDrawSpec.translationMatrix);
 			gl.uniformMatrix4fv(selectorMatrixLocation, false, BC.Math.Matrix.identity);
 			var rings = board.rings;
 			for (var i = 0; i < 2; i++) {
@@ -86,17 +87,17 @@ var BC = (function(root) {
 			}
 		}
 
-		function drawSelector(selectorDrawSpec, lagFactor) {
+		function drawSelector(boardDrawSpec, selectorDrawSpec) {
 			// Don't rotate the board since the selector stays centered.
 			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, BC.Math.Matrix.identity);
 
 			// Translate the selector vertically to match the board position.
-			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.getTranslationMatrix(lagFactor));
+			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, boardDrawSpec.translationMatrix);
 
 			gl.uniformMatrix4fv(selectorMatrixLocation, false, selectorDrawSpec.matrix);
 			gl.uniformMatrix4fv(ringMatrixLocation, false, BC.Math.Matrix.identity);
 			gl.uniformMatrix4fv(cellMatrixLocation, false, BC.Math.Matrix.identity);
-			selectorView.draw(lagFactor);
+			selectorView.draw();
 		}
 
 		function drawStage() {

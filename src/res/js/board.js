@@ -74,6 +74,48 @@ var BC = (function(root) {
 		// Increasing counter used to translate each new ring relative to the board.
 		var ringIndex = 0;
 
+		var selector = Selector.make({
+			metrics: metrics,
+			config: config,
+			audioPlayer: audioPlayer
+		});
+
+		var stage = Stage.make(metrics, stageTranslationY);
+
+		var chainManager = Chain.makeManager();
+		var dropManager = Drop.makeManager(metrics);
+
+		var speedLevel = Quantity.make({
+			value: 1,
+			unit: Unit.NONE
+		});
+
+		var elapsedTime = Quantity.make({
+			value: 0,
+			unit: Unit.SECONDS
+		});
+
+		var score = Quantity.make({
+			value: 0,
+			unit: Unit.NONE
+		});
+
+		var board = {
+			metrics: metrics,
+			rings: rings,
+			selector: selector,
+			stage: stage,
+
+			speedLevel: speedLevel,
+			elapsedTime: elapsedTime,
+			score:score,
+
+			move: move,
+			swap: swap,
+			update: update,
+			getDrawSpec: getDrawSpec
+		};
+
 		// Adds a new ring and increments the ring index counter.
 		function addRing(selectable) {
 			var translationY = -metrics.ringHeight * ringIndex;
@@ -104,47 +146,6 @@ var BC = (function(root) {
 		for (var i = 0; i < NUM_SPARE_RINGS; i++) {
 			addRing(false);
 		}
-
-		var board = {
-			metrics: metrics,
-			rings: rings,
-
-			move: move,
-			swap: swap,
-			update: update
-		};
-
-		var selector = Selector.make({
-			metrics: metrics,
-			config: config,
-			board: board,
-			audioPlayer: audioPlayer
-		});
-		board.selector = selector;
-
-		var stage = Stage.make(metrics, stageTranslationY);
-		board.stage = stage;
-
-		var chainManager = Chain.makeManager();
-		var dropManager = Drop.makeManager(metrics);
-
-		var speedLevel = Quantity.make({
-			value: 1,
-			unit: Unit.NONE
-		});
-		board.speedLevel = speedLevel;
-
-		var elapsedTime = Quantity.make({
-			value: 0,
-			unit: Unit.SECONDS
-		});
-		board.elapsedTime = elapsedTime;
-
-		var score = Quantity.make({
-			value: 0,
-			unit: Unit.NONE
-		});
-		board.score = score;
 
 		function move(direction) {
 			switch (direction) {
@@ -340,14 +341,12 @@ var BC = (function(root) {
 			return rings[row].cells[col % metrics.numCells];
 		}
 
-		function getTranslationMatrix(lagFactor) {
-			return Matrix.makeTranslation(
-					translation[0],
-					translation[1],
-					translation[2]);
+		function getDrawSpec(lagFactor) {
+			var translationMatrix = Matrix.makeTranslation(translation[0], translation[1], translation[2]);
+			return {
+				translationMatrix: translationMatrix
+			};
 		}
-
-		board.getTranslationMatrix = getTranslationMatrix;
 
 		return board;
 	};

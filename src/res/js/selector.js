@@ -33,7 +33,6 @@ var BC = (function(root) {
 
 		var metrics = args.metrics;
 		var config = args.config;
-		var board = args.board;
 		var audioPlayer = args.audioPlayer;
 
 		var updatesPerMove = config.getUpdatesPerMove();
