@@ -74,10 +74,6 @@ var BC = (function(root) {
 		// Increasing counter used to translate each new ring relative to the board.
 		var ringIndex = 0;
 
-		var ringRotationY = BC.Math.sliceRadians(metrics.numCells);
-		var rotationDelta = ringRotationY / config.getUpdatesPerMove();
-		var rotatingDirection = Direction.NONE;
-
 		// Adds a new ring and increments the ring index counter.
 		function addRing(selectable) {
 			var translationY = -metrics.ringHeight * ringIndex;
@@ -114,7 +110,6 @@ var BC = (function(root) {
 			rings: rings,
 
 			move: move,
-			rotate: rotate,
 			swap: swap,
 			update: update
 		};
@@ -200,29 +195,6 @@ var BC = (function(root) {
 					&& rings[currentRing + 1].isSelectable()
 					&& selector.move(Direction.DOWN)) {
 				currentRing++;
-			}
-		}
-
-		// rotate is callback called by the selector module when the selector is moved horizontally.
-		function rotate(direction) {
-			switch (direction) {
-				case Direction.LEFT:
-					rotatingDirection = Direction.LEFT;
-					rotation[1] += rotationDelta;
-					break;
-
-				case Direction.RIGHT:
-					rotatingDirection = Direction.RIGHT;
-					rotation[1] -= rotationDelta;
-					break;
-
-				case Direction.NONE:
-					rotatingDirection = Direction.NONE;
-					break;
-
-				default:
-					Log.error("unsupported rotate direction: " + rotatingDirection);
-					break;
 			}
 		}
 
@@ -368,30 +340,6 @@ var BC = (function(root) {
 			return rings[row].cells[col % metrics.numCells];
 		}
 
-		function getRotationMatrix(lagFactor) {
-			var adjustedRotation = rotation;
-			if (rotatingDirection !== Direction.NONE) {
-				adjustedRotation = [rotation[0], rotation[1], rotation[2]]
-				switch (rotatingDirection) {
-					case Direction.LEFT:
-						adjustedRotation[1] += rotationDelta * lagFactor;
-						break;
-
-					case Direction.RIGHT:
-						adjustedRotation[1] -= rotationDelta * lagFactor;
-						break;
-				}
-			}
-
-			var rotationXMatrix = Matrix.makeXRotation(adjustedRotation[0]);
-			var rotationYMatrix = Matrix.makeYRotation(adjustedRotation[1]);
-			var rotationZMatrix = Matrix.makeZRotation(adjustedRotation[2]);
-
-			var matrix = Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
-			matrix = Matrix.matrixMultiply(matrix, rotationXMatrix);
-			return matrix;
-		}
-
 		function getTranslationMatrix(lagFactor) {
 			return Matrix.makeTranslation(
 					translation[0],
@@ -399,8 +347,6 @@ var BC = (function(root) {
 					translation[2]);
 		}
 
-		// Split rotation and translation to render the selector in a fixed position.
-		board.getRotationMatrix = getRotationMatrix;
 		board.getTranslationMatrix = getTranslationMatrix;
 
 		return board;

@@ -51,7 +51,7 @@ var BC = (function(root) {
 
 			drawStats();
 
-			drawRings(lagFactor);
+			drawRings(selectorDrawSpec, lagFactor);
 			drawStage();
 
 			// Draw selector last for alpha values.
@@ -65,8 +65,8 @@ var BC = (function(root) {
 			scoreView.draw(board.score);
 		}
 
-		function drawRings(lagFactor) {
-			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, board.getRotationMatrix(lagFactor));
+		function drawRings(selectorDrawSpec, lagFactor) {
+			gl.uniformMatrix4fv(boardRotationMatrixLocation, false, selectorDrawSpec.boardRotationMatrix);
 			gl.uniformMatrix4fv(boardTranslationMatrixLocation, false, board.getTranslationMatrix(lagFactor));
 			gl.uniformMatrix4fv(selectorMatrixLocation, false, BC.Math.Matrix.identity);
 			var rings = board.rings;
