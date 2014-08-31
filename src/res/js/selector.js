@@ -34,15 +34,103 @@ var BC = (function(root) {
 		var board = args.board;
 		var audioPlayer = args.audioPlayer;
 
-		var direction = Direction.NONE;
-		var animations = [];
-
 		var updatesPerMove = config.getUpdatesPerMove();
 		var translationDelta = metrics.ringHeight / updatesPerMove;
+		var stateManager = BC.StateManager.make();
+		var animations = [];
 
-		var scaleAccumulator = 0;
-		var scale = [1, 1, 1];
-		var translation = [0, 0, 0];
+		var currentState = {
+			direction: Direction.NONE,
+			scale: [1, 1, 1],
+			translation: [0, 0, 0],
+			scaleAccumulator: 0
+		};
+
+		var moveUpStateMutator = {
+			totalUpdates: updatesPerMove,
+
+			onStart: function(state, stepPercent) {
+				state.direction = Direction.UP;
+				if (stepPercent === 1) {
+					audioPlayer.play(Sound.SELECTOR_MOVEMENT);
+				}
+			},
+
+			onUpdate: function(state, stepPercent) {
+				state.translation[1] += getTranslationDelta(stepPercent);
+			},
+
+			onFinish: function(state) {
+				state.direction = Direction.NONE;
+			},
+		};
+
+		var moveDownStateMutator = {
+			totalUpdates: updatesPerMove,
+
+			onStart: function(state, stepPercent) {
+				state.direction = Direction.DOWN;
+				if (stepPercent === 1) {
+					audioPlayer.play(Sound.SELECTOR_MOVEMENT);
+				}
+			},
+
+			onUpdate: function(state, stepPercent) {
+				state.translation[1] -= getTranslationDelta(stepPercent);
+			},
+
+			onFinish: function(state) {
+				state.direction = Direction.NONE;
+			},
+		};
+
+		function getTranslationDelta(percent) {
+			return translationDelta * percent;
+		}
+
+		function update() {
+			BC.Animation.process(animations);
+			updateState(currentState, 1);
+		}
+
+		function getDrawSpec(lagFactor) {
+			var state = cloneState(currentState);
+			updateState(state, lagFactor);
+
+			var matrix = getMatrix(state, lagFactor);
+			return {
+				matrix: matrix
+			}
+		}
+
+		function updateState(state, stepPercent) {
+			stateManager.updateState(state, stepPercent);
+			currentState.scaleAccumulator += stepPercent;
+		}
+
+		function cloneState(state) {
+			return {
+				direction: state.direction,
+				scale: state.scale.slice(),
+				translation: state.translation.slice(),
+				scaleAccumulator: state.scaleAccumulator
+			};
+		}
+
+		function getMatrix(state, lagFactor) {
+			var scaleMatrix = getScaleMatrix(state, lagFactor);
+			var translationMatrix = getTranslationMatrix(state, lagFactor);
+			return BC.Math.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+		}
+
+		function getScaleMatrix(state, lagFactor) {
+			state.scale[0] = state.scale[1] = 1 + Math.abs(Math.sin(state.scaleAccumulator * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
+			return BC.Math.Matrix.makeScale(state.scale[0], state.scale[1], state.scale[2]);
+		}
+
+		function getTranslationMatrix(state, lagFactor) {
+			return BC.Math.Matrix.makeTranslation(state.translation[0], state.translation[1], state.translation[2]);
+		}
 
 		function move(direction) {
 			switch (direction) {
@@ -97,84 +185,48 @@ var BC = (function(root) {
 		}
 
 		function isMoving() {
-			return direction !== Direction.NONE;
+			return currentState.direction !== Direction.NONE;
 		}
 
 		function startMoving(newDirection) {
-			direction = newDirection;
-			if (animations.length > 0) {
-				BC.Log.error("startMoving: pending animations: " + animations.length);
-			}
+			currentState.direction = newDirection;
+			if (newDirection === Direction.UP) {
+				stateManager.addStateMutator(moveUpStateMutator);
+			} else if (newDirection === Direction.DOWN) {
+				stateManager.addStateMutator(moveDownStateMutator);
+			} else {
+				if (animations.length > 0) {
+					BC.Log.error("startMoving: pending animations: " + animations.length);
+				}
+				animations.push(BC.Animation.make({
+					numUpdates: updatesPerMove,
+					updateCallback: function() {
+						switch (currentState.direction) {
+							case Direction.LEFT:
+								board.rotate(Direction.LEFT);
+								return true;
 
-			animations.push(BC.Animation.make({
-				numUpdates: updatesPerMove,
-				updateCallback: function() {
-					switch (direction) {
-						case Direction.UP:
-							translation[1] += translationDelta;
-							return true;
+							case Direction.RIGHT:
+								board.rotate(Direction.RIGHT);
+								return true;
 
-						case Direction.DOWN:
-							translation[1] -= translationDelta;
-							return true;
-
-						case Direction.LEFT:
-							board.rotate(Direction.LEFT);
-							return true;
-
-						case Direction.RIGHT:
-							board.rotate(Direction.RIGHT);
-							return true;
-
-						default:
-							return false;
+							default:
+								return false;
+						}
+					},
+					finishCallback: function() {
+						currentState.direction = Direction.NONE;
+						board.rotate(Direction.NONE);
+						audioPlayer.play(Sound.SELECTOR_MOVEMENT);
 					}
-				},
-				finishCallback: function() {
-					direction = Direction.NONE;
-					board.rotate(Direction.NONE);
-					audioPlayer.play(Sound.SELECTOR_MOVEMENT);
-				}
-			}));
-		}
-
-		function update() {
-			BC.Animation.process(animations);
-			scaleAccumulator++;
-		}
-
-		function getMatrix(lagFactor) {
-			var scaleMatrix = getScaleMatrix(lagFactor);
-			var translationMatrix = getTranslationMatrix(lagFactor);
-			return BC.Math.Matrix.matrixMultiply(scaleMatrix, translationMatrix);
-		}
-
-		function getScaleMatrix(lagFactor) {
-			scale[0] = scale[1] = 1 + Math.abs(Math.sin((scaleAccumulator + lagFactor) * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
-			return BC.Math.Matrix.makeScale(scale[0], scale[1], scale[2]);
-		}
-
-		function getTranslationMatrix(lagFactor) {
-			var adjustedTranslation = translation;
-			if (isMoving()) {
-				adjustedTranslation = [translation[0], translation[1], translation[2]];
-				switch (direction) {
-					case BC.Direction.UP:
-						adjustedTranslation[1] += translationDelta * lagFactor;
-						break;
-
-					case BC.Direction.DOWN:
-						adjustedTranslation[1] -= translationDelta * lagFactor;
-						break;
-				}
+				}));
 			}
-			return BC.Math.Matrix.makeTranslation(adjustedTranslation[0], adjustedTranslation[1], adjustedTranslation[2]);
 		}
 
 		return {
-			move: move,
 			update: update,
-			getMatrix: getMatrix
+			getDrawSpec: getDrawSpec,
+			move: move
 		};
 	};
 
