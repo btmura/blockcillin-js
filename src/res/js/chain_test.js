@@ -201,7 +201,7 @@ test("find_verticalChains", function() {
 				col: 3
 			},
 			{
-				cell: board.rings[2].cells[3],
+				cell: board.rings[3].cells[3],
 				row: 3,
 				col: 3
 			}
@@ -254,22 +254,33 @@ test("find_crossChains", function() {
 
 
 QUnit.extend(QUnit, {
+	makeCell: function(args) {
+		var blockStyle = args.blockStyle;
+		var state = args.state;
+
+		function getBlockStyle() {
+			return blockStyle;
+		}
+
+		function getState() {
+			return state;
+		}
+
+		return {
+			getBlockStyle: getBlockStyle,
+			getState: getState
+		};
+	},
+
 	makeBoard: function(specs) {
 		var rings = [];
 		for (var i = 0; i < specs.length; i++) {
 			var cells = [];
 			for (var j = 0; j < specs[i].length; j++) {
-				var blockStyle = specs[i][j];
-				var state = BC.Cell.CellState.BLOCK;
-				var cell = {
-					getBlockStyle: function() {
-						return blockStyle;
-					},
-
-					getState: function() {
-						return state;
-					}
-				};
+				var cell = QUnit.makeCell({
+					blockStyle: specs[i][j],
+					state: BC.Cell.CellState.BLOCK
+				});
 				cells.push(cell);
 			}
 			var ring = {
