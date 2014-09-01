@@ -1,4 +1,4 @@
-	3/*
+/*
  * Copyright (C) 2014  Brian Muramatsu
  *
  * This file is part of blockcillin.
@@ -109,7 +109,7 @@ var BC = (function(root) {
 
 			onFinish: function(state) {
 				state.state = CellState.BLOCK_CLEARING_READY;
-			},
+			}
 		};
 
 		var fadeOutStateMutator = {
@@ -154,7 +154,7 @@ var BC = (function(root) {
 			onFinish: function(state) {
 				state.state = CellState.BLOCK;
 				state.droppingBlock = false;
-			},
+			}
 		};
 
 		receiveDirectionStateMutators[Direction.LEFT] = {
@@ -258,7 +258,7 @@ var BC = (function(root) {
 				yellowBoost: state.yellowBoost,
 				alpha: state.alpha,
 				isDrawable: isDrawable,
-				isTransparent: isTransparent,
+				isTransparent: isTransparent
 			}
 		}
 

@@ -74,7 +74,7 @@ var BC = (function(root) {
 
 			onFinish: function(state) {
 				state.direction = Direction.NONE;
-			},
+			}
 		};
 
 		directionStateMutators[Direction.DOWN] = {

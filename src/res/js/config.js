@@ -51,7 +51,7 @@ var BC = (function(root) {
 		return {
 			getSecondsPerUpdate: getSecondsPerUpdate,
 			getUpdatesPerSwap: getUpdatesPerSwap,
-			getUpdatesPerMove: getUpdatesPerMove,
+			getUpdatesPerMove: getUpdatesPerMove
 		};
 	};
 

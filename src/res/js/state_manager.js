@@ -90,7 +90,7 @@ var BC = (function(root) {
 
 		return {
 			addStateMutator: addStateMutator,
-			updateState: updateState,
+			updateState: updateState
 		}
 	};
 
