@@ -4,7 +4,7 @@ JS_SOURCES = $(shell find $(JS_DIR) -type f \( -name *.js ! -name *_test.js ! -n
 JS_SOURCES_FLAG = $(addprefix --js ,$(JS_SOURCES))
 CSS_SOURCES = $(shell find src/res/css -type f \( -name *.css ! -name *.min.css \))
 
-all:
+all: docs
 	java -jar yuicompressor-2.4.8.jar -o '.css$$:.min.css' $(CSS_SOURCES)
 	java -jar compiler.jar $(JS_SOURCES_FLAG) --js_output_file $(JS_DIR)/$(COMPILED_JS)
 
