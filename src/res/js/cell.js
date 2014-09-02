@@ -63,21 +63,26 @@ var BC = (function(root) {
 			blockStyle: args.blockStyle,
 			yellowBoost: 0,
 			alpha: 1,
+			droppingBlock: false,
 			rotation: [0, args.rotationY, 0],
-			translation: [0, 0, 0],
-			droppingBlock: false
+			translation: [0, 0, 0]
 		};
 
-		function cloneState(state) {
-			return {
-				state: state.state,
-				blockStyle: state.blockStyle,
-				yellowBoost: state.yellowBoost,
-				alpha: state.alpha,
-				rotation: state.rotation.slice(),
-				translation: state.translation.slice(),
-				droppingBlock: state.droppingBlock
-			};
+		var drawState = {
+			rotation: [0, 0, 0],
+			translation: [0, 0, 0]
+		};
+
+		function updateDrawState() {
+			drawState.state = currentState.state;
+			drawState.blockStyle = currentState.blockStyle;
+			drawState.yellowBoost = currentState.yellowBoost;
+			drawState.alpha = currentState.alpha;
+			drawState.droppingBlock = currentState.droppingBlock;
+			for (var i = 0; i < 3; i++) {
+				drawState.rotation[i] = currentState.rotation[i];
+				drawState.translation[i] = currentState.translation[i];
+			}
 		}
 
 		var stateManager = BC.StateManager.make();
@@ -244,17 +249,17 @@ var BC = (function(root) {
 		}
 
 		function getDrawSpec(lagFactor) {
-			var state = cloneState(currentState);
-			updateState(state, lagFactor);
+			updateDrawState();
+			updateState(drawState, lagFactor);
 
-			var matrix = getMatrix(state, lagFactor);
-			var isDrawable = getDrawable(state);
-			var isTransparent = getTransparent(state);
+			var matrix = getMatrix(drawState, lagFactor);
+			var isDrawable = getDrawable(drawState);
+			var isTransparent = getTransparent(drawState);
 			return {
 				matrix: matrix,
-				blockStyle: state.blockStyle,
-				yellowBoost: state.yellowBoost,
-				alpha: state.alpha,
+				blockStyle: drawState.blockStyle,
+				yellowBoost: drawState.yellowBoost,
+				alpha: drawState.alpha,
 				isDrawable: isDrawable,
 				isTransparent: isTransparent
 			}

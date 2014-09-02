@@ -37,20 +37,26 @@ var BC = (function(root) {
 
 		var currentState = {
 			direction: Direction.NONE,
+			scaleAccumulator: 0,
 			scale: [1, 1, 1],
 			translation: [0, 0, 0],
-			boardRotation: [0, 0, 0],
-			scaleAccumulator: 0
+			boardRotation: [0, 0, 0]
 		};
 
-		function cloneState(state) {
-			return {
-				direction: state.direction,
-				scale: state.scale.slice(),
-				translation: state.translation.slice(),
-				boardRotation: state.boardRotation.slice(),
-				scaleAccumulator: state.scaleAccumulator
-			};
+		var drawState = {
+			scale: [1, 1, 1],
+			translation: [0, 0, 0],
+			boardRotation: [0, 0, 0]
+		};
+
+		function updateDrawState() {
+			drawState.direction = currentState.direction;
+			drawState.scaleAccumulator = currentState.scaleAccumulator;
+			for (var i = 0; i < 3; i++) {
+				drawState.scale[i] = currentState.scale[i];
+				drawState.translation[i] = currentState.translation[i];
+				drawState.boardRotation[i] = currentState.boardRotation[i];
+			}
 		}
 
 		var stateManager = BC.StateManager.make();
@@ -143,11 +149,11 @@ var BC = (function(root) {
 		}
 
 		function getDrawSpec(lagFactor) {
-			var state = cloneState(currentState);
-			updateState(state, lagFactor);
+			updateDrawState();
+			updateState(drawState, lagFactor);
 
-			var matrix = getMatrix(state, lagFactor);
-			var boardRotationMatrix = getBoardRotationMatrix(state, lagFactor);
+			var matrix = getMatrix(drawState, lagFactor);
+			var boardRotationMatrix = getBoardRotationMatrix(drawState, lagFactor);
 			return {
 				matrix: matrix,
 				boardRotationMatrix: boardRotationMatrix
@@ -175,13 +181,7 @@ var BC = (function(root) {
 		}
 
 		function getBoardRotationMatrix(state, lagFactor) {
-			var rotationXMatrix = Matrix.makeXRotation(state.boardRotation[0]);
-			var rotationYMatrix = Matrix.makeYRotation(state.boardRotation[1]);
-			var rotationZMatrix = Matrix.makeZRotation(state.boardRotation[2]);
-
-			var matrix = Matrix.matrixMultiply(rotationZMatrix, rotationYMatrix);
-			matrix = Matrix.matrixMultiply(matrix, rotationXMatrix);
-			return matrix;
+			return Matrix.makeYRotation(state.boardRotation[1]);
 		}
 
 		function move(direction) {
