@@ -47,18 +47,16 @@ var BC = (function(root) {
 		var config = args.config;
 		var audioPlayer = args.audioPlayer;
 
-		var FLICKER_UPDATE_COUNT = 60;
-		var FREEZE_UPDATE_COUNT = 30;
-		var FADE_OUT_COUNT = 30;
-		var ROTATION_Y_DELTA = BC.Math.sliceRadians(metrics.numCells);
-		var TRANSLATION_Y_DELTA = metrics.ringHeight;
-		var YELLOW_BOOST_SPEED_MULTIPLIER = 75;
-		var YELLOW_BOOST_AMPLITUDE_DIVISOR = 2;
-
+		var updatesPerFlicker = config.getUpdatesPerFlicker();
+		var updatesPerFreeze = config.getUpdatesPerFreeze();
+		var updatesPerFade = config.getUpdatesPerFade();
 		var updatesPerSwap = config.getUpdatesPerSwap();
-		var rotationDelta = ROTATION_Y_DELTA / updatesPerSwap;
-		var translationDelta = TRANSLATION_Y_DELTA / updatesPerSwap;
-		var alphaDelta = 1 / FADE_OUT_COUNT;
+
+		var totalRotationDelta = BC.Math.sliceRadians(metrics.numCells);
+		var rotationDelta = totalRotationDelta / updatesPerSwap;
+		var totalTranslationDelta = metrics.ringHeight;
+		var translationDelta = totalTranslationDelta / updatesPerSwap;
+		var alphaDelta = 1 / updatesPerFade;
 
 		var currentState = {
 			state: args.state,
@@ -85,14 +83,14 @@ var BC = (function(root) {
 		var stateManager = BC.StateManager.make();
 
 		var flickerStateMutator = {
-			totalUpdates: FLICKER_UPDATE_COUNT,
+			totalUpdates: updatesPerFlicker,
 
 			onStart: function(state, stepPercent) {
 				state.state = CellState.BLOCK_CLEARING_PREPARING;
 			},
 
 			onUpdate: function(state, stepPercent, update) {
-				state.yellowBoost = Math.abs(Math.sin((update + stepPercent) * YELLOW_BOOST_SPEED_MULTIPLIER) / YELLOW_BOOST_AMPLITUDE_DIVISOR);
+				state.yellowBoost = config.getYellowBoost(update + stepPercent);
 			},
 
 			onFinish: function(state) {
@@ -101,7 +99,7 @@ var BC = (function(root) {
 		};
 
 		var freezeStateMutator = {
-			totalUpdates: FREEZE_UPDATE_COUNT,
+			totalUpdates: updatesPerFreeze,
 
 			onStart: function(state, stepPercent) {
 				state.blockStyle += metrics.numBlockTypes;
@@ -113,7 +111,7 @@ var BC = (function(root) {
 		};
 
 		var fadeOutStateMutator = {
-			totalUpdates: FADE_OUT_COUNT,
+			totalUpdates: updatesPerFade,
 
 			onStart: function(state, stepPercent) {
 				audioPlayer.play(Sound.CELL_CLEAR);
@@ -161,7 +159,7 @@ var BC = (function(root) {
 			totalUpdates: updatesPerSwap,
 
 			onStart: function(state, stepPercent) {
-				state.rotation[1] -= ROTATION_Y_DELTA;
+				state.rotation[1] -= totalRotationDelta;
 			},
 
 			onUpdate: function(state, stepPercent) {
@@ -177,7 +175,7 @@ var BC = (function(root) {
 			totalUpdates: updatesPerSwap,
 
 			onStart: function(state, stepPercent) {
-				state.rotation[1] += ROTATION_Y_DELTA;
+				state.rotation[1] += totalRotationDelta;
 			},
 
 			onUpdate: function(state, stepPercent) {

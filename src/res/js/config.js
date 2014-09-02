@@ -25,13 +25,24 @@ var BC = (function(root) {
 	// make makes a new Config object.
 	me.make = function(args) {
 
-		var SECONDS_PER_UPDATE = 0.008;
+		var SECONDS_PER_UPDATE = 0.016;
 
-		var SWAP_ANIMATION_SECONDS = 0.1;
-		var MOVE_ANIMATION_SECONDS = 0.1;
+		var SWAP_ANIMATION_UPDATES = fromSeconds(0.1);
+		var MOVE_ANIMATION_UPDATES = fromSeconds(0.1);
+		var FLICKER_ANIMATION_UPDATES = fromSeconds(0.5);
+		var FREEZE_ANIMATION_UPDATES = fromSeconds(0.25);
+		var FADE_ANIMATION_UPDATES = fromSeconds(0.25);
 
-		var SWAP_ANIMATION_UPDATES = Math.ceil(SWAP_ANIMATION_SECONDS / SECONDS_PER_UPDATE);
-		var MOVE_ANIMATION_UPDATES = Math.ceil(MOVE_ANIMATION_SECONDS / SECONDS_PER_UPDATE);
+		var SELECTOR_SCALE_SPEED_MULTIPLIER = 0.05;
+		var SELECTOR_SCALE_AMPLITUDE_DIVISOR = 25;
+
+		var YELLOW_BOOST_SPEED_MULTIPLIER = 150;
+		var YELLOW_BOOST_AMPLITUDE_DIVISOR = 2;
+
+		// fromSeconds converts a duration into update count.
+		function fromSeconds(seconds) {
+			return Math.ceil(seconds / SECONDS_PER_UPDATE);
+		}
 
 		// getSecondsPerUpdate returns the interval between updates.
 		function getSecondsPerUpdate() {
@@ -48,10 +59,40 @@ var BC = (function(root) {
 			return MOVE_ANIMATION_UPDATES;
 		}
 
+		// getUpdatesPerFlicker returns how many updates the blocks will flicker.
+		function getUpdatesPerFlicker() {
+			return FLICKER_ANIMATION_UPDATES;
+		}
+
+		// getUpdatesPerFreeze returns how many updates the blocks will freeze.
+		function getUpdatesPerFreeze() {
+			return FREEZE_ANIMATION_UPDATES;
+		}
+
+		// getUpdatesPerFade returns how many updates the blocks will take to fade out.
+		function getUpdatesPerFade() {
+			return FADE_ANIMATION_UPDATES;
+		}
+
+		// getSelectorScale calculates the selector's scale value given a changing step value.
+		function getSelectorScale(step) {
+			return 1 + Math.abs(Math.sin(step * SELECTOR_SCALE_SPEED_MULTIPLIER)) / SELECTOR_SCALE_AMPLITUDE_DIVISOR;
+		}
+
+		// getYellowBoost calculates the yellow boost value given a changing step value.
+		function getYellowBoost(step) {
+			return Math.abs(Math.sin(step * YELLOW_BOOST_SPEED_MULTIPLIER) / YELLOW_BOOST_AMPLITUDE_DIVISOR);
+		}
+
 		return {
 			getSecondsPerUpdate: getSecondsPerUpdate,
 			getUpdatesPerSwap: getUpdatesPerSwap,
-			getUpdatesPerMove: getUpdatesPerMove
+			getUpdatesPerMove: getUpdatesPerMove,
+			getUpdatesPerFlicker: getUpdatesPerFlicker,
+			getUpdatesPerFreeze: getUpdatesPerFreeze,
+			getUpdatesPerFade: getUpdatesPerFade,
+			getSelectorScale: getSelectorScale,
+			getYellowBoost: getYellowBoost
 		};
 	};
 

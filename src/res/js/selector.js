@@ -27,10 +27,6 @@ var BC = (function(root) {
 		var Matrix = BC.Math.Matrix;
 		var Sound = BC.Audio.Sound;
 
-		// TODO(btmura): remove duplication with board.js and move them to config module
-		var SCALE_AMPLITUDE_DIVISOR = 25;
-		var SCALE_SPEED_MULTIPLIER = 0.035;
-
 		var metrics = args.metrics;
 		var config = args.config;
 		var audioPlayer = args.audioPlayer;
@@ -170,7 +166,7 @@ var BC = (function(root) {
 		}
 
 		function getScaleMatrix(state, lagFactor) {
-			state.scale[0] = state.scale[1] = 1 + Math.abs(Math.sin(state.scaleAccumulator * SCALE_SPEED_MULTIPLIER)) / SCALE_AMPLITUDE_DIVISOR;
+			state.scale[0] = state.scale[1] = config.getSelectorScale(state.scaleAccumulator);
 			return Matrix.makeScale(state.scale[0], state.scale[1], state.scale[2]);
 		}
 
