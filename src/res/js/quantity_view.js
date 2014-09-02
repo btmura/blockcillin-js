@@ -54,9 +54,18 @@ var BC = (function(root) {
 			};
 		}
 
+		var previousValue;
+		var previousUnit;
+
 		function draw(quantity) {
-			var df = displayFuncs[quantity.unit];
-			element.text(df(quantity.value));
+			if (previousValue !== quantity.value || previousUnit !== quantity.unit) {
+				previousValue = quantity.value;
+				previousUnit = quantity.unit;
+
+				var func = displayFuncs[quantity.unit];
+				var newText = func(quantity.value);
+				element.text(newText);
+			}
 		}
 
 		return {
