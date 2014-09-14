@@ -27,6 +27,7 @@ var BC = (function(root) {
 		LEFT: "LEFT",
 		RIGHT: "RIGHT",
 		PRIMARY_ACTION: "PRIMARY_ACTION",
+		SECONDARY_ACTION: "SECONDARY_ACTION",
 		MENU_ACTION: "MENU_ACTION"
 	};
 
@@ -43,6 +44,7 @@ var BC = (function(root) {
 		var moveUpCallback = function() {};
 		var moveDownCallback = function() {};
 		var primaryActionCallback = function() {};
+		var secondaryActionCallback = function() {};
 		var menuActionCallback = function() {};
 		var keyCodeAssignmentCallback = function() {};
 
@@ -57,6 +59,7 @@ var BC = (function(root) {
 		keyData[Key.LEFT] = newKey("bc.controller.left", 37);
 		keyData[Key.RIGHT] = newKey("bc.controller.right", 39);
 		keyData[Key.PRIMARY_ACTION] = newKey("bc.controller.primaryAction", 32);
+		keyData[Key.SECONDARY_ACTION] = newKey("bc.controller.secondaryAction", 17);
 		keyData[Key.MENU_ACTION] = newKey("bc.controller.menuAction", 27);
 
 		function newKey(storageKey, defaultKeyCode) {
@@ -92,6 +95,10 @@ var BC = (function(root) {
 
 				case getKeyCode(Key.PRIMARY_ACTION):
 					primaryActionCallback.call();
+					break;
+
+				case getKeyCode(Key.SECONDARY_ACTION):
+					secondaryActionCallback.call();
 					break;
 
 				case getKeyCode(Key.MENU_ACTION):
@@ -211,6 +218,10 @@ var BC = (function(root) {
 			primaryActionCallback = callback;
 		}
 
+		function setSecondaryActionListener(callback) {
+			secondaryActionCallback = callback;
+		}
+
 		function setMenuActionListener(callback) {
 			menuActionCallback = callback;
 		}
@@ -233,6 +244,7 @@ var BC = (function(root) {
 			setMoveUpListener: setMoveUpListener,
 			setMoveDownListener: setMoveDownListener,
 			setPrimaryActionListener: setPrimaryActionListener,
+			setSecondaryActionListener: setSecondaryActionListener,
 			setMenuActionListener: setMenuActionListener,
 			setKeyCodeAssignmentListener: setKeyCodeAssignmentListener,
 			startKeyCodeAssignment: startKeyCodeAssignment,
