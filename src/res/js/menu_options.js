@@ -141,6 +141,7 @@ var BC = (function(root) {
 		var leftButton = newKeyButton("#left-button", menu, Key.LEFT);
 		var rightButton = newKeyButton("#right-button", menu, Key.RIGHT);
 		var swapButton = newKeyButton("#swap-button", menu, Key.PRIMARY_ACTION);
+		var raiseButton = newKeyButton("#raise-button", menu, Key.SECONDARY_ACTION);
 		var menuButton = newKeyButton("#menu-button", menu, Key.MENU_ACTION);
 		var closeButton = $("#close-button", menu);
 
@@ -172,11 +173,13 @@ var BC = (function(root) {
 		}
 
 		function show() {
+			// TODO(btmura): use a map to make adding keys easier
 			refreshButton(upButton, Key.UP);
 			refreshButton(downButton, Key.DOWN);
 			refreshButton(leftButton, Key.LEFT);
 			refreshButton(rightButton, Key.RIGHT);
 			refreshButton(swapButton, Key.PRIMARY_ACTION);
+			refreshButton(raiseButton, Key.SECONDARY_ACTION);
 			refreshButton(menuButton, Key.MENU_ACTION);
 
 			menu.fadeIn(MENU_FADE_SPEED);

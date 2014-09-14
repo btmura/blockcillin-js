@@ -76,6 +76,7 @@ var BC = (function(root) {
 				return false;
 			}
 
+			// TODO(btmura): use a map instead of a long switch statement
 			switch (event.keyCode) {
 				case getKeyCode(Key.LEFT):
 					moveLeftCallback.call();
