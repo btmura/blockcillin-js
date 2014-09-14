@@ -33,6 +33,9 @@ var BC = (function(root) {
 		var FREEZE_ANIMATION_UPDATES = fromSeconds(0.25);
 		var FADE_ANIMATION_UPDATES = fromSeconds(0.25);
 
+		var RAISE_AMOUNT = 0.2;
+		var RAISE_ANIMATION_UPDATES = fromSeconds(0.5);
+
 		var SELECTOR_SCALE_SPEED_MULTIPLIER = 0.05;
 		var SELECTOR_SCALE_AMPLITUDE_DIVISOR = 25;
 
@@ -52,6 +55,16 @@ var BC = (function(root) {
 		// getUpdatesPerSwap returns how many updates swapping blocks takes.
 		function getUpdatesPerSwap() {
 			return SWAP_ANIMATION_UPDATES;
+		}
+
+		// getUpdatesPerRaise returns how many updates it takes to raise the board.
+		function getUpdatesPerRaise() {
+			return RAISE_ANIMATION_UPDATES;
+		}
+
+		// getRaiseAmount returns how much to multiply the rise speed when the raise key is pressed.
+		function getRaiseAmountPerUpdate() {
+			return RAISE_AMOUNT / RAISE_ANIMATION_UPDATES;
 		}
 
 		// getUpdatesPerMove returns how many updates moving the selector takes.
@@ -87,6 +100,8 @@ var BC = (function(root) {
 		return {
 			getSecondsPerUpdate: getSecondsPerUpdate,
 			getUpdatesPerSwap: getUpdatesPerSwap,
+			getUpdatesPerRaise: getUpdatesPerRaise,
+			getRaiseAmountPerUpdate: getRaiseAmountPerUpdate,
 			getUpdatesPerMove: getUpdatesPerMove,
 			getUpdatesPerFlicker: getUpdatesPerFlicker,
 			getUpdatesPerFreeze: getUpdatesPerFreeze,

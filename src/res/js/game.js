@@ -199,6 +199,9 @@ var BC = (function(root) {
 			controller.setPrimaryActionListener(function() {
 				board.swap();
 			});
+			controller.setSecondaryActionListener(function() {
+				board.raise();
+			});
 
 			resumeGame();
 		}

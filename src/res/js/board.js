@@ -62,12 +62,6 @@ var BC = (function(root) {
 		// Set the initial board translation to show the starting rings.
 		var translationY = stageTranslationY + riseHeight;
 
-		// Translation of the board. Y is increased over time.
-		var translation = [0, translationY, 0];
-
-		// Rotation of the board. Rotated on te z-axis by the selector.
-		var rotation = [0, 0, 0];
-
 		// Rings of cells on the board that are added and removed throughout the game.
 		var rings = [];
 
@@ -112,8 +106,85 @@ var BC = (function(root) {
 
 			move: move,
 			swap: swap,
+			raise: raise,
 			update: update,
 			getDrawSpec: getDrawSpec
+		};
+
+		var stateManager = BC.StateManager.make();
+
+		var currentState = {
+			isRaising: false,
+			allowRaising: false,
+			raiseUpdateCounter: 0,
+			translation: [0, translationY, 0]
+		};
+
+		var drawState = {
+			isRaising: false,
+			allowRaising: false,
+			raiseUpdateCounter: 0,
+			translation: [0, 0, 0]
+		};
+
+		function updateDrawState() {
+			drawState.isRaising = currentState.isRaising;
+			drawState.allowRaising = currentState.allowRaising;
+			drawState.raiseUpdateCounter = currentState.raiseUpdateCounter;
+			for (var i = 0; i < 3; i++) {
+				drawState.translation[i] = currentState.translation[i];
+			}
+		}
+
+		var loopStateMutator = {
+			onStart: function(state, stepPercent) {
+				// Add the initial rings.
+				for (var i = 0; i < metrics.numRings; i++) {
+					addRing(true);
+				}
+
+				// Add the spare rings.
+				for (var i = 0; i < NUM_SPARE_RINGS; i++) {
+					addRing(false);
+				}
+			},
+
+			onUpdate: function(state, stepPercent, update) {
+				if (stepPercent == 1.0) {
+					// 1st pass - update each cell's existing animations.
+					for (var i = 0; i < rings.length; i++) {
+						for (var j = 0; j < metrics.numCells; j++) {
+							var cell = getCell(i, j);
+							cell.update();
+						}
+					}
+
+					// Whether to raise the board.
+					var stopRising = false;
+
+					// 2nd pass - find new dropping blocks and update the board
+					stopRising |= updateCellDrops();
+
+					// 3rd pass - find new chains and update the board
+					stopRising |= updateCellChains();
+
+					if (!stopRising) {
+						raiseBoard(state);
+					}
+
+					state.allowRaising = !stopRising;
+
+					// Update the time-related stats.
+					updateTimeStats();
+
+					// Update selector which might have rotated the board.
+					selector.update();
+
+					// Add or remove rings.
+					updateBoardRings();
+				}
+				return isGameOver();
+			}
 		};
 
 		// Adds a new ring and increments the ring index counter.
@@ -138,14 +209,73 @@ var BC = (function(root) {
 			currentRing--;
 		}
 
-		// Add the initial rings.
-		for (var i = 0; i < metrics.numRings; i++) {
-			addRing(true);
+		function getCell(row, col) {
+			return rings[row].cells[col % metrics.numCells];
 		}
 
-		// Add the spare rings.
-		for (var i = 0; i < NUM_SPARE_RINGS; i++) {
-			addRing(false);
+		function updateCellDrops() {
+			return dropManager.update(board);
+		}
+
+		function updateCellChains() {
+			var result = chainManager.update(board);
+			for (var i = 0; i < result.newChains.length; i++) {
+				var chain = result.newChains[i];
+				score.value += 100 * chain.length;
+			}
+			return result.pendingChainCount > 0;
+		}
+
+		function raiseBoard(state) {
+			var riseSpeed = INITIAL_RISE_SPEED + (speedLevel.value - 1) * RISE_SPEED_DELTA;
+			var translationDelta = riseSpeed / RISE_UPDATE_COUNT;
+
+			if (state.isRaising) {
+				translationDelta += config.getRaiseAmountPerUpdate();
+				state.raiseUpdateCounter++;
+				if (state.raiseUpdateCounter == config.getUpdatesPerRaise()) {
+					state.raiseUpdateCounter = 0;
+					state.isRaising = false;
+				}
+			}
+
+			if (riseHeight + translationDelta > MAX_RISE_HEIGHT) {
+				translationDelta = MAX_RISE_HEIGHT - riseHeight;
+			}
+
+			riseHeight += translationDelta;
+			state.translation[1] += translationDelta;
+		}
+
+		function updateTimeStats() {
+			elapsedTime.value += config.getSecondsPerUpdate();
+			speedLevel.value = 1 + Math.floor(elapsedTime.value / SPEED_LEVEL_DURATION);
+		}
+
+		function updateBoardRings() {
+			// Remove any rings at the top that are now empty.
+			while (rings.length > 0 && rings[0].isEmpty()) {
+				removeRing();
+			}
+
+			// Add rings till we hit hit the ground and then add some spare rings.
+			var totalRingHeight = metrics.ringHeight * rings.length;
+			var gap = riseHeight - totalRingHeight;
+			while (gap > -SPARE_RING_HEIGHT) {
+				addRing(false); // We will update the selectability later.
+				gap -= metrics.ringHeight;
+			}
+
+			// Update ring selectability.
+			for (var i = rings.length - 1; i >= 0; i--) {
+				// Make rings selectable if they are above the ground (== 0).
+				var bottom = riseHeight - metrics.ringHeight * (i + 1);
+				rings[i].setSelectable(bottom >= 0);
+			}
+		}
+
+		function isGameOver() {
+			return riseHeight >= MAX_RISE_HEIGHT;
 		}
 
 		function move(direction) {
@@ -241,113 +371,36 @@ var BC = (function(root) {
 			}
 		}
 
+		function raise() {
+			if (currentState.allowRaising) {
+				currentState.isRaising = true;
+				currentState.raiseUpdateCounter = 0;
+			}
+		}
+
 		function update() {
-			// 1st pass - update each cell's existing animations.
-			for (var i = 0; i < rings.length; i++) {
-				for (var j = 0; j < metrics.numCells; j++) {
-					var cell = getCell(i, j);
-					cell.update();
-				}
-			}
-
-			// Whether to raise the board.
-			var stopRising = false;
-
-			// 2nd pass - find new dropping blocks and update the board
-			stopRising |= updateCellDrops();
-
-			// 3rd pass - find new chains and update the board
-			stopRising |= updateCellChains();
-
-			if (!stopRising) {
-				raiseBoard();
-			}
-
-			// Update the time-related stats.
-			updateTimeStats();
-
-			// Update selector which might have rotated the board.
-			selector.update();
-
-			// Add or remove rings.
-			updateBoardRings();
-
-			return isGameOver();
-		}
-
-		function updateTimeStats() {
-			elapsedTime.value += config.getSecondsPerUpdate();
-			speedLevel.value = 1 + Math.floor(elapsedTime.value / SPEED_LEVEL_DURATION);
-		}
-
-		function updateCellDrops() {
-			return dropManager.update(board);
-		}
-
-		function updateCellChains() {
-			var result = chainManager.update(board);
-			for (var i = 0; i < result.newChains.length; i++) {
-				var chain = result.newChains[i];
-				score.value += 100 * chain.length;
-			}
-			return result.pendingChainCount > 0;
-		}
-
-		function raiseBoard() {
-			var riseSpeed = INITIAL_RISE_SPEED + (speedLevel.value - 1) * RISE_SPEED_DELTA;
-			var translationDelta = riseSpeed / RISE_UPDATE_COUNT;
-			if (riseHeight + translationDelta > MAX_RISE_HEIGHT) {
-				translationDelta = MAX_RISE_HEIGHT - riseHeight;
-			}
-
-			riseHeight += translationDelta;
-			translation[1] += translationDelta;
-		}
-
-		function updateBoardRings() {
-			// Remove any rings at the top that are now empty.
-			while (rings.length > 0 && rings[0].isEmpty()) {
-				removeRing();
-			}
-
-			// Add rings till we hit hit the ground and then add some spare rings.
-			var totalRingHeight = metrics.ringHeight * rings.length;
-			var gap = riseHeight - totalRingHeight;
-			while (gap > -SPARE_RING_HEIGHT) {
-				addRing(false); // We will update the selectability later.
-				gap -= metrics.ringHeight;
-			}
-
-			// Update ring selectability.
-			for (var i = rings.length - 1; i >= 0; i--) {
-				// Quit since everything above should already be selectable.
-				if (rings[i].isSelectable()) {
-					break;
-				}
-
-				// Make rings selectable if they are above the ground (== 0).
-				var bottom = riseHeight - metrics.ringHeight * (i + 1);
-				if (bottom >= 0) {
-					rings[i].setSelectable(true);
-				}
-			}
-		}
-
-		function isGameOver() {
-			return riseHeight >= MAX_RISE_HEIGHT;
-		}
-
-		function getCell(row, col) {
-			return rings[row].cells[col % metrics.numCells];
+			return updateState(currentState, 1);
 		}
 
 		function getDrawSpec(lagFactor) {
-			var translationMatrix = Matrix.makeTranslation(translation[0], translation[1], translation[2]);
+			updateDrawState();
+			updateState(drawState, lagFactor);
+
+			var translationMatrix = getTranslationMatrix(drawState, lagFactor);
 			return {
 				translationMatrix: translationMatrix
 			};
 		}
 
+		function updateState(state, stepPercent) {
+			return stateManager.updateState(state, stepPercent);
+		}
+
+		function getTranslationMatrix(state, lagFactor) {
+			return Matrix.makeTranslation(state.translation[0], state.translation[1], state.translation[2]);
+		}
+
+		stateManager.addStateMutator(loopStateMutator);
 		return board;
 	};
 

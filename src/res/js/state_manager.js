@@ -60,6 +60,8 @@ var BC = (function(root) {
 		 *                      and mutators should not be dequeued
 		 */
 		function updateState(state, stepPercent) {
+			var result;
+
 			if (stateMutatorQueue.length > 0) {
 				var currentStateMutator = stateMutatorQueue[0];
 				if (updateCounter === 0) {
@@ -69,7 +71,7 @@ var BC = (function(root) {
 				}
 				if (currentStateMutator.onUpdate) {
 					// TODO(btmura): pass values to callback using an object
-					currentStateMutator.onUpdate(state, stepPercent, updateCounter);
+					result = currentStateMutator.onUpdate(state, stepPercent, updateCounter);
 				}
 
 				// Don't increment the counter or dequeue mutators for partial updates,
@@ -86,6 +88,8 @@ var BC = (function(root) {
 					}
 				}
 			}
+
+			return result;
 		}
 
 		return {

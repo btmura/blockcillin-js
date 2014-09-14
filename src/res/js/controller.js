@@ -59,7 +59,7 @@ var BC = (function(root) {
 		keyData[Key.LEFT] = newKey("bc.controller.left", 37);
 		keyData[Key.RIGHT] = newKey("bc.controller.right", 39);
 		keyData[Key.PRIMARY_ACTION] = newKey("bc.controller.primaryAction", 32);
-		keyData[Key.SECONDARY_ACTION] = newKey("bc.controller.secondaryAction", 17);
+		keyData[Key.SECONDARY_ACTION] = newKey("bc.controller.secondaryAction", 18);
 		keyData[Key.MENU_ACTION] = newKey("bc.controller.menuAction", 27);
 
 		function newKey(storageKey, defaultKeyCode) {
@@ -70,7 +70,7 @@ var BC = (function(root) {
 			};
 		}
 
-		$(document).keydown(function(event) {
+		$(document).on("keydown", function(event) {
 			if (assignKey != null) {
 				finishKeyCodeAssignment(event.keyCode);
 				return false;
