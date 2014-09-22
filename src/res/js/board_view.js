@@ -23,6 +23,8 @@ var BC = (function(root) {
 	var me = parent.View = parent.View || {};
 
 	me.make = function(args) {
+		var Id = BC.Resources.Id;
+
 		var board = args.board;
 		var gl = args.gl;
 		var programLocations = args.programLocations;
@@ -37,14 +39,22 @@ var BC = (function(root) {
 		var ringMatrixLocation = programLocations.ringMatrixLocation;
 		var cellMatrixLocation = programLocations.cellMatrixLocation;
 
-		var cellView = BC.Cell.View.make(gl, board.metrics, resources.blockTextureTiles);
+		var cellView = BC.Cell.View.make({
+			gl: gl,
+			metrics: board.metrics,
+			resources: resources
+		});
 		var selectorView = BC.Selector.View.make({
 			gl: gl,
 			metrics: board.metrics,
 			programLocations: programLocations,
-			textureTile: resources.selectorTextureTile
+			textureTile: resources.getTile(Id.SELECTOR)
 		});
-		var stageView = BC.Stage.View.make(gl, board.metrics, resources.blackTextureTile);
+		var stageView = BC.Stage.View.make({
+			gl: gl,
+			metrics: board.metrics,
+			textureTile: resources.getTile(Id.STAGE)
+		});
 
 		function draw(lagFactor) {
 			var boardDrawSpec = board.getDrawSpec(lagFactor);
@@ -52,8 +62,9 @@ var BC = (function(root) {
 
 			drawStats();
 
-			drawRings(boardDrawSpec, selectorDrawSpec, lagFactor);
 			drawStage();
+
+			drawRings(boardDrawSpec, selectorDrawSpec, lagFactor);
 
 			// Draw selector last for alpha values.
 			drawSelector(boardDrawSpec, selectorDrawSpec);

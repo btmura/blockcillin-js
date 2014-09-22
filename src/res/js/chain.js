@@ -50,7 +50,7 @@ var BC = (function(root) {
 		}
 
 		function isMatch(cell, otherCell) {
-			return cell.getState() === otherCell.getState() && cell.getBlockStyle() == otherCell.getBlockStyle();
+			return cell.getState() === otherCell.getState() && cell.getContents() == otherCell.getContents();
 		}
 
 		function getStartCol(row) {
@@ -161,7 +161,7 @@ var BC = (function(root) {
 				var cell1 = chain1[i];
 				for (var j = 0; j < chain2.length; j++) {
 					var cell2 = chain2[j];
-					if (cell1.cell.getBlockStyle() === cell2.cell.getBlockStyle()
+					if (cell1.cell.getContents() === cell2.cell.getContents()
 							&& cell1.row === cell2.row
 							&& cell1.col === cell2.col) {
 						return true;
@@ -174,7 +174,7 @@ var BC = (function(root) {
 		function contains(chain, otherMatch) {
 			for (var i = 0; i < chain.length; i++) {
 				var match = chain[i];
-				if (match.cell.getBlockStyle() === otherMatch.cell.getBlockStyle()
+				if (match.cell.getContents() === otherMatch.cell.getContents()
 						&& match.row === otherMatch.row
 						&& match.col === otherMatch.col) {
 					return true;
@@ -273,6 +273,7 @@ var BC = (function(root) {
 				switch (cell.getState()) {
 					case CellState.BLOCK_CLEARING_MARKED:
 					case CellState.BLOCK_CLEARING_PREPARING:
+					case CellState.BLOCK_CLEARING_FROZEN:
 						break;
 
 					case CellState.BLOCK_CLEARING_READY:

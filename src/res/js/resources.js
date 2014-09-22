@@ -19,51 +19,73 @@
 
 var BC = (function(root) {
 
+	// TODO(btmura): rename module to Texture
 	var me = root.Resources = root.Resources || {};
 
-	me.make = function() {
-		var BLOCK = 0;
-		var BLOCK_INCOMING = 1;
-		var BLOCK_CLEARING = 2;
-		var MISC = 4;
+	me.Id = {
+		BLOCK_RED: 0,
+		BLOCK_GREEN: 1,
+		BLOCK_CYAN: 2,
+		BLOCK_MAGENTA: 3,
+		BLOCK_YELLOW: 4,
+		BLOCK_BLUE: 5,
 
-		var RED = 0;
-		var GREEN = 1;
-		var CYAN = 2;
-		var MAGENTA = 3;
-		var YELLOW = 4;
-		var BLUE = 5;
+		BLOCK_INCOMING_RED: 10,
+		BLOCK_INCOMING_GREEN: 11,
+		BLOCK_INCOMING_CYAN: 12,
+		BLOCK_INCOMING_MAGENTA: 13,
+		BLOCK_INCOMING_YELLOW: 14,
+		BLOCK_INCOMING_BLUE: 15,
+
+		BLOCK_MARKED_RED: 20,
+		BLOCK_MARKED_GREEN: 21,
+		BLOCK_MARKED_CYAN: 22,
+		BLOCK_MARKED_MAGENTA: 23,
+		BLOCK_MARKED_YELLOW: 24,
+		BLOCK_MARKED_BLUE: 25,
+
+		SELECTOR: 30,
+		STAGE: 31,
+		EXPLOSION: 32
+	}
+
+	me.make = function() {
+		var Id = BC.Resources.Id;
 
 		var tileSet = BC.GL.textureTileSet(8, 8, 0.002);
-		var blockTextureTiles = [
-			tileSet.tile(BLOCK, RED),
-			tileSet.tile(BLOCK, GREEN),
-			tileSet.tile(BLOCK, CYAN),
-			tileSet.tile(BLOCK, MAGENTA),
-			tileSet.tile(BLOCK, YELLOW),
-			tileSet.tile(BLOCK, BLUE),
+		var textureTiles = {};
 
-			tileSet.tile(BLOCK_CLEARING, RED),
-			tileSet.tile(BLOCK_CLEARING, GREEN),
-			tileSet.tile(BLOCK_CLEARING, CYAN),
-			tileSet.tile(BLOCK_CLEARING, MAGENTA),
-			tileSet.tile(BLOCK_CLEARING, YELLOW),
-			tileSet.tile(BLOCK_CLEARING, BLUE),
+		textureTiles[Id.BLOCK_RED]  = tileSet.tile(0, 0);
+		textureTiles[Id.BLOCK_GREEN]  = tileSet.tile(0, 1);
+		textureTiles[Id.BLOCK_CYAN]  = tileSet.tile(0, 2);
+		textureTiles[Id.BLOCK_MAGENTA]  = tileSet.tile(0, 3);
+		textureTiles[Id.BLOCK_YELLOW]  = tileSet.tile(0, 4);
+		textureTiles[Id.BLOCK_BLUE]  = tileSet.tile(0, 5);
 
-			tileSet.tile(BLOCK_INCOMING, RED),
-			tileSet.tile(BLOCK_INCOMING, GREEN),
-			tileSet.tile(BLOCK_INCOMING, CYAN),
-			tileSet.tile(BLOCK_INCOMING, MAGENTA),
-			tileSet.tile(BLOCK_INCOMING, YELLOW),
-			tileSet.tile(BLOCK_INCOMING, BLUE)
-		];
-		var selectorTextureTile = tileSet.tile(MISC, 0);
-		var blackTextureTile = tileSet.tile(MISC, 1);
+		textureTiles[Id.BLOCK_INCOMING_RED]  = tileSet.tile(1, 0);
+		textureTiles[Id.BLOCK_INCOMING_GREEN]  = tileSet.tile(1, 1);
+		textureTiles[Id.BLOCK_INCOMING_CYAN]  = tileSet.tile(1, 2);
+		textureTiles[Id.BLOCK_INCOMING_MAGENTA]  = tileSet.tile(1, 3);
+		textureTiles[Id.BLOCK_INCOMING_YELLOW]  = tileSet.tile(1, 4);
+		textureTiles[Id.BLOCK_INCOMING_BLUE]  = tileSet.tile(1, 5);
+
+		textureTiles[Id.BLOCK_MARKED_RED]  = tileSet.tile(2, 0);
+		textureTiles[Id.BLOCK_MARKED_GREEN]  = tileSet.tile(2, 1);
+		textureTiles[Id.BLOCK_MARKED_CYAN]  = tileSet.tile(2, 2);
+		textureTiles[Id.BLOCK_MARKED_MAGENTA]  = tileSet.tile(2, 3);
+		textureTiles[Id.BLOCK_MARKED_YELLOW]  = tileSet.tile(2, 4);
+		textureTiles[Id.BLOCK_MARKED_BLUE]  = tileSet.tile(2, 5);
+
+		textureTiles[Id.SELECTOR] = tileSet.tile(4, 0);
+		textureTiles[Id.STAGE] = tileSet.tile(4, 1);
+		textureTiles[Id.EXPLOSION] = tileSet.tile(4, 2);
+
+		function getTile(id) {
+			return textureTiles[id];
+		}
 
 		return {
-			blockTextureTiles: blockTextureTiles,
-			selectorTextureTile: selectorTextureTile,
-			blackTextureTile: blackTextureTile
+			getTile: getTile
 		};
 	};
 

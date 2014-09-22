@@ -22,7 +22,11 @@ var BC = (function(root) {
 	var parent = root.Stage = root.Stage || {};
 	var me = parent.View = parent.View || {};
 
-	me.make = function(gl, metrics, textureTile) {
+	me.make = function(args) {
+		var gl = args.gl;
+		var metrics = args.metrics;
+		var textureTile = args.textureTile;
+
 		var points = [];
 		var i = 0;
 

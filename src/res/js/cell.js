@@ -21,6 +21,19 @@ var BC = (function(root) {
 
 	var me = root.Cell = root.Cell || {};
 
+	var NUM_BLOCK_COLORS = 6;
+
+	me.CellContents = {
+		EMPTY: 0,
+		BLOCK_RED: 1,
+		BLOCK_GREEN: 2,
+		BLOCK_CYAN: 3,
+		BLOCK_MAGENTA: 4,
+		BLOCK_YELLOW: 5,
+		BLOCK_BLUE: 6,
+		EXPLOSION: 7
+	};
+
 	me.CellState = {
 		EMPTY: "EMPTY",
 		EMPTY_NO_SWAP: "EMPTY_NO_SWAP",
@@ -32,11 +45,13 @@ var BC = (function(root) {
 
 		BLOCK_CLEARING_MARKED: "BLOCK_CLEARING_MARKED",
 		BLOCK_CLEARING_PREPARING: "BLOCK_CLEARING_PREPARING",
+		BLOCK_CLEARING_FROZEN: "BLOCK_CLEARING_FROZEN",
 		BLOCK_CLEARING_READY: "BLOCK_CLEARING_READY",
 		BLOCK_CLEARING_IN_PROGRESS: "BLOCK_CLEARING_IN_PROGRESS"
 	};
 
 	me.make = function(args) {
+		var CellContents = BC.Cell.CellContents;
 		var CellState = BC.Cell.CellState;
 		var Direction = BC.Direction;
 		var Log = BC.Log;
@@ -56,30 +71,37 @@ var BC = (function(root) {
 		var rotationDelta = totalRotationDelta / updatesPerSwap;
 		var totalTranslationDelta = metrics.ringHeight;
 		var translationDelta = totalTranslationDelta / updatesPerSwap;
-		var alphaDelta = 1 / updatesPerFade;
+		var alphaDelta = 0.65 / updatesPerFade;
+
+		var initialScale = 0.6;
+		var scaleDelta = 1.1 / updatesPerFade;
+		var zOffset = metrics.ringInnerRadius + (metrics.ringOuterRadius - metrics.ringInnerRadius) / 2;
 
 		var currentState = {
+			contents: 1 + BC.Math.randomInt(NUM_BLOCK_COLORS - 1),
 			state: args.state,
-			blockStyle: args.blockStyle,
 			yellowBoost: 0,
 			alpha: 1,
 			droppingBlock: false,
-			rotation: [0, args.rotationY, 0],
-			translation: [0, 0, 0]
+			scale: [1, 1, 1],
+			translation: [0, 0, zOffset],
+			rotation: [0, args.rotationY, 0]
 		};
 
 		var drawState = {
-			rotation: [0, 0, 0],
-			translation: [0, 0, 0]
+			scale: [1, 1, 1],
+			translation: [0, 0, 0],
+			rotation: [0, 0, 0]
 		};
 
 		function updateDrawState() {
+			drawState.contents = currentState.contents;
 			drawState.state = currentState.state;
-			drawState.blockStyle = currentState.blockStyle;
 			drawState.yellowBoost = currentState.yellowBoost;
 			drawState.alpha = currentState.alpha;
 			drawState.droppingBlock = currentState.droppingBlock;
 			for (var i = 0; i < 3; i++) {
+				drawState.scale[i] = currentState.scale[i];
 				drawState.rotation[i] = currentState.rotation[i];
 				drawState.translation[i] = currentState.translation[i];
 			}
@@ -107,7 +129,7 @@ var BC = (function(root) {
 			totalUpdates: updatesPerFreeze,
 
 			onStart: function(state, stepPercent) {
-				state.blockStyle += metrics.numBlockTypes;
+				state.state = CellState.BLOCK_CLEARING_FROZEN;
 			},
 
 			onFinish: function(state) {
@@ -120,14 +142,18 @@ var BC = (function(root) {
 
 			onStart: function(state, stepPercent) {
 				audioPlayer.play(Sound.CELL_CLEAR);
+				state.contents = CellContents.EXPLOSION;
+				state.scale[0] = state.scale[1] = state.scale[2] = initialScale;
 			},
 
 			onUpdate: function(state, stepPercent) {
+				state.scale[0] = state.scale[1] = state.scale[2] = state.scale[0] + scaleDelta;
 				state.alpha -= alphaDelta;
 			},
 
 			onFinish: function(state) {
 				state.state = CellState.EMPTY_NO_DROP;
+				state.scale[0] = state.scale[1] = state.scale[2] = 1;
 				state.alpha = 1;
 			}
 		};
@@ -204,15 +230,15 @@ var BC = (function(root) {
 		}
 
 		function sendBlock() {
-			var blockStyle = currentState.blockStyle;
-			currentState.blockStyle = 0;
+			var oldContents = currentState.contents;
+			currentState.contents = CellContents.EMPTY;
 			currentState.state = CellState.EMPTY_NO_SWAP;
 			stateManager.addStateMutator(sendStateMutator);
-			return blockStyle;
+			return oldContents;
 		}
 
-		function receiveBlock(direction, blockStyle) {
-			currentState.blockStyle = blockStyle;
+		function receiveBlock(direction, contents) {
+			currentState.contents = contents;
 			currentState.state = CellState.BLOCK_RECEIVING;
 			stateManager.addStateMutator(receiveDirectionStateMutators[direction]);
 		}
@@ -225,17 +251,14 @@ var BC = (function(root) {
 			currentState.state = newState;
 		}
 
-		function getBlockStyle() {
-			return currentState.blockStyle;
-		}
-
-		function setBlockStyle(newBlockStyle) {
-			currentState.blockStyle = newBlockStyle;
+		function getContents() {
+			return currentState.contents;
 		}
 
 		function isClearing() {
 			return currentState.state === CellState.BLOCK_CLEARING_MARKED
 					|| currentState.state === CellState.BLOCK_CLEARING_PREPARING
+					|| currentState.state === CellState.BLOCK_CLEARING_FROZEN
 					|| currentState.state === CellState.BLOCK_CLEARING_READY
 					|| currentState.state === CellState.BLOCK_CLEARING_IN_PROGRESS
 		}
@@ -257,7 +280,8 @@ var BC = (function(root) {
 			var isTransparent = getTransparent(drawState);
 			return {
 				matrix: matrix,
-				blockStyle: drawState.blockStyle,
+				state: drawState.state,
+				contents: drawState.contents,
 				yellowBoost: drawState.yellowBoost,
 				alpha: drawState.alpha,
 				isDrawable: isDrawable,
@@ -270,9 +294,11 @@ var BC = (function(root) {
 		}
 
 		function getMatrix(state, lagFactor) {
-			var rotationMatrix = Matrix.makeYRotation(state.rotation[1]);
+			var scaleMatrix = Matrix.makeScale(state.scale[0], state.scale[1], state.scale[2]);
 			var translationMatrix = Matrix.makeTranslation(state.translation[0], state.translation[1], state.translation[2]);
-			return Matrix.matrixMultiply(rotationMatrix, translationMatrix);
+			var rotationMatrix = Matrix.makeYRotation(state.rotation[1]);
+			var matrix = Matrix.matrixMultiply(scaleMatrix, translationMatrix);
+			return Matrix.matrixMultiply(matrix, rotationMatrix);
 		}
 
 		function getDrawable(state) {
@@ -293,8 +319,7 @@ var BC = (function(root) {
 
 			getState: getState,
 			setState: setState,
-			getBlockStyle: getBlockStyle,
-			setBlockStyle: setBlockStyle,
+			getContents: getContents,
 
 			isClearing: isClearing,
 			hasDroppingBlock: hasDroppingBlock,

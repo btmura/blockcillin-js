@@ -96,6 +96,23 @@ var BC = (function(root) {
 		};
 	};
 
+	me.newArrayBuffer = function(gl, bufferData) {
+		var bufferId = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferData), gl.STATIC_DRAW);
+		return bufferId;
+	};
+
+	me.newElementArrayBuffer = function(gl, bufferData) {
+		var bufferId = gl.createBuffer();
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferId);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(bufferData), gl.STATIC_DRAW);
+		return {
+			bufferId: bufferId,
+			count: bufferData.length
+		};
+	};
+
 	return root;
 
 }(BC || {}))

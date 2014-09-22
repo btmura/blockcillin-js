@@ -37,22 +37,16 @@ var BC = (function(root) {
 
 		var state = selectable ? CellState.BLOCK : CellState.BLOCK_INCOMING;
 
+		var theta = 2 * Math.PI / metrics.numCells;
 		var cells = [];
 		for (var i = 0; i < metrics.numCells; i++) {
-			var rotationY = i * RING_ROTATION_Y_DELTA;
-
-			var blockStyle = BC.Math.randomInt(metrics.numBlockTypes);
-			if (!selectable) {
-				blockStyle += metrics.numBlockTypes * 2;
-			}
-
+			var rotationY = i * RING_ROTATION_Y_DELTA + theta/2;
 			cells[i] = BC.Cell.make({
 				metrics: metrics,
 				config: config,
-				rotationY: rotationY,
+				audioPlayer: audioPlayer,
 				state: state,
-				blockStyle: blockStyle,
-				audioPlayer: audioPlayer
+				rotationY: rotationY,
 			});
 		}
 
@@ -72,8 +66,6 @@ var BC = (function(root) {
 					// TODO(btmura): create function on Cell to change selectable state
 					if (cells[i].getState() === BC.Cell.CellState.BLOCK_INCOMING) {
 						cells[i].setState(BC.Cell.CellState.BLOCK);
-						// TODO(btmura): remove manual multiplication to change texture
-						cells[i].setBlockStyle(cells[i].getBlockStyle() - metrics.numBlockTypes * 2);
 					}
 				}
 			}

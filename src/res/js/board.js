@@ -333,8 +333,10 @@ var BC = (function(root) {
 		function swap() {
 			var leftCell = getCell(currentRing, currentCell);
 			var rightCell = getCell(currentRing, currentCell + 1);
-			var leftStyle = leftCell.getBlockStyle();
-			var rightStyle = rightCell.getBlockStyle();
+
+			// TODO(btmura): remove need to save cell contents
+			var leftContents = leftCell.getContents();
+			var rightContents = rightCell.getContents();
 
 			BC.Log.log("swap: (" + leftCell.getState() + ", " + rightCell.getState() + ")");
 
@@ -349,7 +351,7 @@ var BC = (function(root) {
 			var moveLeft = isEmpty(leftCell) && isBlock(rightCell);
 			if (moveLeft) {
 				rightCell.sendBlock(Direction.LEFT);
-				leftCell.receiveBlock(Direction.RIGHT, rightStyle);
+				leftCell.receiveBlock(Direction.RIGHT, rightContents);
 				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
@@ -357,15 +359,15 @@ var BC = (function(root) {
 			var moveRight = isBlock(leftCell) && isEmpty(rightCell);
 			if (moveRight) {
 				leftCell.sendBlock(Direction.RIGHT);
-				rightCell.receiveBlock(Direction.LEFT, leftStyle);
+				rightCell.receiveBlock(Direction.LEFT, leftContents);
 				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
 
 			var swap = isBlock(leftCell) && isBlock(rightCell);
 			if (swap) {
-				leftCell.receiveBlock(Direction.RIGHT, rightStyle);
-				rightCell.receiveBlock(Direction.LEFT, leftStyle);
+				leftCell.receiveBlock(Direction.RIGHT, rightContents);
+				rightCell.receiveBlock(Direction.LEFT, leftContents);
 				audioPlayer.play(Sound.CELL_SWAP);
 				return;
 			}
